@@ -12,8 +12,8 @@
 | Backend API | NestJS (TypeScript) | İş mantığı, kimlik, tenant izolasyonu, WebSocket, bildirim |
 | Veritabanı | PostgreSQL + PostGIS | Kalıcı veri, mekânsal sorgular (`ST_DWithin`), RLS |
 | Önbellek | Redis | Son konum, pub/sub, hız sınırlama |
-| Rota motoru | OSRM + VROOM (self-hosted) | Mesafe matrisi, durak optimizasyonu |
-| Harita ve adres | Google Maps Platform | Places Autocomplete, Place Details Essentials, Maps SDK |
+| Rota motoru | OSRM + VROOM (self-hosted) | Mesafe matrisi, durak optimizasyonu; pilotta yalnızca Eskişehir OSM çıkarımı ([ADR-0006](kararlar/0006-hizmet-bolgesi-eskisehir.md)) |
+| Harita ve adres | Google Maps Platform | Places Autocomplete (hizmet bölgesi kısıtlı, [ADR-0006](kararlar/0006-hizmet-bolgesi-eskisehir.md)), Place Details Essentials, Maps SDK |
 | Push | FCM (high-priority data message) | Yeni paket bildirimi |
 
 ## 2. Sistem diyagramı
@@ -80,6 +80,7 @@ erDiagram
         string name
         string status
         jsonb settings
+        jsonb service_area
     }
     BUSINESS {
         uuid id PK
@@ -158,6 +159,7 @@ erDiagram
 Notlar:
 - `LOCATION_PING` büyük hacimli olduğundan gün bazlı partition (veya TimescaleDB) düşünülüyor; saklama süresi KVKK'ya göre sınırlı ([ADR-0005](kararlar/0005-konum-takibi-ve-kvkk.md)).
 - Google kullanım şartları nedeniyle `place_id` kalıcı saklanabilir, koordinat önbelleği sınırlıdır ([ADR-0001](kararlar/0001-hibrit-harita-mimarisi.md)).
+- `TENANT.service_area` hizmet bölgesini veri olarak tutar (poligon / bbox, şehir adı, varsayılan harita merkezi ve yakınlaştırma); kodda şehre özgü sabit yoktur. Pilot: Eskişehir ([ADR-0006](kararlar/0006-hizmet-bolgesi-eskisehir.md)). İşletme bazlı adres defteri (telefon → `place_id` + adres metni) aynı ADR kapsamındadır.
 - Alan adları taslaktır; kesin şema İterasyon 1'de çıkarılacak.
 
 ## 4. Paket yaşam döngüsü
@@ -235,6 +237,6 @@ Pilot müşteri keşfi henüz yapılmadı; aşağıdakiler cevap bekliyor.
 | 9 | Paket iptal ve iade kuralları (alındıktan sonra iptal ücreti vb.) | Yaşam döngüsü |
 | 10 | Konum verisi saklama süresi ve VERBİS yükümlülüğü | ADR-0005 |
 | 11 | Google ToS: koordinat önbellekleme ve Google verisini Google dışı harita ile kullanma sınırları | ADR-0001 (açık risk) |
-| 12 | Türkiye OSM adres / yol kalitesi pilot bölgede yeterli mi? | ADR-0001 (OSRM) |
+| 12 | Eskişehir OSM adres / yol kalitesi yeterli mi? (~30 örnek adresle test) | ADR-0001, ADR-0006 |
 | 13 | Android developer verification: Türkiye ve kurumsal dağıtım durumu | ADR-0003 |
 | 14 | Faturalama modeli: paket başı mı, abonelik mi? | Faturalama (İterasyon 4+) |

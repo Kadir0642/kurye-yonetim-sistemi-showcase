@@ -33,6 +33,7 @@ Kapsam, pilot müşteri keşfi sonrasında değişebilir. Her iterasyon bir demo
 **Hedef:** Bir işletme paket girer, kurye havuzdan alır, navigasyonla teslim eder, yönetici canlı haritada izler.
 
 - [ ] Kimlik doğrulama ve tenant altyapısı (RLS dahil)
+- [ ] Kiracı hizmet bölgesi yapılandırması (`service_area`: poligon / bbox, şehir, varsayılan harita merkezi; Places kısıtı) ([ADR-0006](kararlar/0006-hizmet-bolgesi-eskisehir.md))
 - [ ] İşletme yönetimi (ekleme, düzenleme, çıkarma)
 - [ ] Paket ekleme, Google Places adres otomatik tamamlama (session token)
 - [ ] Sipariş havuzu
@@ -53,6 +54,7 @@ Kapsam, pilot müşteri keşfi sonrasında değişebilir. Her iterasyon bir demo
 
 - [ ] Paketleri duraklara gruplama
 - [ ] Rota optimizasyonu: OSRM + VROOM kurulumu ve entegrasyonu
+- [ ] Eskişehir OSM çıkarımı (osmium) ile OSRM + VROOM; ~30 örnek adreste Google geocode ve OSRM snapping karşılaştırması (adres kalitesi testi) ([ADR-0006](kararlar/0006-hizmet-bolgesi-eskisehir.md))
 - [ ] Kurye başına yarıçap filtresi (PostGIS `ST_DWithin`)
 - [ ] Elle atama ve yeniden atama
 - [ ] Konum kesilme uyarısı (heartbeat)

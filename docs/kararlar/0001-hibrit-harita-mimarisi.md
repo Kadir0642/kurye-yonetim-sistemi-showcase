@@ -26,6 +26,7 @@ Aşağıdaki hibrit yapı önerilir:
 - (-) Ek altyapı bakımı: OSM verisi (Geofabrik Türkiye) güncellemesi, OSRM / VROOM servisleri.
 - **Açık risk:** Google şartları Places / Geocoding koordinatlarının önbelleğini sınırlar (yaklaşık 30 gün; yalnızca `place_id` süresiz saklanabilir) ve Google verisinin Google dışı harita ile kullanımını kısıtlayabilir. OSRM'ye giren koordinatların kaynağı ve saklama şekli hukuken netleştirilmeli. Yedek plan: yalnızca Google ile Single Vehicle Routing (maliyet artışı kabul edilirse).
 - **Açık risk:** Türkiye OSM'de kapı numarası ve kırsal yol kalitesi doğrulanmadı; pilot bölgede ölçülmeli.
+- **İlgili karar:** Pilot yalnızca Eskişehir olduğundan OSRM / VROOM il bazlı OSM çıkarımıyla çalışır ve Places isteklerine hizmet bölgesi kısıtı uygulanır; bkz. [ADR-0006](0006-hizmet-bolgesi-eskisehir.md).
 
 ## Alternatifler
 
