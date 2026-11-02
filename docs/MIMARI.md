@@ -1,6 +1,6 @@
 # Mimari
 
-> Durum: **İterasyon 1 için kabul edildi** (2026-10-30). Yığın ve harita kararları [ADR-0007](kararlar/0007-backend-ve-web-yigini.md) ve [ADR-0008](kararlar/0008-acik-kaynak-harita.md), kurye uygulaması [ADR-0002](kararlar/0002-kurye-uygulamasi-react-native-expo.md), rota uyumlu atama (İterasyon 2 ana hedefi) [ADR-0009](kararlar/0009-rota-uyumlu-atama.md), kuryeler arası devir [ADR-0010](kararlar/0010-kuryeler-arasi-devir.md). İterasyon 1'in kesin şeması, durum makinesi ve protokolleri: İterasyon 1 spesifikasyonu. Pilot müşteri keşfi sürdüğü için ileriki iterasyonlara ait bölümler değişebilir. Gerekçeler için [karar kayıtları](kararlar/README.md), dayanak için araştırma raporları.
+> Durum: **İterasyon 1 için kabul edildi** (2026-10-30); **İterasyon 2 spesifikasyonu onaya sunuldu** (2026-11-02): iterasyon-2/SPEC.md, [ADR-0011](kararlar/0011-osrm-motosiklet-profili-ve-rota-altyapisi.md), [ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md), [ADR-0013](kararlar/0013-rota-motoru-siniri-ve-yaklasik-mod.md), [ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md). Yığın ve harita kararları [ADR-0007](kararlar/0007-backend-ve-web-yigini.md) ve [ADR-0008](kararlar/0008-acik-kaynak-harita.md), kurye uygulaması [ADR-0002](kararlar/0002-kurye-uygulamasi-react-native-expo.md), rota uyumlu atama (İterasyon 2 ana hedefi) [ADR-0009](kararlar/0009-rota-uyumlu-atama.md), kuryeler arası devir [ADR-0010](kararlar/0010-kuryeler-arasi-devir.md). İterasyon 1'in kesin şeması, durum makinesi ve protokolleri: İterasyon 1 spesifikasyonu. Pilot müşteri keşfi sürdüğü için ileriki iterasyonlara ait bölümler değişebilir. Gerekçeler için [karar kayıtları](kararlar/README.md), dayanak için araştırma raporları.
 
 ## 1. Bileşenler
 
@@ -11,14 +11,15 @@
 | İşletme paneli (sonra) | React + TypeScript | Restoranların kendi siparişlerini girmesi |
 | Ortak sözleşme | OpenAPI 3.1 + WebSocket protokolü (`packages/contracts`) | Üç bileşenin paylaştığı TS tipleri (contract-first) |
 | Backend API | NestJS (Fastify), Drizzle ORM, zod | İş mantığı, kimlik, tenant izolasyonu, WebSocket, adres sağlayıcıları, arka plan işleri |
-| Veritabanı | PostgreSQL 16 + PostGIS | Kalıcı veri, mekânsal sorgular (`ST_DWithin`); RLS İterasyon 2'de ([ADR-0004](kararlar/0004-cok-kiracili-mimari.md)) |
-| Önbellek | Redis | Son konum, "konum kesildi" takibi, WebSocket pub/sub fan-out, hız sınırlama |
+| Veritabanı | PostgreSQL 16 + PostGIS | Kalıcı veri, mekânsal sorgular (`ST_DWithin`); RLS İterasyon 2b'de ([ADR-0004](kararlar/0004-cok-kiracili-mimari.md), [ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md)) |
+| Önbellek | Redis | Son konum, "konum kesildi" takibi, WebSocket pub/sub fan-out, hız sınırlama; İterasyon 2: akıllı havuz uygunluk önbelleği, toplu atama penceresi, iş kilitleri |
 | Harita gösterimi | MapLibre + OpenFreeMap vektör karoları | Ücretsiz, anahtarsız ([ADR-0008](kararlar/0008-acik-kaynak-harita.md)) |
 | Adres arama | API `/geo` → Google Places (New) (anahtar varsa) veya Photon | Otomatik tamamlama, hizmet bölgesi kısıtı ([ADR-0006](kararlar/0006-hizmet-bolgesi-eskisehir.md)) |
-| Rota motoru (İterasyon 2) | OSRM + VROOM (self-hosted, docker compose) | OSRM: süre matrisi (`table`) ve rota çizgisi; VROOM: durak sıralaması (pickup-delivery, kapasite, zaman penceresi). Pilotta yalnızca Eskişehir OSM çıkarımı |
-| Yönlendirme servisi (İterasyon 2) | API içinde `routing` modülü: saf yerleştirme/skor fonksiyonları + OSRM/VROOM istemcileri | Kurye başına canlı rota ve durak listesi, en ucuz yerleştirme ile sapma süresi, aday kurye öneri/skoru, kararlılık kuralları ([ADR-0009](kararlar/0009-rota-uyumlu-atama.md)) |
-| Atama motoru (İterasyon 2) | API içinde `assignment` modülü | Üç mod (`ONERI`, `AKILLI_HAVUZ`, `OTOMATIK`), ret ve devir akışı (yönetici onaylı devir isteği + kuryeler arası devir), atama metrikleri; tasarım: rota uyumlu atama, kuryeler arası devir |
-| Push (İterasyon 2) | FCM / APNs | Yeni paket bildirimi; İterasyon 1'de vardiya açıkken WebSocket kullanılır |
+| Rota altyapısı (İterasyon 2) | OSRM (MLD, depodaki `motorcycle.lua` profili) + VROOM, Docker compose `routing` profili | OSRM: süre matrisi (`table`) ve rota çizgisi; VROOM: kurye başına nihai durak sırası (pickup-delivery, kapasite, zaman penceresi). Yalnızca Eskişehir OSM çıkarımı, tek komutla üretilir ([ADR-0011](kararlar/0011-osrm-motosiklet-profili-ve-rota-altyapisi.md)) |
+| Rota motoru (İterasyon 2) | API içinde `src/routing`: Nest / DB / Redis bilmeyen saf kütüphane; arayüzü `@kurye/contracts/routing-engine` | En ucuz yerleştirme, uygulanabilirlik (kapasite, tazelik, mevcut paket gecikme sınırı), skor ve Türkçe gerekçe, toplu atama (regret-2), kararlılık kuralları, süreç içi kesin sıralayıcı, OSRM yokken yaklaşık mod ([ADR-0009](kararlar/0009-rota-uyumlu-atama.md), [ADR-0013](kararlar/0013-rota-motoru-siniri-ve-yaklasik-mod.md), [ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md)) |
+| Dağıtım alanı (İterasyon 2) | API içinde `routes` ve `dispatch` modülleri | Kurye rotalarının kaydı ve yeniden sıralanması, öneriler, üç mod (`ONERI`, `AKILLI_HAVUZ`, `OTOMATIK`), bekleyenler kuyruğu, toplu atama, gerekçeli ret, atama metrikleri (SPEC) |
+| Devir alanı (İterasyon 2) | API içinde `handover` modülü | Yönetici onaylı devir isteği ve kuryeler arası devir, kod / QR, buluşma doğrulaması, nakit sorumluluğu, devir metrikleri (kuryeler arası devir) |
+| Push (İterasyon 2b) | FCM / APNs | Yeni paket, rota değişikliği, devir teklifi bildirimi; o zamana kadar vardiya açıkken / uygulama önündeyken WebSocket |
 
 ## 2. Sistem diyagramı
 
@@ -35,14 +36,14 @@ flowchart LR
         WS["WebSocket Gateway<br/>(/ws, düz WebSocket)"]
         PG[("PostgreSQL 16<br/>+ PostGIS")]
         RD[("Redis")]
-        OSRM["OSRM + VROOM<br/>(İterasyon 2: rota uyumlu atama)"]
+        OSRM["OSRM + VROOM<br/>(İterasyon 2: rota uyumlu dağıtım)"]
     end
 
     subgraph Dis["Dış servisler"]
         OFM["OpenFreeMap<br/>(vektör karolar)"]
         GEO["Photon veya<br/>Google Places (New)"]
         NAV["Google Maps / Apple Haritalar<br/>(navigasyon uygulaması)"]
-        PUSH["FCM / APNs<br/>(İterasyon 2)"]
+        PUSH["FCM / APNs<br/>(İterasyon 2b)"]
     end
 
     KA -->|"REST: vardiya, havuz, paket, toplu konum"| API
@@ -64,7 +65,7 @@ flowchart LR
 
 ## 3. Çok kiracılı veri modeli (taslak)
 
-Kiracı (tenant) = kurye firması. İşletmeler, kuryeler ve paketler kiracıya bağlıdır; tüm tablolarda `tenant_id` bulunur. İterasyon 1'de izolasyon uygulama katmanında ve bileşik yabancı anahtarlarla (`(tenant_id, id)`) sağlanır; PostgreSQL satır düzeyi güvenlik (RLS) İterasyon 2'de eklenir ([ADR-0004](kararlar/0004-cok-kiracili-mimari.md)). Aşağıdaki diyagram uzun vadeli modeldir; İterasyon 1'in kesin tabloları SPEC §3'tedir.
+Kiracı (tenant) = kurye firması. İşletmeler, kuryeler ve paketler kiracıya bağlıdır; tüm tablolarda `tenant_id` bulunur. İterasyon 1 ve 2'de izolasyon uygulama katmanında ve bileşik yabancı anahtarlarla (`(tenant_id, id)`) sağlanır; PostgreSQL satır düzeyi güvenlik (RLS) İterasyon 2b'de eklenir ([ADR-0004](kararlar/0004-cok-kiracili-mimari.md), [ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md)). Aşağıdaki diyagram uzun vadeli modeldir; İterasyon 1'in kesin tabloları SPEC §3'tedir.
 
 ```mermaid
 erDiagram
@@ -219,7 +220,7 @@ sequenceDiagram
 ## 6. Yeni paket ve navigasyon akışı (özet)
 
 1. Yönetici paket girer. Adres API'nin `/geo` uçlarıyla otomatik tamamlanır: anahtar varsa Google Places (New) ve session token, yoksa Photon; hizmet bölgesiyle sınırlıdır. Gerekirse haritada iğne sürüklenerek düzeltilir.
-2. Paket `IN_POOL` durumuna geçer. Vardiyadaki kuryelere WebSocket `pool.updated` olayı gider; uygulama, alış noktası kendi yarıçapı içindeyse titreşimle uyarır. Push (FCM/APNs) İterasyon 2'dedir.
+2. Paket `IN_POOL` durumuna geçer. Vardiyadaki kuryelere WebSocket `pool.updated` olayı gider; uygulama, alış noktası kendi yarıçapı içindeyse titreşimle uyarır. Push (FCM/APNs) İterasyon 2b'dedir.
 3. Kurye havuzu yarıçap filtresiyle (PostGIS `ST_DWithin`, alış noktasına göre) görür ve paketi alır. Paket uygulamada MapLibre haritasında açılır; tek dokunuşla navigasyon başlar:
    - Android: `google.navigation:` intent'i (iki teker modu), olmazsa `geo:`.
    - iOS: Google Maps veya Apple Haritalar.
@@ -227,13 +228,17 @@ sequenceDiagram
 
 ### 6.1 Rota uyumlu atama (iterasyon 2)
 
+> Kesin tasarım: İterasyon 2 teknik spesifikasyonu. Bu, müşterinin en yüksek önceliğidir (SPEC §1.1).
+
 İterasyon 2'de paket ataması "kuryeye en yakın" yerine **"kuryenin rotasına en az sapma ekleyen"** ölçütüyle yapılır ([ADR-0009](kararlar/0009-rota-uyumlu-atama.md)). Özet akış:
 
 1. Yeni paket (alış R, teslim D) için PostGIS ile aday kuryeler süzülür: vardiyada, kapasite uygun, R'ye veya rotalarına yakın.
 2. Her aday için (R, D) çifti mevcut durak dizisine en ucuz yerleştirilir (OSRM `table` matrisi); uygulanabilirlik (kapasite, alıştan teslime azami süre) ve skor (sapma + gecikme + bekleme + adalet) hesaplanır.
 3. Moda göre: öneri paneli (`ONERI`), rotaya uyan havuz (`AKILLI_HAVUZ`) veya otomatik atama / bekleyenler kuyruğu (`OTOMATIK`).
-4. Atamadan sonra VROOM nihai sırayı kurar; kilitli sıradaki durak ve kazanç eşiği rotanın oynamasını önler.
-5. Kurye "Rotam" ekranında numaralı durakları görür; panelde rota çizgileri ve öneriler görünür. Alıştan önce gerekçeli ret, alıştan sonra iki devir yolu vardır: yönetici onaylı devir isteği ve kuryeler arası devir ([bölüm 6.2](#62-kuryeler-arası-devir-iterasyon-2)).
+4. Atamadan sonra VROOM nihai sırayı kurar; kilitli sıradaki durak, kazanç eşiği, soğuma süresi ve mevcut paket başına gecikme sınırı (varsayılan 8 dk) rotanın oynamasını ve mevcut paketlerin bozulmasını önler.
+5. Birden çok yeni paket aynı anda geldiğinde (aynı restorandan art arda siparişler, yoğun saat) **toplu atama** tüm kuryelerin mevcut rotalarına birlikte yerleştirir (regret-2); aynı restoranın teslimleri birbirine yakın siparişleri uygunsa tek kuryeye gruplanır ([ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md)).
+6. OSRM / VROOM erişilemezse sistem durmaz: süreler kuş uçuşu tahmine düşer, otomatik atama askıya alınır, İterasyon 1 havuz / elle atama davranışı açık bir uyarıyla sürer ([ADR-0013](kararlar/0013-rota-motoru-siniri-ve-yaklasik-mod.md)).
+7. Kurye "Rotam" ekranında numaralı durakları görür; panelde rota çizgileri ve öneriler görünür. Alıştan önce gerekçeli ret, alıştan sonra iki devir yolu vardır: yönetici onaylı devir isteği ve kuryeler arası devir ([bölüm 6.2](#62-kuryeler-arası-devir-iterasyon-2)).
 
 Tasarım, algoritma, veri modeli taslağı ve benchmark planı: iterasyon-2/ROTA-UYUMLU-ATAMA.md. Yeni tablolar (`courier_routes`, `route_stops`, `assignment_suggestions`, `package_rejections`, `handover_requests`, `handover_offers`) yukarıdaki diyagramdaki `STOP` kavramının yerini alır.
 
@@ -262,7 +267,8 @@ Tasarım, veri modeli (`handover_offers`), API eskizi, uç durumlar ve KVKK notl
 
 ## 7. Güvenlik ve gizlilik ilkeleri
 
-- Tenant izolasyonu: her istekte JWT'den gelen `tenant_id` bağlamı, depo katmanında zorunlu filtre ve bileşik yabancı anahtarlar; RLS İterasyon 2'de.
+- Tenant izolasyonu: her istekte JWT'den gelen `tenant_id` bağlamı, depo katmanında zorunlu filtre ve bileşik yabancı anahtarlar; RLS İterasyon 2b'de ([ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md)).
+- Rota motoru (OSRM / VROOM) yalnızca iç ağda çalışır; kurye konumu üçüncü taraf bir servise gönderilmez.
 - Kimlik: kısa ömürlü JWT access token + rotasyonlu, tek kullanımlık refresh token (yeniden kullanım tespiti).
 - Konum yalnızca açık vardiyada; aydınlatma metni ve açık rıza metni ayrı ([ADR-0005](kararlar/0005-konum-takibi-ve-kvkk.md)).
 - Gizli anahtarlar depoda tutulmaz; yapılandırma ortam değişkenleriyle.
@@ -301,3 +307,5 @@ Pilot müşteri keşfi henüz yapılmadı; aşağıdakiler cevap bekliyor.
 | 25 | Devirde yönetici onayı istenir mi, yoksa yalnızca bilgi mi? (varsayılan: bilgi) | ADR-0010: `handover_requires_dispatcher_approval` |
 | 26 | Alınmış paketin devrinde kapıda nakit sorumluluğu ve kasa teslimi nasıl işliyor? | ADR-0010: nakit sorumluluk devri, İterasyon 3 kasa |
 | 27 | Günlük kaç devir normal? Şehir içi GPS ile 150 m buluşma yarıçapı güvenilir mi? | ADR-0010: devir sınırları, `handover_meet_radius_m` |
+| 28 | Yeni paket eklenirken mevcut bir paketin en çok kaç dakika gecikmesi kabul edilir? (varsayılan 8 dk) Aynı restorandan gelen siparişler tek kuryeye verilmeli mi? | ADR-0014: `maxAddedDelayPerPackageMin`, toplu atama gruplaması |
+| 29 | Motosikletli kuryelerin gerçek süreleri OSRM tahmininden ne kadar farklı? (pilot konum izinden ölçülecek) | ADR-0011: `ROUTING_DURATION_FACTOR` kalibrasyonu |

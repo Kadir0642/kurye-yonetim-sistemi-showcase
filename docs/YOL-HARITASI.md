@@ -5,8 +5,9 @@ Kapsam, pilot müşteri keşfi sonrasında değişebilir. Her iterasyon bir demo
 | İterasyon | Odak | Durum |
 |---|---|---|
 | 0 | Planlama ve araştırma | 🚧 Devam ediyor |
-| 1 | Çekirdek | 🚧 Spesifikasyon hazır, uygulama başlıyor |
-| 2 | **Ana hedef: rota uyumlu atama** (duraklar, rota optimizasyonu, öneri / otomatik atama, ret ve devir); push, iOS, OTA, RLS | ⏳ |
+| 1 | Çekirdek | ✅ Uygulandı ve birleştirildi |
+| 2 | **Ana hedef: dinamik, rota uyumlu dağıtım** (tek akıllı rota, en iyi uyan kuryeye tekil ve toplu atama, kararlı yeniden sıralama, öneri / otomatik atama, ret ve devir, benchmark) | 🚧 Spesifikasyon hazır (SPEC) |
+| 2b | Platform ve sağlamlaştırma: RLS, push, iOS, OTA, adres kalitesi testi | ⏳ |
 | 3 | Hakediş, kasa ve atama | ⏳ |
 | 4+ | Genişleme | ⏳ |
 
@@ -28,80 +29,81 @@ Kapsam, pilot müşteri keşfi sonrasında değişebilir. Her iterasyon bir demo
 
 ---
 
-## İterasyon 1 — Çekirdek 🚧
+## İterasyon 1 — Çekirdek ✅
 
 **Hedef:** Bir yönetici paket girer, kurye havuzdan alır, navigasyonla teslim eder, yönetici canlı haritada izler. Demo **ücretli anahtar olmadan** çalışır.
 
 Teknik spesifikasyon: iterasyon-1/SPEC.md. API sözleşmesi `packages/contracts` altındadır. Üç paralel görev: A (API + altyapı), B (yönetim paneli), C (kurye mobil uygulaması).
 
-- [ ] Monorepo (npm workspaces), ortak sözleşme (OpenAPI 3.1 + WebSocket protokolü), docker compose altyapısı ([ADR-0007](kararlar/0007-backend-ve-web-yigini.md))
-- [ ] Kimlik doğrulama (JWT + rotasyonlu refresh) ve tenant altyapısı (uygulama katmanı + bileşik FK; RLS İterasyon 2'de)
-- [ ] Kiracı hizmet bölgesi yapılandırması (`service_area`: poligon / bbox, şehir, varsayılan harita merkezi) ([ADR-0006](kararlar/0006-hizmet-bolgesi-eskisehir.md))
-- [ ] İşletme yönetimi (ekleme, düzenleme, arşivleme)
-- [ ] Kurye yönetimi (panelden hesap açma, PIN sıfırlama, vardiyayı kapatma)
-- [ ] Paket ekleme; adres otomatik tamamlama API üzerinden (Photon, anahtar varsa Google Places) ([ADR-0008](kararlar/0008-acik-kaynak-harita.md))
-- [ ] Paket durum makinesi ve olay geçmişi (audit)
-- [ ] Sipariş havuzu, kurye yarıçap filtresi (PostGIS `ST_DWithin`), yarışa dayanıklı alma
-- [ ] Elle atama, yeniden atama, havuza geri alma
-- [ ] Kurye uygulaması (React Native + Expo, Android'de doğrulanır; iOS yapılandırması hazır) ([ADR-0002](kararlar/0002-kurye-uygulamasi-react-native-expo.md)): giriş, KVKK onayları, izinler ve pil optimizasyonu ekranı
-- [ ] Kurye uygulaması: vardiya aç / kapat, arka plan konum servisi (kalıcı kuyruk, toplu gönderim)
-- [ ] Kurye uygulaması: havuzdan paket alma, harita (MapLibre) ve tek dokunuş navigasyon, teslim etme
-- [ ] Panel: canlı harita (MapLibre + WebSocket)
-- [ ] Konum kesilme uyarısı (heartbeat)
-- [ ] Demo seed verisi (kurgusal Eskişehir firması, işletmeler, kuryeler, paketler) ve kurye konum simülatörü
+- [x] Monorepo (npm workspaces), ortak sözleşme (OpenAPI 3.1 + WebSocket protokolü), docker compose altyapısı ([ADR-0007](kararlar/0007-backend-ve-web-yigini.md))
+- [x] Kimlik doğrulama (JWT + rotasyonlu refresh) ve tenant altyapısı (uygulama katmanı + bileşik FK; RLS İterasyon 2b'de, [ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md))
+- [x] Kiracı hizmet bölgesi yapılandırması (`service_area`: poligon / bbox, şehir, varsayılan harita merkezi) ([ADR-0006](kararlar/0006-hizmet-bolgesi-eskisehir.md))
+- [x] İşletme yönetimi (ekleme, düzenleme, arşivleme)
+- [x] Kurye yönetimi (panelden hesap açma, PIN sıfırlama, vardiyayı kapatma)
+- [x] Paket ekleme; adres otomatik tamamlama API üzerinden (Photon, anahtar varsa Google Places) ([ADR-0008](kararlar/0008-acik-kaynak-harita.md))
+- [x] Paket durum makinesi ve olay geçmişi (audit)
+- [x] Sipariş havuzu, kurye yarıçap filtresi (PostGIS `ST_DWithin`), yarışa dayanıklı alma
+- [x] Elle atama, yeniden atama, havuza geri alma
+- [x] Kurye uygulaması (React Native + Expo, Android'de doğrulanır; iOS yapılandırması hazır) ([ADR-0002](kararlar/0002-kurye-uygulamasi-react-native-expo.md)): giriş, KVKK onayları, izinler ve pil optimizasyonu ekranı
+- [x] Kurye uygulaması: vardiya aç / kapat, arka plan konum servisi (kalıcı kuyruk, toplu gönderim)
+- [x] Kurye uygulaması: havuzdan paket alma, harita (MapLibre) ve tek dokunuş navigasyon, teslim etme
+- [x] Panel: canlı harita (MapLibre + WebSocket)
+- [x] Konum kesilme uyarısı (heartbeat)
+- [x] Demo seed verisi (kurgusal Eskişehir firması, işletmeler, kuryeler, paketler) ve kurye konum simülatörü
 
 **Portföy çıktısı:** Paket oluşturma, havuzdan alma ve navigasyon başlatmayı gösteren GIF; panelde canlı harita ekran görüntüsü.
 
 ---
 
-## İterasyon 2 — ana hedef: Rota uyumlu atama ⏳
+## İterasyon 2 — ana hedef: dinamik, rota uyumlu dağıtım 🚧
 
-**Hedef:** Birden fazla paket taşıyan kuryenin paketlerini haritada **optimal sırayla durak** olarak görmesi ve yeni paketin kuryenin **rotasına en az sapma ekleyen** kuryeye atanması. Pilot müşterinin sahadaki sorunu: mevcut yazılım yoldaki kuryeye yeni paketi yalnızca yakınlığa göre atıyor, paket çoğu zaman rota dışında veya ters yönde kalıyor, kuryeler yanlış atanmış paketi bırakıyor, yönetici haritaya bakıp elle yeniden dağıtıyor. Rota uyumlu atama ürünün ayırt edici özelliğidir.
+**Hedef:** Birden fazla paket taşıyan kurye paketlerini **tek bir akıllı rota** olarak, haritada numaralı duraklarla ve uygulanabilir en kısa sırayla görür. Yeni paket (veya aynı anda gelen paket**ler**) kuryenin **mevcut rotasına en iyi uyduğu** kuryeye, mevcut paketleri gecikme ve tazelik sınırları içinde tutarak atanır ve rota durak olarak yeniden kurulur. Pilot müşterinin sahadaki sorunu: mevcut yazılım yoldaki kuryeye yeni paketi yalnızca yakınlığa göre atıyor, paket çoğu zaman rota dışında veya ters yönde kalıyor, kuryeler yanlış atanmış paketi bırakıyor, yönetici haritaya bakıp elle yeniden dağıtıyor. Rota uyumlu dağıtım ürünün ayırt edici özelliği ve müşterinin **en yüksek önceliğidir**.
 
-Tasarım: iterasyon-2/ROTA-UYUMLU-ATAMA.md. Karar: [ADR-0009](kararlar/0009-rota-uyumlu-atama.md).
+**Teknik spesifikasyon: iterasyon-2/SPEC.md** (sözleşme `packages/contracts` 0.2.0). Tasarım dayanakları: ROTA-UYUMLU-ATAMA.md, KURYE-DEVIR.md. Kararlar: [ADR-0009](kararlar/0009-rota-uyumlu-atama.md), [ADR-0010](kararlar/0010-kuryeler-arasi-devir.md), [ADR-0011](kararlar/0011-osrm-motosiklet-profili-ve-rota-altyapisi.md), [ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md), [ADR-0013](kararlar/0013-rota-motoru-siniri-ve-yaklasik-mod.md), [ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md).
 
-Önerilen sıra: (a) altyapı ve rota, (b) atama, (c) panel ve kurye uygulaması, (d) benchmark; platform maddeleri paralel yürür.
+Beş paralel görev (gorevler/): **R** rota altyapısı + motor + benchmark, **A2** API rota ve atama alanı, **H2** API devir alanı (A2'nin M1 dönüm noktasından sonra), **B2** panel, **C2** kurye uygulaması. Birleştirme sırası: R → A2 → H2 → B2 → C2 → entegrasyon turu (SPEC §20.5).
 
-**Rota uyumlu atama — çekirdek**
-- [ ] OSRM + VROOM konteynerleri (docker compose) ve Eskişehir OSM çıkarımı boru hattı (osmium, `osrm-extract/partition/customize`) ([ADR-0006](kararlar/0006-hizmet-bolgesi-eskisehir.md))
-- [ ] Adres kalitesi testi: ~30 örnek adreste Google geocode ile OSRM snapping karşılaştırması (gerçek müşteri verisi olmadan)
-- [ ] Durak modeli ve kurye başına canlı rota: `courier_routes`, `route_stops`; paketleri duraklara gruplama (`PICKUP` / `DROPOFF`)
-- [ ] Rota optimizasyonu (VROOM, pickup-delivery): paket ekle/çıkar/tamamla ile yeniden sıralama; kilitli sıradaki durak ve kazanç eşiği (kararlılık kuralları)
-- [ ] Aday süzme (PostGIS) + en ucuz yerleştirme + uygulanabilirlik + skor; gerekçeli öneri (ör. "Rotası üzerinde, +2 dk"); performans hedefi: 25 kurye için < 300 ms
-- [ ] Üç atama modu: `ONERI` (varsayılan), `AKILLI_HAVUZ`, `OTOMATIK` (+ bekleyenler kuyruğu); kiracı ayarları (azami paket 4, sapma eşiği 5 dk, azami süre 35 dk, kazanç eşiği 2 dk, ön süzme 5 km)
-- [ ] Kontrollü ret (alıştan önce, gerekçe enum) ve devir isteği (alıştan sonra, yönetici onayı); `package_rejections`, `handover_requests`, denetim kaydı. Devir isteği, alıştan sonraki iki devir yolundan biridir; diğeri aşağıdaki kuryeler arası devirdir
-- [ ] Panel: rota çizgileri ve numaralı duraklar, öneri paneli, sürükle-bırak atama ve büyük sapma uyarısı ("+14 dk, 2 paket gecikir"), bekleyenler ve devir listeleri
-- [ ] Kurye uygulaması "Rotam": numaralı duraklar (liste + harita), sıradaki durağa tek dokunuş navigasyon, rota değişince bildirim ("Yeni paket rotana eklendi: +3 dk"), ret ve devir isteği
-- [ ] Metrikler: ortalama sapma, elle yeniden atama sayısı, ret oranı, kötü atama oranı, zamanında teslim oranı
-- [ ] Simülasyon benchmark'ı: sentetik Eskişehir günü (~20 kurye, ~400 paket), "en yakın kurye" ile rota uyumlu atama karşılaştırması (toplam km, ortalama teslimat süresi, geç teslim %, geri dönüş)
+**Çekirdek: dinamik rota uyumlu dağıtım** (kabul kriterleri SPEC §19.0 (a)-(f))
+- [ ] OSRM (MLD, motosiklet profili) + VROOM konteynerleri (compose `routing` profili) ve tekrar üretilebilir Eskişehir çıkarımı (osmium, PowerShell + Bash) ([ADR-0011](kararlar/0011-osrm-motosiklet-profili-ve-rota-altyapisi.md))
+- [ ] Kurye başına canlı rota ve duraklar (`courier_routes`, `route_stops`; `PICKUP` / `DROPOFF` / `HANDOVER`)
+- [ ] En ucuz yerleştirme + uygulanabilirlik (kapasite, tazelik 35 dk, **mevcut paket başına gecikme sınırı 8 dk**) + skor + gerekçeli öneri ("Rotası üzerinde, +2 dk"); 25 kurye için < 300 ms
+- [ ] **Toplu atama:** birden çok yeni paketin tüm kuryelerin mevcut rotalarına birlikte yerleştirilmesi (regret-2), aynı restoran siparişlerinin gruplanması ([ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md))
+- [ ] Nihai sıra (VROOM; yokken süreç içi kesin sıralayıcı) ve kararlılık kuralları: kilitli sıradaki durak, 2 dk kazanç eşiği, soğuma, sessiz değişiklik yok
+- [ ] Üç atama modu: `ONERI` (varsayılan), `AKILLI_HAVUZ`, `OTOMATIK` (+ toplu pencere) ve bekleyenler kuyruğu; kiracı ayarları
+- [ ] Rota motoru düşerse açık işaretli yaklaşık mod ve İterasyon 1 davranışına dönüş ([ADR-0013](kararlar/0013-rota-motoru-siniri-ve-yaklasik-mod.md))
+- [ ] Panel: rota çizgileri ve numaralı duraklar (yeni paketle canlı değişim), öneri paneli (ayrıntı + oluşturma), sürükle-bırak atama ve büyük sapma / gecikme uyarısı, bekleyenler ve toplu öneri
+- [ ] Kurye uygulaması "Rotam": numaralı duraklar (liste + harita), sıradaki durağa tek dokunuş navigasyon, rota değişince şerit ("Yeni paket rotana eklendi: +3 dk")
+- [ ] Simülasyon benchmark'ı (`npm run benchmark`): sentetik Eskişehir günü (~20 kurye, ~400 paket, yoğun saatler, aynı restoran siparişleri), "en yakın kurye" ile rota uyumlu atama karşılaştırması (toplam km, ortalama teslim süresi, geç teslim %, geri dönüş); grafik + rapor `docs/benchmark/`
 
-**Kuryeler arası devir** (pilot müşteri isteği; karar: [ADR-0010](kararlar/0010-kuryeler-arasi-devir.md), tasarım: iterasyon-2/KURYE-DEVIR.md)
-- [ ] Sözleşme (contract-first): OpenAPI uçları (`handover-candidates`, `handover-offers`, `accept | decline | confirm`, yönetici uçları) ve WebSocket olayları (`handover.offered`, `handover.updated`)
-- [ ] Veri modeli: `handover_offers` tablosu (kısmi benzersiz indeks: pakette tek `PENDING`), kiracı ayarları (`handover_radius_m` 1500, `handover_offer_timeout_s` 60, `handover_requires_dispatcher_approval` false, `handover_meet_radius_m` 150, `max_handovers_per_package` 2, `max_handovers_per_courier_per_day` 10), yeni `package_events` tipleri
-- [ ] Aday listesi: PostGIS `ST_DWithin` ile son konumlar, vardiya / STALE / kapasite süzgeci, mesafeye göre sıralama; rota skoru varsa rotaya sapma etiketi
-- [ ] Alıştan önce (`ASSIGNED`): teklif, kabul / ret / zaman aşımı, koşullu UPDATE ile atomik yeniden atama
-- [ ] Alıştan sonra (`PICKED_UP`): QR / 4 haneli kod, buluşma yarıçapı doğrulaması (kod + konum), taze kalma süresinin orijinal alıştan sürmesi, `CASH` pakette tahsilat sorumluluğu devri ve kasa için olay kaydı
-- [ ] Yönetici: canlı WS olayı ve denetim kaydı, isteğe bağlı onay, iptal ve elle onay; yönetici onaylı devir isteğiyle (ADR-0009) aynı buluşma adımlarının paylaşılması
-- [ ] Kötüye kullanım sınırları (paket başı / günlük), zaman aşımı işi ve devir metrikleri ("en çok devreden / devralan")
-- [ ] Uç durum testleri: devreden STALE olur, devralan vardiyayı kapatır, paket iptal edilir, iki eşzamanlı teklif, kabul ile zaman aşımı yarışı
-- [ ] Kurye uygulaması: "Devret" aday listesi, teklif kartı, kod / QR ekranı ve QR tarama; panel: devirler sekmesi, onay kutusu ve devir ayarları
-- [ ] KVKK: aydınlatma metni güncellemesi (meslektaşa yakınlık / buluşma konumu), açık sorular 24-27'nin pilotla kapatılması
+**Kontrollü ret ve devir**
+- [ ] Gerekçeli ret (alıştan önce) ve yeniden dağıtım; `release` uyumluluğu; ret uyarısı; metrikler (ortalama sapma, elle yeniden atama, ret oranı, kötü atama oranı, zamanında teslim)
+- [ ] Yönetici onaylı devir isteği (yol B) ve kuryeler arası devir (yol A, [ADR-0010](kararlar/0010-kuryeler-arasi-devir.md)): aday listesi, teklif, iki aşama, QR / 4 haneli kod, buluşma yarıçapı, tazeliğin orijinal alıştan sürmesi, nakit sorumluluğu devri, sınırlar, yönetici onayı ve elle onay, metrikler
+- [ ] Kurye uygulaması devir ekranları (aday listesi, teklif kartı, buluşma, kod / QR, QR tarama, nakit onayı); panel devirler sekmesi, onaylar, devir ayarları
+- [ ] KVKK: aydınlatma metni güncellemesi (meslektaşa yakınlık / buluşma konumu, rota motoru), yeni `consentVersion`; açık sorular 24-27'nin pilotla kapatılması
 
-**Platform ve altyapı (İterasyon 2'ye bırakılanlar)**
-- [ ] Push bildirim (FCM / APNs): yeni paket, atama ve rota değişikliği bildirimi
-- [ ] PostgreSQL RLS ile ikinci savunma hattı; yeni rota tablolarına da uygulanır ([ADR-0004](kararlar/0004-cok-kiracili-mimari.md))
-- [ ] iOS derleme ve TestFlight dağıtımı (EAS Build, Apple Developer hesabı) ([ADR-0003](kararlar/0003-dagitim-apk-self-update.md))
-- [ ] OTA güncelleme kanalı (EAS Update veya kendi güncelleme sunucumuz) ve uygulama içi APK güncellemesi (PackageInstaller)
-- [ ] OEM'e özel pil optimizasyonu yönlendirme ekranları (Xiaomi, Huawei, Samsung ayrıntılı)
-- [ ] Panel oturumunda httpOnly çerez; demo HTTP yerine HTTPS
-
-**Pilotla doğrulanacak varsayımlar:** kurye başına azami paket, kabul edilebilir sapma, azami teslim süresi, restoran hazırlık süresi bilgisi, otomatik atama tercihi, ret politikası, çoklu restoran alışı ([MIMARI açık sorular 17-23](MIMARI.md#8-açık-sorular)).
+**Pilotla doğrulanacak varsayımlar:** kurye başına azami paket, kabul edilebilir sapma, azami teslim süresi, mevcut paket gecikme sınırı, restoran hazırlık süresi bilgisi, otomatik atama tercihi, ret politikası, çoklu restoran alışı, `ROUTING_DURATION_FACTOR` kalibrasyonu ([MIMARI açık sorular 17-29](MIMARI.md#8-açık-sorular)).
 
 **Portföy çıktısı:**
-- Benchmark sonuç grafiği ("en yakın kurye" ile rota uyumlu atama), README'de yayınlanır.
-- Rota haritası GIF'i: numaralı duraklar, yeni paketin sapma dakikasıyla önerilmesi ve atanması.
+- Benchmark sonuç grafiği ("en yakın kurye" ile rota uyumlu atama), README'de yayınlanır (sonuç ne ise).
+- Rota haritası GIF'i: numaralı duraklar, yeni paketin sapma dakikasıyla önerilmesi, atanması ve rotanın canlı yeniden kurulması; aynı restorandan üç siparişin toplu atanması.
 - Kuryeler arası devir GIF'i: aday listesi, teklif kartı, kod / QR ile devir tamamlanması ve panelde canlı olay.
-- Optimize edilmiş rota ve "Rotam" ekran görüntüleri, iOS uygulama ekran görüntüleri, push bildirim akışı.
+- "Rotam" ekran görüntüleri.
+
+---
+
+## İterasyon 2b — Platform ve sağlamlaştırma ⏳
+
+İterasyon 2'den bilinçli olarak ayrılan maddeler (SPEC §1.3). Ön koşulu ürün sahibinin hesap / anahtar sağlaması olanlar işaretlidir.
+
+- [ ] PostgreSQL RLS (ikinci savunma hattı; `withTenant`, iki DB rolü) — **ikinci kiracı canlıya alınmadan önce zorunlu** ([ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md))
+- [ ] Push bildirim (FCM / APNs): yeni paket, atama, rota değişikliği, devir teklifi — *Firebase projesi gerekir* (`CourierNotifier` bağlantı noktası hazır)
+- [ ] iOS derleme ve TestFlight dağıtımı (EAS Build) — *Apple Developer hesabı gerekir* ([ADR-0003](kararlar/0003-dagitim-apk-self-update.md))
+- [ ] Adres kalitesi testi: ~30 örnek adreste Google geocode ile OSRM snapping karşılaştırması — *Google Maps anahtarı gerekir*
+- [ ] Panelde durağı sürükleyerek elle sıralama (kilit altyapısı İterasyon 2'de hazır)
+- [ ] OTA güncelleme kanalı (EAS Update veya kendi sunucumuz) ve uygulama içi APK güncellemesi (PackageInstaller)
+- [ ] OEM'e özel pil optimizasyonu yönlendirme ekranları (Xiaomi, Huawei, Samsung ayrıntılı)
+- [ ] Panel oturumunda httpOnly çerez; demo HTTP yerine HTTPS
+- [ ] Ürün sahibinin ekleyebileceği, bağlantı noktaları hazır özellikler: restoran "hazır" sinyali (`ready_at`), teslim kanıtı geofence (`DeliveryVerifier`) (SPEC §13)
 
 ---
 

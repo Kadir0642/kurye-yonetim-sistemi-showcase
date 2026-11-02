@@ -1,6 +1,6 @@
 # ADR-0004: Çok kiracılı (multi-tenant) mimari
 
-- **Durum:** Kabul edildi (RLS İterasyon 2'ye ertelendi; aşağıdaki uygulama notuna bakın)
+- **Durum:** Kabul edildi (RLS önce İterasyon 2'ye, sonra [ADR-0012](0012-rls-iterasyon-2b-ye-ertelendi.md) ile İterasyon 2b'ye ertelendi; aşağıdaki uygulama notlarına bakın)
 - **Tarih:** 2026-10-30
 
 ## Bağlam
@@ -22,6 +22,10 @@ Baştan çok kiracılı tasarım:
 - İterasyon 1'de izolasyon **uygulama katmanında** zorlanır: JWT'deki `tid` her isteğin kiracı bağlamıdır; tüm sorgular depo (repository) katmanında `tenant_id` ile filtrelenir; yolda veya gövdede kiracı kimliği kabul edilmez.
 - **Veritabanı düzeyinde ikinci hat:** kiracıya ait tablolar arası yabancı anahtarlar **bileşik**tir (`(tenant_id, id)`); böylece bir kiracının paketi başka kiracının işletmesine veya kuryesine bağlanamaz.
 - **PostgreSQL RLS İterasyon 2'de** açılır. Gerekçe: pilotta tek kiracı var. RLS, her isteğin bir işlem içinde `SET LOCAL app.tenant_id` ile çalışmasını gerektirir; bu da bağlantı havuzu, arka plan işleri (konum kesildi kontrolü, saklama süresi silme) ve seed ile birlikte ilk iterasyonda gereksiz risk getirir. Şema RLS'ye hazırdır: `tenant_id` her tabloda bulunur ve uygulama ayrı bir DB rolüyle bağlanacak şekilde tasarlanır. e2e testleri kiracılar arası erişimin 404 döndüğünü doğrular.
+
+## Uygulama notu (İterasyon 2, 2026-11-02)
+
+- RLS, İterasyon 2'nin paralel görevleriyle çakışmaması için **İterasyon 2b**'ye ertelendi: [ADR-0012](0012-rls-iterasyon-2b-ye-ertelendi.md). İterasyon 2'nin yeni tabloları `tenant_id` ve bileşik FK'larla RLS'ye hazır yazılır; ikinci kiracı canlıya alınmadan önce 2b tamamlanmalıdır.
 
 ## Sonuçlar
 

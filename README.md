@@ -222,14 +222,9 @@ Kaynak kod bu depoda **bulunmaz**; ticari bir ürün olduğu için özel depoda 
 
 ## Geliştirici
 
-<!--
-Aşağıdaki alanları depo sahibi doldurur (özel depoda showcase/README.md içinde):
-- Ad Soyad: <ADINIZ SOYADINIZ>
-- LinkedIn: <LINKEDIN_URL>
-- E-posta: <EPOSTA>
--->
+**Kadir Kacır** · [LinkedIn](https://www.linkedin.com/in/kadir-kac%C4%B1r-247412325/)
 
-Bu proje bir öğrenci geliştirici tarafından, yapay zekâ ajanlarıyla birlikte yürütülmektedir. İletişim bilgileri yakında eklenecektir.
+Ürün sahibi ve proje yöneticisi olarak gereksinimleri pilot müşteriyle toplayıp önceliklendiriyor, mimari kararları onaylıyor ve projeyi yapay zekâ ajanlarıyla (Claude Opus orkestratör + Claude Sonnet uygulama ajanları) uçtan uca yürütüyor. Kaynak kod ve teknik detaylar mülakatlarda istek üzerine gösterilebilir.
 
 ## Lisans
 

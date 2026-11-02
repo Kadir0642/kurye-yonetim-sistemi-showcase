@@ -16,8 +16,12 @@ Mimari ve teknoloji kararları, bağlamı ve alternatifleriyle birlikte burada t
 | [0008](0008-acik-kaynak-harita.md) | Açık kaynak harita (MapLibre + OpenFreeMap), sağlayıcı arkasında adres arama | Kabul edildi |
 | [0009](0009-rota-uyumlu-atama.md) | Rota uyumlu atama: kurye başına canlı rota, sapma süresine dayalı uygunluk, üç atama modu | Kabul edildi |
 | [0010](0010-kuryeler-arasi-devir.md) | Kuryeler arası devir: yakındaki meslektaşa teklif, alıştan sonra fiziksel buluşma ve kanıt (kod + konum) | Kabul edildi |
+| [0011](0011-osrm-motosiklet-profili-ve-rota-altyapisi.md) | OSRM motosiklet profili ve rota altyapısı (OSRM MLD + VROOM, Docker, Eskişehir çıkarımı) | Önerildi |
+| [0012](0012-rls-iterasyon-2b-ye-ertelendi.md) | PostgreSQL RLS İterasyon 2b'ye ertelendi; İterasyon 2 tabloları RLS'ye hazır | Önerildi |
+| [0013](0013-rota-motoru-siniri-ve-yaklasik-mod.md) | Rota motoru sınırı, yaklaşık (düşüş) modu ve süreç içi kesin sıralayıcı | Önerildi |
+| [0014](0014-toplu-atama-regret-ekleme.md) | Toplu atama: mevcut rotalara regret-2 ekleme, gecikme sınırı, aynı işletme gruplaması | Önerildi |
 
-İterasyon 1 teknik spesifikasyonu: docs/iterasyon-1/SPEC.md. İterasyon 2 ana hedefi (rota uyumlu atama) tasarımı: docs/iterasyon-2/ROTA-UYUMLU-ATAMA.md. Kuryeler arası devir tasarımı: docs/iterasyon-2/KURYE-DEVIR.md.
+İterasyon 1 teknik spesifikasyonu: docs/iterasyon-1/SPEC.md. İterasyon 2 ana hedefi (rota uyumlu atama) tasarımı: docs/iterasyon-2/ROTA-UYUMLU-ATAMA.md. Kuryeler arası devir tasarımı: docs/iterasyon-2/KURYE-DEVIR.md. İterasyon 2 teknik spesifikasyonu: docs/iterasyon-2/SPEC.md.
 
 ## Durumlar
 

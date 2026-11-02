@@ -3,6 +3,7 @@
 - **Durum:** Kabul edildi (varsayılan eşikler pilot müşteri ile doğrulanacak)
 - **Tarih:** 2026-10-30
 - **Güncelleme:** 2026-10-30, madde 4 [ADR-0010](0010-kuryeler-arasi-devir.md) ile genişletildi (kuryeler arası devir eklendi, yönetici onaylı devir isteği iki devir yolundan biri oldu).
+- **Güncelleme:** 2026-11-02, İterasyon 2 spesifikasyonu (SPEC) ile kesinleştirildi: motosiklet profili [ADR-0011](0011-osrm-motosiklet-profili-ve-rota-altyapisi.md), motor sınırı ve OSRM yokken yaklaşık mod [ADR-0013](0013-rota-motoru-siniri-ve-yaklasik-mod.md), birden çok yeni paket için toplu atama ve mevcut paket başına sert gecikme sınırı (varsayılan 8 dk) [ADR-0014](0014-toplu-atama-regret-ekleme.md).
 
 ## Bağlam
 
