@@ -1,14 +1,14 @@
 # Kurye Yönetim Sistemi — Proje Vitrini
 
-> Restoranların platform komisyonu ödemeden kendi teslimatını yapabilmesi için, kurye firmalarına yönelik çok kiracılı (multi-tenant) kurye yönetim platformu: Android kurye uygulaması, web yönetim paneli ve backend.
+> Restoranların platform komisyonu ödemeden kendi teslimatını yapabilmesi için, kurye firmalarına yönelik çok kiracılı (multi-tenant) kurye yönetim platformu: mobil kurye uygulaması (Android + iOS), web yönetim paneli ve backend.
 
-**🚧 Geliştirme aşamasında — İterasyon 0: Planlama**
+**✅ İterasyon 1 tamamlandı · İterasyon 2 (rota uyumlu atama) planlandı**
 
 Pilot bölge: Eskişehir; tasarım çok şehirli kullanıma hazırdır ([ADR-0006](docs/kararlar/0006-hizmet-bolgesi-eskisehir.md)).
 
 > **Bu bir vitrin (showcase) reposudur.** Ürün ticari olduğu için **kaynak kod özel (private) bir depoda tutulur** ve burada yer almaz. Bu depo; proje özetini, mimariyi, karar kayıtlarını (ADR), yapay zekâ destekli geliştirme sürecini, yol haritasını ve ekran görüntülerini içerir. Kaynak kod, mülakatlarda talep üzerine gösterilebilir. Vitrin, her iterasyon sonunda özel depodan güncellenir.
 
-**English summary:** Kurye Yönetim Sistemi is a multi-tenant courier management platform for Turkish courier firms that deliver for many restaurants for a per-package fee. It consists of a lightweight native Android courier app (sideloaded APK with in-app updates), a React admin web panel and a NestJS/PostgreSQL backend. It is developed through an AI-orchestrated workflow (Claude Opus orchestrator + Sonnet sub-agents) with a human product owner; see [docs/GELISTIRME-SURECI.md](docs/GELISTIRME-SURECI.md). **This is a showcase repository:** the source code lives in a private repository because this is a commercial product, and can be demonstrated on request during interviews. This repository contains the architecture, decision records (ADRs), development process, roadmap and screenshots. The project is currently in the planning phase (iteration 0).
+**English summary:** Kurye Yönetim Sistemi is a multi-tenant courier management platform for Turkish courier firms that deliver for many restaurants for a per-package fee. It consists of a React Native + Expo Android courier app (background location, sideloaded APK), a React admin web panel with a live map and a NestJS/PostgreSQL+PostGIS backend. It is developed through an AI-orchestrated workflow (Claude Opus orchestrator + Sonnet sub-agents) with a human product owner; see [docs/GELISTIRME-SURECI.md](docs/GELISTIRME-SURECI.md). **This is a showcase repository:** the source code lives in a private repository because this is a commercial product, and can be demonstrated on request during interviews. This repository contains the architecture, decision records (ADRs), development process, roadmap and screenshots. Iteration 1 (core) is complete: the screenshots below come from the running system. Iteration 2 (route-aware assignment, courier-to-courier handover) is planned.
 
 ---
 
@@ -16,7 +16,7 @@ Pilot bölge: Eskişehir; tasarım çok şehirli kullanıma hazırdır ([ADR-000
 
 - [Problem ve çözüm](#problem-ve-çözüm)
 - [Özellikler](#özellikler)
-- [Ekran görüntüleri ve demo](#ekran-görüntüleri-ve-demo)
+- [Ekran görüntüleri](#ekran-görüntüleri)
 - [Mimari](#mimari)
 - [Teknoloji yığını](#teknoloji-yığını)
 - [Yol haritası](#yol-haritası)
@@ -33,8 +33,8 @@ Restoranlar, Yemeksepeti veya Trendyol gibi platformların teslimat komisyonlar�
 |---|---|
 | Kuryeler ödemelerin (hakediş) neye göre hesaplandığına güvenmiyor | Paket bazlı, kuryenin kendi ekranında görebildiği şeffaf hakediş |
 | Siparişler telefonla / mesajla dağıtılıyor, adil dağılım yok | Sipariş havuzu, yarıçap filtresi ve adil atama |
-| Adres girişi yavaş ve hatalı | Google Places otomatik tamamlama ile adres girişi |
-| Kurye uygulamaları ucuz telefonlarda yavaş, pil tüketiyor ve konumu kaçırıyor | Yerel (native) Kotlin, hafif uygulama, kuyruklu konum gönderimi |
+| Adres girişi yavaş ve hatalı | Hizmet bölgesiyle sınırlı adres otomatik tamamlama (Google Places veya açık kaynak Photon) ve haritada iğneyle düzeltme |
+| Kurye uygulamaları ucuz telefonlarda yavaş, pil tüketiyor ve konumu kaçırıyor | Android ve iOS için tek kod (React Native + Expo), kalıcı kuyruklu toplu konum gönderimi, pil optimizasyonu rehberi |
 | Kuryenin konumu kesilince fark edilmiyor | Heartbeat tabanlı konum kesilme uyarısı |
 | Kapıda nakit tahsilat takibi zor | Kasa / nakit mutabakatı |
 
@@ -42,28 +42,35 @@ Restoranlar, Yemeksepeti veya Trendyol gibi platformların teslimat komisyonlar�
 
 ## Özellikler
 
-Durum: ✅ tamamlandı, ⏳ planlandı. Ayrıntılı kapsam için [YOL-HARITASI.md](docs/YOL-HARITASI.md).
+Durum: ✅ tamamlandı (İterasyon 1), ⏳ planlandı. Ayrıntılı kapsam için [YOL-HARITASI.md](docs/YOL-HARITASI.md).
+
+### ⭐ Rota uyumlu akıllı atama
+
+> Yeni paket, kuryeye **yakınlığına** göre değil, kuryenin **rotasına kattığı sapma süresine** göre atanır ("Rotası üzerinde, +2 dk" ile "Ters yön, +14 dk" arasındaki fark). Her kurye paketlerini haritada numaralı duraklar ve optimal sırayla görür; yönetici önerilen en iyi 3 kuryeyi tek tıkla atar, kontrollü ret ve devir akışı yanlış atamaları görünür kılar. Pilot müşteriden gelen sahadaki geri bildirimle (ters yöndeki paketler, kuryelerin paketi bırakması, yöneticinin elle yeniden dağıtımı) şekillendi; **İterasyon 2'nin ana hedefidir**. Karar: [ADR-0009](docs/kararlar/0009-rota-uyumlu-atama.md). Başarı, "en yakın kurye" ile karşılaştıran bir simülasyon benchmark'ı ile ölçülecek ve sonuç grafiği burada yayınlanacak.
 
 ### Sipariş ve paket yönetimi
-- ⏳ Sınırsız işletme tanımı, firma başına çok kiracılı yapı (İterasyon 1)
-- ⏳ Google Places ile adres girişi ve paket ekleme (İterasyon 1)
-- ⏳ Sipariş havuzu: kurye paketi havuzdan kendisi alır (İterasyon 1)
-- ⏳ Elle atama ve yeniden atama (İterasyon 2)
-- ⏳ Kurye başına yarıçap filtresi (İterasyon 2)
+- ✅ Sınırsız işletme tanımı, firma başına çok kiracılı yapı (İterasyon 1)
+- ✅ Adres otomatik tamamlama (Photon / Google Places) ile paket ekleme (İterasyon 1)
+- ✅ Sipariş havuzu: kurye paketi havuzdan kendisi alır (İterasyon 1)
+- ✅ Elle atama ve yeniden atama (İterasyon 1)
+- ✅ Kurye başına yarıçap filtresi (İterasyon 1)
 
-### Kurye uygulaması (Android)
-- ⏳ Vardiya aç / kapat, havuzdan paket alma (İterasyon 1)
-- ⏳ Paket seçilince adres haritada açılır, tek dokunuşla navigasyon (İterasyon 1)
-- ⏳ Paketleri duraklara gruplama ve rota optimizasyonu (İterasyon 2)
-- ⏳ Uygulama içi otomatik güncelleme (İterasyon 2)
+### Kurye uygulaması (Android + iOS)
+- ✅ Vardiya aç / kapat, havuzdan paket alma (İterasyon 1)
+- ✅ Paket seçilince adres haritada açılır, tek dokunuşla navigasyon (İterasyon 1)
+- ⏳ "Rotam" ekranı: numaralı duraklar (liste + harita), optimal sıra, rota değişince bildirim (İterasyon 2)
+- ⏳ Kontrollü ret (gerekçeli) ve devir isteği (İterasyon 2)
+- ⏳ Kuryeler arası devir: yakındaki meslektaşa teklif, alıştan sonra kod + konum ile fiziksel devir ([ADR-0010](docs/kararlar/0010-kuryeler-arasi-devir.md), İterasyon 2)
+- ⏳ OTA güncelleme (expo-updates) ve iOS dağıtımı (İterasyon 2)
 - ⏳ Şeffaf hakediş ekranı (İterasyon 3)
 
 ### Yönetim paneli (Web)
-- ⏳ Canlı harita ve kurye konumları (İterasyon 1)
-- ⏳ Konum kesilme uyarısı (İterasyon 2)
+- ✅ Canlı harita ve kurye konumları (İterasyon 1)
+- ✅ Konum kesilme uyarısı (İterasyon 1)
 - ⏳ Hakediş ve raporlar (İterasyon 3)
 - ⏳ Kasa / nakit mutabakatı (İterasyon 3)
-- ⏳ ETA ve adil / otomatik atama (İterasyon 3)
+- ⏳ Rota çizgileri, öneri paneli, sürükle-bırak atama ve sapma uyarısı (İterasyon 2)
+- ⏳ ETA gösterimi (İterasyon 3)
 
 ### Entegrasyonlar ve genişlemeler
 - ⏳ İşletme paneli: restoranların kendi siparişlerini girmesi (İterasyon 4+)
@@ -71,55 +78,73 @@ Durum: ✅ tamamlandı, ⏳ planlandı. Ayrıntılı kapsam için [YOL-HARITASI.
 - ⏳ Platform entegrasyonları ve SoftPOS (İterasyon 4+)
 - ⏳ Paket başı faturalama (İterasyon 4+)
 
-## Ekran görüntüleri ve demo
+## Ekran görüntüleri
 
-Henüz uygulama kodu bulunmuyor; planlama aşamasındayız. Her iterasyon sonunda ekran görüntüleri ve GIF'ler `docs/assets/screenshots/` ve `docs/assets/gifs/` altına eklenecek ve burada gösterilecek.
+Aşağıdaki görüntüler gerçek API ve kurgusal Eskişehir demo verisiyle alınmıştır (kişisel veri içermez).
 
-<!--
-Görsel ekleme şablonu (dosyalar eklendiğinde yorumu kaldırın):
+### Yönetim paneli
 
-| Kurye uygulaması | Yönetim paneli |
-|---|---|
-| <img src="docs/assets/screenshots/kurye-havuz.png" width="260" alt="Sipariş havuzu"> | <img src="docs/assets/screenshots/panel-canli-harita.png" width="480" alt="Canlı harita"> |
+<table>
+  <tr>
+    <td colspan="2" align="center"><img src="docs/assets/screenshots/panel-canli-harita.png" width="900" alt="Canlı harita"><br><sub>Canlı harita: kurye konumları, durum özeti, "Konum kesildi" uyarısı ve havuzdaki paketler</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/assets/screenshots/panel-paket-listesi.png" width="440" alt="Paket listesi"><br><sub>Paket listesi: durum, işletme, kurye ve tarih filtreleri</sub></td>
+    <td align="center"><img src="docs/assets/screenshots/panel-paket-detay.png" width="440" alt="Paket ayrıntısı"><br><sub>Paket ayrıntısı ve olay geçmişi (kim, ne zaman, ne yaptı)</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/assets/screenshots/panel-paket-olustur.png" width="440" alt="Yeni paket"><br><sub>Yeni paket: adres otomatik tamamlama ve haritada iğne</sub></td>
+    <td align="center"><img src="docs/assets/screenshots/panel-canli-harita-mobil.png" width="150" alt="Canlı harita (mobil)">&nbsp;<img src="docs/assets/screenshots/panel-paket-olustur-mobil.png" width="150" alt="Yeni paket (mobil)"><br><sub>Panel telefon ekranında da çalışır (duyarlı tasarım)</sub></td>
+  </tr>
+</table>
 
-![Paket alma ve navigasyon demosu](docs/assets/gifs/paket-alma-navigasyon.gif)
--->
+### Kurye uygulaması (Android)
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/assets/screenshots/kurye-vardiya.png" width="220" alt="Vardiya"><br><sub>Vardiya aç / kapat</sub></td>
+    <td align="center"><img src="docs/assets/screenshots/kurye-havuz.png" width="220" alt="Sipariş havuzu"><br><sub>Havuz: yarıçap içindeki paketler</sub></td>
+    <td align="center"><img src="docs/assets/screenshots/kurye-paket-detay.png" width="220" alt="Paket ayrıntısı"><br><sub>Paket ayrıntısı ve harita</sub></td>
+    <td align="center"><img src="docs/assets/screenshots/kurye-paket-yolda.png" width="220" alt="Paket yolda"><br><sub>Paket yolda: müşteriye git, teslim ettim</sub></td>
+  </tr>
+</table>
 
 ## Mimari
 
-Taslak mimari; ayrıntılar [docs/MIMARI.md](docs/MIMARI.md) ve [karar kayıtlarında](docs/kararlar/README.md).
+Mimari özeti; ayrıntılar [docs/MIMARI.md](docs/MIMARI.md) ve [karar kayıtlarında](docs/kararlar/README.md).
 
 ```mermaid
 flowchart LR
     subgraph Istemciler["İstemciler"]
-        KA["Kurye App<br/>(Android, Kotlin)"]
-        YP["Yönetim Paneli<br/>(React)"]
+        KA["Kurye App<br/>(React Native + Expo,<br/>Android + iOS)"]
+        YP["Yönetim Paneli<br/>(React + Vite)"]
         IP["İşletme Paneli<br/>(React, sonraki iterasyon)"]
     end
 
     subgraph Sunucu["Backend (VPS, Türkiye)"]
-        API["Backend API<br/>(NestJS)"]
+        API["Backend API<br/>(NestJS + Fastify)"]
         PG[("PostgreSQL<br/>+ PostGIS")]
         RD[("Redis")]
-        RT["OSRM + VROOM<br/>(rota ve optimizasyon)"]
+        RT["OSRM + VROOM<br/>(İterasyon 2)"]
     end
 
     subgraph Dis["Dış servisler"]
-        GM["Google Maps Platform<br/>(Places, Maps SDK)"]
-        FCM["Firebase Cloud Messaging"]
+        OFM["OpenFreeMap<br/>(MapLibre karoları)"]
+        GEO["Photon / Google Places<br/>(adres arama)"]
+        PUSH["FCM / APNs<br/>(İterasyon 2)"]
     end
 
-    KA <-->|"HTTPS, konum paketleri"| API
+    KA <-->|"HTTPS + WebSocket"| API
     YP <-->|"HTTPS + WebSocket"| API
     IP -.->|"HTTPS"| API
     API --> PG
     API --> RD
-    API --> RT
-    API -->|"Places Details"| GM
-    KA -->|"Maps SDK, Places"| GM
-    YP -->|"Maps JS API"| GM
-    API -->|"yeni paket bildirimi"| FCM
-    FCM -.->|"high-priority data message"| KA
+    API -.-> RT
+    API -->|"/geo"| GEO
+    KA -->|"harita karoları"| OFM
+    YP -->|"harita karoları"| OFM
+    API -.->|"yeni paket bildirimi"| PUSH
+    PUSH -.-> KA
 ```
 
 ### Öne çıkan mimari kararlar
@@ -127,37 +152,43 @@ flowchart LR
 | ADR | Karar |
 |---|---|
 | [0001](docs/kararlar/0001-hibrit-harita-mimarisi.md) | Hibrit harita mimarisi (Google Places + OSRM/VROOM) |
-| [0002](docs/kararlar/0002-kurye-uygulamasi-native-kotlin.md) | Kurye uygulaması: native Kotlin + Jetpack Compose |
-| [0003](docs/kararlar/0003-dagitim-apk-self-update.md) | Dağıtım: APK + uygulama içi güncelleme |
+| [0002](docs/kararlar/0002-kurye-uygulamasi-react-native-expo.md) | Kurye uygulaması: React Native + Expo, tek kod Android + iOS |
+| [0003](docs/kararlar/0003-dagitim-apk-self-update.md) | Dağıtım: Android APK + OTA, iOS TestFlight / özel uygulama |
 | [0004](docs/kararlar/0004-cok-kiracili-mimari.md) | Çok kiracılı (multi-tenant) mimari, satır düzeyinde güvenlik |
 | [0005](docs/kararlar/0005-konum-takibi-ve-kvkk.md) | Konum takibi ve KVKK |
 | [0006](docs/kararlar/0006-hizmet-bolgesi-eskisehir.md) | Hizmet bölgesi: Eskişehir pilotu, çok şehre hazır tasarım |
+| [0007](docs/kararlar/0007-backend-ve-web-yigini.md) | Backend ve web yığını: uçtan uca TypeScript monorepo |
+| [0008](docs/kararlar/0008-acik-kaynak-harita.md) | Açık kaynak harita (MapLibre + OpenFreeMap), sağlayıcı arkasında adres arama |
+| [0009](docs/kararlar/0009-rota-uyumlu-atama.md) | Rota uyumlu atama: kurye başına canlı rota, sapma süresine dayalı uygunluk, üç atama modu |
+| [0010](docs/kararlar/0010-kuryeler-arasi-devir.md) | Kuryeler arası devir: yakındaki meslektaşa teklif, alıştan sonra fiziksel buluşma ve kanıt (kod + konum) |
 
 ## Teknoloji yığını
 
-> Taslak: tüm seçimler pilot müşteri keşfi tamamlanana kadar **önerildi** statüsündedir ([ADR'ler](docs/kararlar/README.md)).
+> Kararlar ve gerekçeleri: [ADR'ler](docs/kararlar/README.md).
 
 | Katman | Teknoloji | Durum |
 |---|---|---|
-| Kurye uygulaması | Kotlin, Jetpack Compose (Android-only) | Taslak |
-| Yönetim paneli | React, TypeScript, Vite | Taslak |
-| Backend | NestJS (TypeScript) | Taslak |
-| Veritabanı | PostgreSQL + PostGIS, satır düzeyinde güvenlik (RLS) | Taslak |
-| Önbellek / pub-sub | Redis | Taslak |
-| Gerçek zamanlı | WebSocket (panel), FCM high-priority data message (kurye) | Taslak |
-| Harita ve adres | Google Places Autocomplete, Maps SDK for Android | Taslak |
-| Rota ve optimizasyon | OSRM + VROOM (self-hosted) | Taslak |
-| Dağıtım | APK + uygulama içi güncelleme, isteğe bağlı Headwind MDM | Taslak |
+| Kurye uygulaması | React Native + Expo (TypeScript), tek kod Android + iOS; expo-location, MapLibre React Native | Kabul edildi |
+| Yönetim paneli | React, TypeScript, Vite, Mantine, TanStack Query, MapLibre GL JS | Kabul edildi |
+| Backend | NestJS (Fastify), Drizzle ORM, zod; npm workspaces monorepo | Kabul edildi |
+| API sözleşmesi | OpenAPI 3.1 (contract-first) + JSON WebSocket protokolü, üretilen TS tipleri | Kabul edildi |
+| Veritabanı | PostgreSQL 16 + PostGIS; satır düzeyinde güvenlik (RLS) İterasyon 2'de | Kabul edildi |
+| Önbellek / pub-sub | Redis | Kabul edildi |
+| Gerçek zamanlı | Düz WebSocket (panel + kurye); push (FCM/APNs) İterasyon 2'de | Kabul edildi |
+| Harita | MapLibre + OpenFreeMap (ücretsiz, anahtarsız) | Kabul edildi |
+| Adres | API üzerinden Photon veya Google Places (New), hizmet bölgesi kısıtlı | Kabul edildi |
+| Rota ve optimizasyon | OSRM + VROOM (self-hosted, İterasyon 2) | Kabul edildi |
+| Dağıtım | Android APK + OTA (expo-updates); iOS TestFlight / Custom App | Kabul edildi |
 | Barındırma | Türkiye'de VPS | Taslak |
 
 ## Yol haritası
 
 | İterasyon | Odak | Durum |
 |---|---|---|
-| 0 | Planlama ve araştırma | 🚧 Devam ediyor |
-| 1 | Çekirdek: kimlik / tenant, işletme, paket, havuz, kurye app, canlı harita | ⏳ |
-| 2 | Duraklar, rota optimizasyonu, yarıçap filtresi, self-update | ⏳ |
-| 3 | Hakediş, kasa mutabakatı, ETA, adil atama | ⏳ |
+| 0 | Planlama ve araştırma | ✅ Tamamlandı (müşteri keşfi sürüyor) |
+| 1 | Çekirdek: kimlik / tenant, işletme, paket, havuz, yarıçap filtresi, kurye app, canlı harita, konum kesildi uyarısı | ✅ Tamamlandı |
+| 2 | **Ana hedef: rota uyumlu atama** (duraklar, rota optimizasyonu, öneri / otomatik atama, ret ve devir); push bildirim, iOS dağıtımı, OTA / self-update | ⏳ |
+| 3 | Hakediş, kasa mutabakatı, ETA gösterimi | ⏳ |
 | 4+ | İşletme paneli, POS / platform entegrasyonları, SoftPOS, faturalama | ⏳ |
 
 Ayrıntılar: [docs/YOL-HARITASI.md](docs/YOL-HARITASI.md)

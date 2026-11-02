@@ -1,7 +1,9 @@
 # ADR-0001: Hibrit harita mimarisi
 
-- **Durum:** Önerildi (pilot müşteri cevapları ve Google şartları doğrulaması bekliyor)
+- **Durum:** Kabul edildi (harita **gösterimi** ve adres sağlayıcı seçimi [ADR-0008](0008-acik-kaynak-harita.md) ile değişti)
 - **Tarih:** 2026-10-30
+
+> **Güncelleme (2026-10-30):** Madde 2 (Maps SDK / Maps JavaScript API ile harita gösterimi) **yerine geçti**: harita gösterimi MapLibre + OpenFreeMap ile yapılır ([ADR-0008](0008-acik-kaynak-harita.md)). Madde 1 (Google Places, session token) geçerlidir; ancak artık istemciden değil **API üzerinden**, bir sağlayıcı arayüzü arkasında çağrılır ve anahtar yoksa Photon kullanılır. Madde 3-5 (OSRM + VROOM, navigasyon intent'i, ETA) geçerlidir; rota ve optimizasyon İterasyon 2'dedir.
 
 ## Bağlam
 
@@ -12,7 +14,7 @@ Sistemin dört harita ihtiyacı var: adres girişi, kurye haritası, rota matris
 Aşağıdaki hibrit yapı önerilir:
 
 1. **Adres girişi:** Google Places Autocomplete, **session token** ile; oturum bir **Place Details (Essentials)** çağrısıyla kapatılır. Autocomplete oturum kullanımı ücretsizdir; Place Details Essentials 10 bin istekten sonra ücretlidir.
-2. **Kurye haritası:** Maps SDK for Android (ücretsiz). Yönetim panelinde Maps JavaScript API (belirli hacme kadar ücretsiz).
+2. ~~**Kurye haritası:** Maps SDK for Android (ücretsiz). Yönetim panelinde Maps JavaScript API (belirli hacme kadar ücretsiz).~~ Yerine geçti: [ADR-0008](0008-acik-kaynak-harita.md).
 3. **Rota matrisi ve durak optimizasyonu:** Self-hosted **OSRM + VROOM**. Google Route Optimization (~400 USD/ay ve üzeri) maliyetli bulunduğundan seçilmedi.
 4. **Navigasyon başlatma:** Durak başına `google.navigation:` intent'i (tek hedef; uygulama durak durumunu kendisi izleyebilir). İsteğe bağlı olarak çok duraklı Google Maps URL'si (en fazla 9 ara nokta, parçalı gönderim).
 5. **ETA:** Önce OSRM tahmini; trafik duyarlı ETA gerekirse yalnızca bu amaçla Google Routes.

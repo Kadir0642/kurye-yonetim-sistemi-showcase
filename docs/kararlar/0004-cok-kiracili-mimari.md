@@ -1,6 +1,6 @@
 # ADR-0004: Çok kiracılı (multi-tenant) mimari
 
-- **Durum:** Önerildi
+- **Durum:** Kabul edildi (RLS İterasyon 2'ye ertelendi; aşağıdaki uygulama notuna bakın)
 - **Tarih:** 2026-10-30
 
 ## Bağlam
@@ -16,6 +16,12 @@ Baştan çok kiracılı tasarım:
 - **PostgreSQL satır düzeyi güvenlik (RLS):** her oturumda kiracı bağlamı (ör. `SET LOCAL app.tenant_id`) ayarlanır; politikalar `tenant_id` eşleşmesini zorlar. Uygulama katmanı hatalarına karşı ikinci savunma hattıdır.
 - Kullanıcı rolleri kiracı içinde tanımlanır (firma yöneticisi, kurye; ileride işletme kullanıcısı).
 - Pilot aşamada tek kiracı vardır; ancak kod ve şema çok kiracılıdır.
+
+## Uygulama notu (İterasyon 1, 2026-10-30)
+
+- İterasyon 1'de izolasyon **uygulama katmanında** zorlanır: JWT'deki `tid` her isteğin kiracı bağlamıdır; tüm sorgular depo (repository) katmanında `tenant_id` ile filtrelenir; yolda veya gövdede kiracı kimliği kabul edilmez.
+- **Veritabanı düzeyinde ikinci hat:** kiracıya ait tablolar arası yabancı anahtarlar **bileşik**tir (`(tenant_id, id)`); böylece bir kiracının paketi başka kiracının işletmesine veya kuryesine bağlanamaz.
+- **PostgreSQL RLS İterasyon 2'de** açılır. Gerekçe: pilotta tek kiracı var. RLS, her isteğin bir işlem içinde `SET LOCAL app.tenant_id` ile çalışmasını gerektirir; bu da bağlantı havuzu, arka plan işleri (konum kesildi kontrolü, saklama süresi silme) ve seed ile birlikte ilk iterasyonda gereksiz risk getirir. Şema RLS'ye hazırdır: `tenant_id` her tabloda bulunur ve uygulama ayrı bir DB rolüyle bağlanacak şekilde tasarlanır. e2e testleri kiracılar arası erişimin 404 döndüğünü doğrular.
 
 ## Sonuçlar
 
