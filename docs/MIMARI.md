@@ -13,8 +13,8 @@
 | Backend API | NestJS (Fastify), Drizzle ORM, zod | İş mantığı, kimlik, tenant izolasyonu, WebSocket, adres sağlayıcıları, arka plan işleri |
 | Veritabanı | PostgreSQL 16 + PostGIS | Kalıcı veri, mekânsal sorgular (`ST_DWithin`); RLS İterasyon 2b'de ([ADR-0004](kararlar/0004-cok-kiracili-mimari.md), [ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md)) |
 | Önbellek | Redis | Son konum, "konum kesildi" takibi, WebSocket pub/sub fan-out, hız sınırlama; İterasyon 2: akıllı havuz uygunluk önbelleği, toplu atama penceresi, iş kilitleri |
-| Harita gösterimi | MapLibre + OpenFreeMap vektör karoları | Ücretsiz, anahtarsız ([ADR-0008](kararlar/0008-acik-kaynak-harita.md)) |
-| Adres arama | API `/geo` → Google Places (New) (anahtar varsa) veya Photon | Otomatik tamamlama, hizmet bölgesi kısıtı ([ADR-0006](kararlar/0006-hizmet-bolgesi-eskisehir.md)) |
+| Harita gösterimi | MapLibre + OpenFreeMap vektör karoları | Ücretsiz, anahtarsız ([ADR-0008](kararlar/0008-acik-kaynak-harita.md)); İterasyon 3'te kendi karolarımız ([§9](#9-harita-platformu-iterasyon-3), [ADR-0016](kararlar/0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md)) |
+| Adres arama | API `/geo` → Google Places (New) (anahtar varsa) veya Photon | Otomatik tamamlama, hizmet bölgesi kısıtı ([ADR-0006](kararlar/0006-hizmet-bolgesi-eskisehir.md)); İterasyon 3'te kendi Photon örneğimiz ([§9](#9-harita-platformu-iterasyon-3)) |
 | Rota altyapısı (İterasyon 2) | OSRM (MLD, depodaki `motorcycle.lua` profili) + VROOM, Docker compose `routing` profili | OSRM: süre matrisi (`table`) ve rota çizgisi; VROOM: kurye başına nihai durak sırası (pickup-delivery, kapasite, zaman penceresi). Yalnızca Eskişehir OSM çıkarımı, tek komutla üretilir ([ADR-0011](kararlar/0011-osrm-motosiklet-profili-ve-rota-altyapisi.md)) |
 | Rota motoru (İterasyon 2) | API içinde `src/routing`: Nest / DB / Redis bilmeyen saf kütüphane; arayüzü `@kurye/contracts/routing-engine` | En ucuz yerleştirme, uygulanabilirlik (kapasite, tazelik, mevcut paket gecikme sınırı), skor ve Türkçe gerekçe, toplu atama (regret-2), kararlılık kuralları, süreç içi kesin sıralayıcı, OSRM yokken yaklaşık mod ([ADR-0009](kararlar/0009-rota-uyumlu-atama.md), [ADR-0013](kararlar/0013-rota-motoru-siniri-ve-yaklasik-mod.md), [ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md)) |
 | Dağıtım alanı (İterasyon 2) | API içinde `routes` ve `dispatch` modülleri | Kurye rotalarının kaydı ve yeniden sıralanması, öneriler, üç mod (`ONERI`, `AKILLI_HAVUZ`, `OTOMATIK`), bekleyenler kuyruğu, toplu atama, gerekçeli ret, atama metrikleri (SPEC) |
@@ -293,7 +293,7 @@ Pilot müşteri keşfi henüz yapılmadı; aşağıdakiler cevap bekliyor.
 | 11 | Google ToS: koordinat önbellekleme ve Google verisini Google dışı harita ile kullanma sınırları | ADR-0001 (açık risk) |
 | 12 | Eskişehir OSM adres / yol kalitesi yeterli mi? (~30 örnek adresle test) | ADR-0001, ADR-0006 |
 | 13 | Android developer verification: Türkiye ve kurumsal dağıtım durumu | ADR-0003 |
-| 14 | Faturalama modeli: paket başı mı, abonelik mi? | Faturalama (İterasyon 4+) |
+| 14 | Faturalama modeli: paket başı mı, abonelik mi? | Faturalama (İterasyon 5+) |
 | 15 | iOS üretim dağıtımı: firmanın D-U-N-S numarası / Apple Business Manager hesabı var mı (Custom App), yoksa listelenmemiş App Store uygulaması mı? | ADR-0003 |
 | 16 | KVKK aydınlatma ve açık rıza metinlerinin hukuken onaylı içeriği | ADR-0005 |
 | 17 | Bir kurye aynı anda en çok kaç paket taşır? (varsayılan 4) | ADR-0009: `max_active_packages_per_courier`, kapasite kısıtı |
@@ -305,7 +305,81 @@ Pilot müşteri keşfi henüz yapılmadı; aşağıdakiler cevap bekliyor.
 | 23 | Kurye tek turda birden fazla restoranlardan paket toplar mı? | ADR-0009: çoklu alış, yerleştirme ve kapasite |
 | 24 | Kuryeler arası devir hangi mesafede yapılıyor? (varsayılan aday yarıçapı 1500 m) | ADR-0010: `handover_radius_m` |
 | 25 | Devirde yönetici onayı istenir mi, yoksa yalnızca bilgi mi? (varsayılan: bilgi) | ADR-0010: `handover_requires_dispatcher_approval` |
-| 26 | Alınmış paketin devrinde kapıda nakit sorumluluğu ve kasa teslimi nasıl işliyor? | ADR-0010: nakit sorumluluk devri, İterasyon 3 kasa |
+| 26 | Alınmış paketin devrinde kapıda nakit sorumluluğu ve kasa teslimi nasıl işliyor? | ADR-0010: nakit sorumluluk devri, İterasyon 4 kasa (eski numara: 3) |
 | 27 | Günlük kaç devir normal? Şehir içi GPS ile 150 m buluşma yarıçapı güvenilir mi? | ADR-0010: devir sınırları, `handover_meet_radius_m` |
 | 28 | Yeni paket eklenirken mevcut bir paketin en çok kaç dakika gecikmesi kabul edilir? (varsayılan 8 dk) Aynı restorandan gelen siparişler tek kuryeye verilmeli mi? | ADR-0014: `maxAddedDelayPerPackageMin`, toplu atama gruplaması |
 | 29 | Motosikletli kuryelerin gerçek süreleri OSRM tahmininden ne kadar farklı? (pilot konum izinden ölçülecek) | ADR-0011: `ROUTING_DURATION_FACTOR` kalibrasyonu |
+| 30 | Pilot müşterinin kurye telefon modelleri ve Android sürümleri nedir? (Xiaomi / Samsung / düşük uç; GMS'siz cihaz var mı?) | İterasyon 3 P-8 cihaz matrisi, ADR-0005 |
+| 31 | Pilotta restoranlar için "paket hazır" sinyali kaynağı hangisi olabilir: panel, kurye bildirimi, işletmeye özel tek dokunuşluk bağlantı? | İterasyon 3 3b-2, ADR-0009: `ready_at` |
+| 32 | Teslim geofence'i 150 m, Eskişehir sokaklarında ve apartman / site yapısında uygun mu? Geçersiz kılma oranı ne çıkıyor? | İterasyon 3 3b-4 |
+| 33 | Öğrenilmiş teslim noktası gözlemleri (90 gün), adres özetleri (12 ay) ve anonim hız özetleri için saklama süreleri hukuken uygun mu? | ADR-0017, ADR-0005, İterasyon 3 P-9 |
+| 34 | Pilot ne zaman başlıyor? (öğrenilmiş hızlar için pilottan sonra en az 4 hafta veri gerekir) | İterasyon 3 takvimi, 3c-1 |
+
+## 9. Harita platformu (iterasyon 3)
+
+> Kararlar: [ADR-0016](kararlar/0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md) (kendi karo, geocoder ve güncelleme hattı), [ADR-0017](kararlar/0017-saha-verisinden-ogrenen-harita.md) (saha verisinden öğrenme). Plan: iterasyon-3/PLAN.md. Bu bölüm **hedef mimaridir**; İterasyon 3 tamamlanana kadar §2'deki harici servisler (OpenFreeMap, genel Photon) geçerlidir.
+
+İlke: çalışma zamanında üçüncü taraf harita servisi yoktur. Aynı Eskişehir OSM çıkarımı (`eskisehir.osm.pbf`) rotayı, karoları ve adres dizinini besler; üçü her hafta aynı sürümle yenilenir. Kuryenin telefonu karoyu ve rotayı yerelde saklar, eylemleri kalıcı bir kuyruğa yazar.
+
+```mermaid
+flowchart TB
+    subgraph Uretim["Derleme zamanı (haftalık hat, ADR-0016)"]
+        GF["Geofabrik<br/>Türkiye PBF + md5"] --> EX["osmium extract<br/>eskisehir.osm.pbf"]
+        EX --> OB["osrm-extract / partition / customize<br/>(+ öğrenilmiş hız dosyası, 3c)"]
+        EX --> PT["planetiler (OpenMapTiles)<br/>eskisehir.pmtiles"]
+        EX --> NM["Nominatim (geçici)<br/>-> Photon dizini"]
+        OB --> KP{{"Kapılar<br/>rota seti, PMTiles boyutu,<br/>altın sorgu seti"}}
+        PT --> KP
+        NM --> KP
+        KP -->|"geçti: sıfır kesinti geçiş"| SW["sürüm değiştirme<br/>(ters vekil + atomik işaretçi)"]
+    end
+
+    subgraph Calisma["Çalışma zamanı (Türkiye'deki VPS, iç ağ)"]
+        API["Backend API"]
+        OSRM["OSRM (MLD)<br/>+ VROOM"]
+        TS["Karo sunucusu<br/>(PMTiles, HTTP range / ZXY)<br/>+ stil, sprite, glyph"]
+        PH["Photon<br/>(Eskişehir dizini)"]
+        PG[("PostgreSQL + PostGIS<br/>ping, adres defteri, özetler")]
+        RD[("Redis")]
+        MF["GET /map/manifest<br/>(sürüm, sha256, boyut)"]
+    end
+
+    subgraph Ogrenme["Öğrenme işleri (ADR-0017)"]
+        PA["Ping özetleme işi (günlük)<br/>OSRM match -> bacak hızları<br/>yalnızca toplanabilir özet"]
+        DP["Teslim noktası hesabı<br/>ağırlıklı medyan, bozunma, güven"]
+        SP["Hız yayın işi (3c)<br/>eşik + karıştırma + doğrulama"]
+    end
+
+    subgraph Uygulama["Kurye uygulaması"]
+        OS[("Yerel depo<br/>eskisehir.pmtiles,<br/>rota ve durak önbelleği,<br/>eylem kuyruğu, konum kuyruğu")]
+        MAP["MapLibre Native"]
+    end
+
+    SW --> OSRM
+    SW --> TS
+    SW --> PH
+    SW --> MF
+    API --> OSRM
+    API -->|"/geo"| PH
+    API --> PG
+    API --> RD
+    PG --> PA
+    PA -->|"match"| OSRM
+    PA -->|"segment_speed_stats"| PG
+    PG --> DP
+    DP -->|"öğrenilmiş DROPOFF konumu"| API
+    PG --> SP
+    SP -->|"segment-speeds.csv"| OB
+    MAP -->|"yerel dosya (çevrimdışı)"| OS
+    MAP -.->|"yerel dosya yoksa: çevrimiçi karo"| TS
+    OS -->|"manifest denetimi, indirme"| MF
+    OS -->|"Idempotency-Key + occurredAt,<br/>konum batch"| API
+    API -->|"rota (geometry), paketler"| OS
+```
+
+Ana noktalar:
+- **Karo:** tek `eskisehir.pmtiles` dosyası; panel çevrimiçi okur, telefon dosyayı indirip yerelde okur. Sürüm kontrolü `GET /map/manifest` ile; yeniden indirme politikası PLAN 3a-4.
+- **Adres arama:** API `GeoProvider` arayüzü değişmez; `PHOTON_BASE_URL` iç adrese döner. Öğrenilmiş teslim noktaları geocoder sonucunu `DROPOFF` konumu olarak geçersiz kılar ([ADR-0017](kararlar/0017-saha-verisinden-ogrenen-harita.md) A).
+- **Rota:** OSRM / VROOM aynı kalır; hız dosyası ve zamansal çarpan 3c'de eklenir. Ping özetleme **ilk günden** çalışır, ham saklama (30 gün) uzamaz.
+- **Çevrimdışı:** uygulama rotayı ve durakları yerelde saklar; eylemler kalıcı kuyrukta, UUID `Idempotency-Key` ve cihaz olay zamanıyla gönderilir (PLAN 3a-6). Bugün yalnızca konum kuyruğu kalıcıdır.
+- **Atıf:** harita üzerinde "© OpenStreetMap katkıcıları, © OpenMapTiles".

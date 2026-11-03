@@ -2,6 +2,7 @@
 
 - **Durum:** Kabul edildi
 - **Tarih:** 2026-10-30
+- **Güncelleme (2026-11-03):** Madde 1'in karo sağlayıcısı (OpenFreeMap) ve madde 2'nin genel Photon sunucusu, İterasyon 3'te kendi barındırdığımız karo sunucusu ve kendi Photon örneğimizle değiştirilir: [ADR-0016](0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md) (kısmen yerine geçti). Madde 3 (navigasyonu uygulamaya devir) geçerlidir. `GooglePlacesProvider` isteğe bağlı kalır, üretim varsayılanı değildir.
 - **Değiştirdiği karar:** [ADR-0001](0001-hibrit-harita-mimarisi.md) madde 2 (Maps SDK / Maps JavaScript API ile gösterim) ve madde 1'in uygulama biçimi
 
 ## Bağlam

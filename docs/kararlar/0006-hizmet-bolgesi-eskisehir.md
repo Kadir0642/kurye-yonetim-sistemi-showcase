@@ -3,6 +3,8 @@
 - **Durum:** Kabul edildi
 - **Tarih:** 2026-10-30
 
+- **Güncelleme (2026-11-03):** d) adres defteri, telefon yerine adres anahtarıyla ve saha verisinden öğrenilen teslim noktalarıyla [ADR-0017](0017-saha-verisinden-ogrenen-harita.md) içinde yeniden tanımlandı; Google ToS riski bu yoldan kalkar. Harita, geocoder ve rota çıkarımı [ADR-0016](0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md) ile tek OSM çıkarımından beslenir. 30 adreslik kalite testi İterasyon 3'tedir (PLAN 3a-8), Google'sız.
+
 ## Bağlam
 
 Ürün sahibinden gelen bilgiye göre pilot müşteri yalnızca **Eskişehir** içinde faaliyet gösteriyor. Çekirdek bölge **Odunpazarı ve Tepebaşı** ilçeleridir; çevre ilçeler (ör. Çifteler, Mihalgazi, Sivrihisar) isteğe bağlı olarak kapsama eklenebilir. Ürün başka illerde satılırsa yeni şehirler sonradan eklenecektir.

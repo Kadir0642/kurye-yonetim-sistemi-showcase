@@ -13,15 +13,17 @@ Mimari ve teknoloji kararları, bağlamı ve alternatifleriyle birlikte burada t
 | [0005](0005-konum-takibi-ve-kvkk.md) | Konum takibi ve KVKK | Kabul edildi |
 | [0006](0006-hizmet-bolgesi-eskisehir.md) | Hizmet bölgesi: Eskişehir pilotu, çok şehre hazır tasarım | Kabul edildi |
 | [0007](0007-backend-ve-web-yigini.md) | Backend ve web yığını: uçtan uca TypeScript monorepo | Kabul edildi |
-| [0008](0008-acik-kaynak-harita.md) | Açık kaynak harita (MapLibre + OpenFreeMap), sağlayıcı arkasında adres arama | Kabul edildi |
+| [0008](0008-acik-kaynak-harita.md) | Açık kaynak harita (MapLibre + OpenFreeMap), sağlayıcı arkasında adres arama | Kabul edildi (karo sağlayıcısı ve genel Photon ADR-0016 ile değişti) |
 | [0009](0009-rota-uyumlu-atama.md) | Rota uyumlu atama: kurye başına canlı rota, sapma süresine dayalı uygunluk, üç atama modu | Kabul edildi |
 | [0010](0010-kuryeler-arasi-devir.md) | Kuryeler arası devir: yakındaki meslektaşa teklif, alıştan sonra fiziksel buluşma ve kanıt (kod + konum) | Kabul edildi |
 | [0011](0011-osrm-motosiklet-profili-ve-rota-altyapisi.md) | OSRM motosiklet profili ve rota altyapısı (OSRM MLD + VROOM, Docker, Eskişehir çıkarımı) | Önerildi |
 | [0012](0012-rls-iterasyon-2b-ye-ertelendi.md) | PostgreSQL RLS İterasyon 2b'ye ertelendi; İterasyon 2 tabloları RLS'ye hazır | Önerildi |
 | [0013](0013-rota-motoru-siniri-ve-yaklasik-mod.md) | Rota motoru sınırı, yaklaşık (düşüş) modu ve süreç içi kesin sıralayıcı | Önerildi |
 | [0014](0014-toplu-atama-regret-ekleme.md) | Toplu atama: mevcut rotalara regret-2 ekleme, gecikme sınırı, aynı işletme gruplaması | Önerildi |
+| [0016](0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md) | Eskişehir'e özel, kendi barındırdığımız harita platformu (planetiler + PMTiles, kendi Photon, haftalık OSM hattı, çevrimdışı harita); ADR-0008'i kısmen değiştirir | Kabul edildi |
+| [0017](0017-saha-verisinden-ogrenen-harita.md) | Saha verisinden öğrenen harita: öğrenilmiş teslim noktaları ve öğrenilmiş hızlar | Kabul edildi |
 
-İterasyon 1 teknik spesifikasyonu: docs/iterasyon-1/SPEC.md. İterasyon 2 ana hedefi (rota uyumlu atama) tasarımı: docs/iterasyon-2/ROTA-UYUMLU-ATAMA.md. Kuryeler arası devir tasarımı: docs/iterasyon-2/KURYE-DEVIR.md. İterasyon 2 teknik spesifikasyonu: docs/iterasyon-2/SPEC.md.
+İterasyon 1 teknik spesifikasyonu: docs/iterasyon-1/SPEC.md. İterasyon 2 ana hedefi (rota uyumlu atama) tasarımı: docs/iterasyon-2/ROTA-UYUMLU-ATAMA.md. Kuryeler arası devir tasarımı: docs/iterasyon-2/KURYE-DEVIR.md. İterasyon 2 teknik spesifikasyonu: docs/iterasyon-2/SPEC.md. İterasyon 3 (harita platformu) planı: docs/iterasyon-3/PLAN.md. (0015 numarası başka bir çalışma kolunda ayrılmıştır.)
 
 ## Durumlar
 

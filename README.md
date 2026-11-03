@@ -62,21 +62,21 @@ Durum: ✅ tamamlandı (İterasyon 1), ⏳ planlandı. Ayrıntılı kapsam için
 - ⏳ Kontrollü ret (gerekçeli) ve devir isteği (İterasyon 2)
 - ⏳ Kuryeler arası devir: yakındaki meslektaşa teklif, alıştan sonra kod + konum ile fiziksel devir ([ADR-0010](docs/kararlar/0010-kuryeler-arasi-devir.md), İterasyon 2)
 - ⏳ OTA güncelleme (expo-updates) ve iOS dağıtımı (İterasyon 2)
-- ⏳ Şeffaf hakediş ekranı (İterasyon 3)
+- ⏳ Şeffaf hakediş ekranı (İterasyon 4)
 
 ### Yönetim paneli (Web)
 - ✅ Canlı harita ve kurye konumları (İterasyon 1)
 - ✅ Konum kesilme uyarısı (İterasyon 1)
-- ⏳ Hakediş ve raporlar (İterasyon 3)
-- ⏳ Kasa / nakit mutabakatı (İterasyon 3)
+- ⏳ Hakediş ve raporlar (İterasyon 4)
+- ⏳ Kasa / nakit mutabakatı (İterasyon 4)
 - ⏳ Rota çizgileri, öneri paneli, sürükle-bırak atama ve sapma uyarısı (İterasyon 2)
-- ⏳ ETA gösterimi (İterasyon 3)
+- ⏳ ETA gösterimi (İterasyon 4)
 
 ### Entegrasyonlar ve genişlemeler
-- ⏳ İşletme paneli: restoranların kendi siparişlerini girmesi (İterasyon 4+)
-- ⏳ POS entegrasyonu (İterasyon 4+)
-- ⏳ Platform entegrasyonları ve SoftPOS (İterasyon 4+)
-- ⏳ Paket başı faturalama (İterasyon 4+)
+- ⏳ İşletme paneli: restoranların kendi siparişlerini girmesi (İterasyon 5+)
+- ⏳ POS entegrasyonu (İterasyon 5+)
+- ⏳ Platform entegrasyonları ve SoftPOS (İterasyon 5+)
+- ⏳ Paket başı faturalama (İterasyon 5+)
 
 ## Ekran görüntüleri
 
@@ -188,8 +188,9 @@ flowchart LR
 | 0 | Planlama ve araştırma | ✅ Tamamlandı (müşteri keşfi sürüyor) |
 | 1 | Çekirdek: kimlik / tenant, işletme, paket, havuz, yarıçap filtresi, kurye app, canlı harita, konum kesildi uyarısı | ✅ Tamamlandı |
 | 2 | **Ana hedef: rota uyumlu atama** (duraklar, rota optimizasyonu, öneri / otomatik atama, ret ve devir); push bildirim, iOS dağıtımı, OTA / self-update | ⏳ |
-| 3 | Hakediş, kasa mutabakatı, ETA gösterimi | ⏳ |
-| 4+ | İşletme paneli, POS / platform entegrasyonları, SoftPOS, faturalama | ⏳ |
+| 3 | **Eskişehir'e özel harita platformu:** kendi karoları, adres arama ve haftalık OSM güncellemesi; çevrimdışı harita ve eylem kuyruğu; saha verisinden öğrenen teslim noktaları ve hızlar ([ADR-0016](docs/kararlar/0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md), [ADR-0017](docs/kararlar/0017-saha-verisinden-ogrenen-harita.md)) | 📝 Plan hazır |
+| 4 | Hakediş, kasa mutabakatı, ETA gösterimi | ⏳ |
+| 5+ | İşletme paneli, POS / platform entegrasyonları, SoftPOS, faturalama | ⏳ |
 
 Ayrıntılar: [docs/YOL-HARITASI.md](docs/YOL-HARITASI.md)
 

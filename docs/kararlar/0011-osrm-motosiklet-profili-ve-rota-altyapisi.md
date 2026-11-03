@@ -4,6 +4,8 @@
 - **Tarih:** 2026-11-02
 - **İlgili:** [ADR-0001](0001-hibrit-harita-mimarisi.md), [ADR-0006](0006-hizmet-bolgesi-eskisehir.md), [ADR-0009](0009-rota-uyumlu-atama.md), İterasyon 2 SPEC §14
 
+- **Güncelleme (2026-11-03):** madde 4'teki "aylık zamanlanmış iş", [ADR-0016](0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md) ile haftalık, kapılı ve kesintisiz geçişli bir hatta dönüştü (karolar ve geocoder ile birlikte). Öğrenilmiş hızlar `osrm-customize --segment-speed-file` ile eklenir ([ADR-0017](0017-saha-verisinden-ogrenen-harita.md)).
+
 ## Bağlam
 
 - Rota uyumlu atama ([ADR-0009](0009-rota-uyumlu-atama.md)) süre matrisine (`table`) ve rota çizgisine dayanır. Öneri bütçesi 25 kurye için 300 ms'dir; matris çağrısına bunun yaklaşık 100 ms'i düşer.

@@ -3,6 +3,8 @@
 - **Durum:** Kabul edildi (saklama süresi ve hukuki dayanak müşteri/hukuk görüşü bekliyor; İterasyon 1 varsayılanı 30 gün)
 - **Tarih:** 2026-10-30
 
+- **Güncelleme (2026-11-03):** [ADR-0017](0017-saha-verisinden-ogrenen-harita.md): ham konum saklaması (30 gün) değişmez; vardiya izlerinden yalnızca anonim, toplanabilir hız özetleri ve kurye kimliği içermeyen teslim noktası gözlemleri (90 gün) üretilir. Aydınlatma / açık rıza metinleri güncellenir, hukuki onay pilot öncesi şarttır.
+
 ## Bağlam
 
 Kurye konumu, KVKK kapsamında çalışan / yüklenici kişisel verisidir. Hukuki dayanak (meşru menfaat dengeleme testi veya açık rıza), aydınlatma yükümlülüğü, ölçülülük ve amaçla sınırlılık gerekir. Pazar araştırmasına göre KVKK Kurulu 2026/347 sayılı karara göre açık rıza metni ile aydınlatma metni ayrı düzenlenmelidir. Teknik tarafta Android arka plan konumu için foreground service gerekir ve OEM pil sonlandırıcıları (Huawei, Xiaomi, OnePlus, Samsung) güvenilirliği tehdit eder. Kuryelere özgü bir Kurul kararı bulunamadı.
