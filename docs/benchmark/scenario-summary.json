@@ -1,0 +1,77 @@
+{
+  "universe": {
+    "businesses": 40,
+    "deliveryPoints": 600,
+    "courierStarts": 20,
+    "nodes": 660,
+    "matrixSha256": "748bf740090acd3ee2cb481acf1c79db0aefc6861c7f2899e08bf6952776bfcd"
+  },
+  "seeds": [
+    {
+      "seed": 1,
+      "orders": 417,
+      "bursts": 20,
+      "peakShare": 75.0599520383693
+    },
+    {
+      "seed": 2,
+      "orders": 365,
+      "bursts": 16,
+      "peakShare": 75.61643835616438
+    },
+    {
+      "seed": 3,
+      "orders": 395,
+      "bursts": 22,
+      "peakShare": 71.13924050632912
+    },
+    {
+      "seed": 4,
+      "orders": 420,
+      "bursts": 22,
+      "peakShare": 75
+    },
+    {
+      "seed": 5,
+      "orders": 383,
+      "bursts": 14,
+      "peakShare": 71.80156657963447
+    },
+    {
+      "seed": 6,
+      "orders": 410,
+      "bursts": 27,
+      "peakShare": 76.58536585365853
+    },
+    {
+      "seed": 7,
+      "orders": 371,
+      "bursts": 18,
+      "peakShare": 74.12398921832884
+    },
+    {
+      "seed": 8,
+      "orders": 397,
+      "bursts": 21,
+      "peakShare": 77.07808564231738
+    },
+    {
+      "seed": 9,
+      "orders": 415,
+      "bursts": 16,
+      "peakShare": 72.28915662650603
+    },
+    {
+      "seed": 10,
+      "orders": 391,
+      "bursts": 25,
+      "peakShare": 75.1918158567775
+    }
+  ],
+  "strategies": [
+    "A",
+    "D",
+    "B",
+    "C"
+  ]
+}

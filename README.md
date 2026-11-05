@@ -2,18 +2,19 @@
 
 > Restoranların platform komisyonu ödemeden kendi teslimatını yapabilmesi için, kurye firmalarına yönelik çok kiracılı (multi-tenant) kurye yönetim platformu: mobil kurye uygulaması (Android + iOS), web yönetim paneli ve backend.
 
-**✅ İterasyon 1 tamamlandı · İterasyon 2 (rota uyumlu atama) planlandı**
+**✅ İterasyon 2 tamamlandı · İterasyon 3 (Eskişehir'e özel harita platformu) planlandı**
 
 Pilot bölge: Eskişehir; tasarım çok şehirli kullanıma hazırdır ([ADR-0006](docs/kararlar/0006-hizmet-bolgesi-eskisehir.md)).
 
 > **Bu bir vitrin (showcase) reposudur.** Ürün ticari olduğu için **kaynak kod özel (private) bir depoda tutulur** ve burada yer almaz. Bu depo; proje özetini, mimariyi, karar kayıtlarını (ADR), yapay zekâ destekli geliştirme sürecini, yol haritasını ve ekran görüntülerini içerir. Kaynak kod, mülakatlarda talep üzerine gösterilebilir. Vitrin, her iterasyon sonunda özel depodan güncellenir.
 
-**English summary:** Kurye Yönetim Sistemi is a multi-tenant courier management platform for Turkish courier firms that deliver for many restaurants for a per-package fee. It consists of a React Native + Expo Android courier app (background location, sideloaded APK), a React admin web panel with a live map and a NestJS/PostgreSQL+PostGIS backend. It is developed through an AI-orchestrated workflow (Claude Opus orchestrator + Sonnet sub-agents) with a human product owner; see [docs/GELISTIRME-SURECI.md](docs/GELISTIRME-SURECI.md). **This is a showcase repository:** the source code lives in a private repository because this is a commercial product, and can be demonstrated on request during interviews. This repository contains the architecture, decision records (ADRs), development process, roadmap and screenshots. Iteration 1 (core) is complete: the screenshots below come from the running system. Iteration 2 (route-aware assignment, courier-to-courier handover) is planned.
+**English summary:** Kurye Yönetim Sistemi is a multi-tenant courier management platform for Turkish courier firms that deliver for many restaurants for a per-package fee. It consists of a React Native + Expo Android courier app (background location, sideloaded APK), a React admin web panel with a live map and a NestJS/PostgreSQL+PostGIS backend. It is developed through an AI-orchestrated workflow (Claude Opus orchestrator + Sonnet sub-agents) with a human product owner; see [docs/GELISTIRME-SURECI.md](docs/GELISTIRME-SURECI.md). **This is a showcase repository:** the source code lives in a private repository because this is a commercial product, and can be demonstrated on request during interviews. This repository contains the architecture, decision records (ADRs), development process, roadmap and screenshots. Iterations 1 and 2 are complete: the screenshots below come from the running system. Iteration 2 delivered route-aware assignment (real OSRM + VROOM engine, suggestions, batch assignment, drag-and-drop with warnings), courier-to-courier handover, a map-first route screen and in-app turn-by-turn navigation; in a synthetic Eskişehir-day simulation (not a field result) it cut total distance by about 30% and late deliveries from 19.9% to 3.2% versus "nearest courier" (see Sonuçlar). Iteration 3 (a self-hosted, Eskişehir-specific map platform) is planned.
 
 ---
 
 ## İçindekiler
 
+- [Sonuçlar](#sonuçlar)
 - [Problem ve çözüm](#problem-ve-çözüm)
 - [Özellikler](#özellikler)
 - [Ekran görüntüleri](#ekran-görüntüleri)
@@ -24,6 +25,21 @@ Pilot bölge: Eskişehir; tasarım çok şehirli kullanıma hazırdır ([ADR-000
 - [Bu depoda neler var?](#bu-depoda-neler-var)
 - [Geliştirici](#geliştirici)
 - [Lisans](#lisans)
+
+## Sonuçlar
+
+<p align="center"><img src="docs/benchmark/benchmark.png" width="900" alt="Benchmark: en yakın kurye ile rota uyumlu atama"></p>
+
+Aynı **sentetik** Eskişehir gününde (20 kurye, ~400 sipariş, 10 tohum; gerçek yol ağı üzerinde OSRM süre ve mesafe matrisi) pilotun bugünkü yazılımının basitleştirilmiş modeli olan **"en yakın kurye"** (A) ile **rota uyumlu atama**nın (B: öneri modu) karşılaştırması:
+
+| Ölçüt | En yakın kurye (A) | Rota uyumlu (B) | Fark |
+|---|---:|---:|---:|
+| Toplam km | 1886 | 1318 | **-%30** |
+| Geç teslim (alıştan teslime > 35 dk) | %19,9 | %3,2 | **-%84** |
+| Ort. teslimat süresi (sipariş → teslim) | 38,6 dk | 27,6 dk | -%28 |
+| Geri dönüş oranı (km / doğrudan km) | 1,80 | 1,26 | -%30 |
+
+> **Dürüst okuma:** bu bir **sentetik simülasyondur**, gerçek saha sonucu değildir. Taban çizgisi A basitleştirilmiş bir modeldir; trafik, sürücü davranışı ve yönetici yükü yoktur; talep gerçek siparişlerden değil üretilmiş dağılımdan gelir. İşletmenin hazır olma anı **biliniyorsa** kilometre farkı küçülür (B: -%8, otomatik + toplu pencere C: -%14) ama geç teslim farkı büyür (%0,7). Sayılar tek başına değil, iki tabloyla birlikte okunmalıdır. Tam yöntem, senaryo, hipotezler (biri yalnızca kısmen doğrulandı) ve sınırlamalar: [benchmark raporu](docs/benchmark/README.md).
 
 ## Problem ve çözüm
 
@@ -42,11 +58,17 @@ Restoranlar, Yemeksepeti veya Trendyol gibi platformların teslimat komisyonlar�
 
 ## Özellikler
 
-Durum: ✅ tamamlandı (İterasyon 1), ⏳ planlandı. Ayrıntılı kapsam için [YOL-HARITASI.md](docs/YOL-HARITASI.md).
+Durum: ✅ tamamlandı (İterasyon 1-2), ⏳ planlandı. Ayrıntılı kapsam için [YOL-HARITASI.md](docs/YOL-HARITASI.md).
 
 ### ⭐ Rota uyumlu akıllı atama
 
-> Yeni paket, kuryeye **yakınlığına** göre değil, kuryenin **rotasına kattığı sapma süresine** göre atanır ("Rotası üzerinde, +2 dk" ile "Ters yön, +14 dk" arasındaki fark). Her kurye paketlerini haritada numaralı duraklar ve optimal sırayla görür; yönetici önerilen en iyi 3 kuryeyi tek tıkla atar, kontrollü ret ve devir akışı yanlış atamaları görünür kılar. Pilot müşteriden gelen sahadaki geri bildirimle (ters yöndeki paketler, kuryelerin paketi bırakması, yöneticinin elle yeniden dağıtımı) şekillendi; **İterasyon 2'nin ana hedefidir**. Karar: [ADR-0009](docs/kararlar/0009-rota-uyumlu-atama.md). Başarı, "en yakın kurye" ile karşılaştıran bir simülasyon benchmark'ı ile ölçülecek ve sonuç grafiği burada yayınlanacak.
+> Yeni paket, kuryeye **yakınlığına** göre değil, kuryenin **rotasına kattığı sapma süresine** göre atanır ("Rotası üzerinde, +3 dk" ile "Ters yön, +9 dk" arasındaki fark). Her kurye paketlerini haritada numaralı duraklar ve optimal sırayla görür; yönetici önerilen en iyi kuryeleri tek tıkla atar, kontrollü ret ve devir akışı yanlış atamaları görünür kılar. Pilot müşteriden gelen sahadaki geri bildirimle (ters yöndeki paketler, kuryelerin paketi bırakması, yöneticinin elle yeniden dağıtımı) şekillendi; **İterasyon 2'nin ana hedefiydi ve çalışıyor**: [ADR-0009](docs/kararlar/0009-rota-uyumlu-atama.md), rota motoru [ADR-0011](docs/kararlar/0011-osrm-motosiklet-profili-ve-rota-altyapisi.md) (OSRM motosiklet profili + VROOM). Ölçüm: [Sonuçlar](#sonuçlar).
+
+- ✅ Kurye başına canlı rota: gerçek yolları izleyen çizgi, numaralı duraklar, ETA; yeni paketle çizgi canlı yeniden kurulur
+- ✅ Gerekçeli öneri: sapma dakikası, etiket ("Rotası üzerinde", "Ters yön"), gecikecek paketler, elenenler; kapasite, tazelik (35 dk) ve mevcut paket gecikme sınırı (8 dk) korunur
+- ✅ Üç atama modu (öneri, akıllı havuz, otomatik), bekleyenler kuyruğu, **toplu atama** (aynı restoranın siparişleri aynı kuryede gruplanır)
+- ✅ Rota motoru düşerse açık işaretli yaklaşık mod ve elle atamaya geri dönüş
+- ✅ Simülasyon benchmark'ı: "en yakın kurye" ile karşılaştırma ([sonuçlar](#sonuçlar))
 
 ### Sipariş ve paket yönetimi
 - ✅ Sınırsız işletme tanımı, firma başına çok kiracılı yapı (İterasyon 1)
@@ -54,35 +76,55 @@ Durum: ✅ tamamlandı (İterasyon 1), ⏳ planlandı. Ayrıntılı kapsam için
 - ✅ Sipariş havuzu: kurye paketi havuzdan kendisi alır (İterasyon 1)
 - ✅ Elle atama ve yeniden atama (İterasyon 1)
 - ✅ Kurye başına yarıçap filtresi (İterasyon 1)
+- ✅ Sürükle-bırak atama ve büyük sapma / gecikme uyarısı (İterasyon 2)
 
 ### Kurye uygulaması (Android + iOS)
 - ✅ Vardiya aç / kapat, havuzdan paket alma (İterasyon 1)
 - ✅ Paket seçilince adres haritada açılır, tek dokunuşla navigasyon (İterasyon 1)
-- ⏳ "Rotam" ekranı: numaralı duraklar (liste + harita), optimal sıra, rota değişince bildirim (İterasyon 2)
-- ⏳ Kontrollü ret (gerekçeli) ve devir isteği (İterasyon 2)
-- ⏳ Kuryeler arası devir: yakındaki meslektaşa teklif, alıştan sonra kod + konum ile fiziksel devir ([ADR-0010](docs/kararlar/0010-kuryeler-arasi-devir.md), İterasyon 2)
-- ⏳ OTA güncelleme (expo-updates) ve iOS dağıtımı (İterasyon 2)
+- ✅ "Rotam" ekranı: tam ekran harita, numaralı durak listesi, optimal sıra, rota değişince şerit ve titreşim (İterasyon 2)
+- ✅ **Uygulama içi adım adım navigasyon**: eğik yön-yukarı harita, Türkçe sesli yönlendirme, yeniden rota, gündüz / gece teması, varışta kaydırarak onay ([ADR-0015](docs/kararlar/0015-uygulama-ici-navigasyon.md), İterasyon 2)
+- ✅ Kontrollü ret (gerekçeli) ve devir isteği (İterasyon 2)
+- ✅ Kuryeler arası devir: yakındaki meslektaşa teklif, alıştan sonra kod / QR + konum ile fiziksel devir ([ADR-0010](docs/kararlar/0010-kuryeler-arasi-devir.md), İterasyon 2)
+- ⏳ Push bildirim (FCM), OTA güncelleme ve iOS dağıtımı (İterasyon 2b)
 - ⏳ Şeffaf hakediş ekranı (İterasyon 4)
 
 ### Yönetim paneli (Web)
 - ✅ Canlı harita ve kurye konumları (İterasyon 1)
 - ✅ Konum kesilme uyarısı (İterasyon 1)
+- ✅ Rota çizgileri ve numaralı duraklar, öneri paneli, sürükle-bırak atama, bekleyenler ve toplu öneri, rota motoru durumu şeridi (İterasyon 2)
+- ✅ Devirler sekmesi, atama ve devir ayarları, metrikler sayfası (İterasyon 2)
 - ⏳ Hakediş ve raporlar (İterasyon 4)
 - ⏳ Kasa / nakit mutabakatı (İterasyon 4)
-- ⏳ Rota çizgileri, öneri paneli, sürükle-bırak atama ve sapma uyarısı (İterasyon 2)
-- ⏳ ETA gösterimi (İterasyon 4)
+- ⏳ ETA gösterimi müşteriye (İterasyon 4)
 
 ### Entegrasyonlar ve genişlemeler
 - ⏳ İşletme paneli: restoranların kendi siparişlerini girmesi (İterasyon 5+)
-- ⏳ POS entegrasyonu (İterasyon 5+)
+- ⏳ POS entegrasyonu, ilk hedef Adisyo (İterasyon 5+)
 - ⏳ Platform entegrasyonları ve SoftPOS (İterasyon 5+)
 - ⏳ Paket başı faturalama (İterasyon 5+)
 
 ## Ekran görüntüleri
 
-Aşağıdaki görüntüler gerçek API ve kurgusal Eskişehir demo verisiyle alınmıştır (kişisel veri içermez).
+Aşağıdaki görüntüler gerçek API, gerçek rota motoru (OSRM + VROOM) ve kurgusal Eskişehir demo verisiyle alınmıştır (kişisel veri içermez). Harita verisi © OpenStreetMap katkıcıları (ODbL).
 
-### Yönetim paneli
+### Yönetim paneli: rota uyumlu atama
+
+<table>
+  <tr>
+    <td colspan="2" align="center"><img src="docs/assets/screenshots/panel-rota-harita.png" width="900" alt="Canlı harita: rotalar"><br><sub>Canlı harita: her kuryenin renkli rota çizgisi gerçek yolları izler, duraklar numaralı (alış kare, teslim daire)</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/assets/screenshots/panel-oneri.png" width="440" alt="Kurye önerileri"><br><sub>Kurye önerileri: "Rotası üzerinde, +3 dk" ile "Ters yön, +6 dk"; satıra gelince rotaya yerleştirme önizlemesi</sub></td>
+    <td align="center"><img src="docs/assets/screenshots/panel-uyari.png" width="440" alt="Büyük sapma uyarısı"><br><sub>Paketi ters yöndeki kuryenin üstüne sürükleyince sapma uyarısı</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/assets/screenshots/panel-toplu-oneri.png" width="440" alt="Toplu öneri"><br><sub>Toplu öneri: aynı restoranın üç siparişi tek kuryede gruplanır, "önce / sonra" süresi</sub></td>
+    <td align="center"><img src="docs/assets/gifs/panel-rota-degisimi.gif" width="440" alt="Rota yeniden kurulumu"><br><sub>Atama: kuryenin rotası canlı olarak yeniden kurulur (eski çizgi söner, yenisi çizilir, numaralar yenilenir)</sub></td>
+  </tr>
+</table>
+
+<details>
+<summary>Diğer panel ekranları (İterasyon 1, devirler, mobil görünüm)</summary>
 
 <table>
   <tr>
@@ -94,11 +136,44 @@ Aşağıdaki görüntüler gerçek API ve kurgusal Eskişehir demo verisiyle al�
   </tr>
   <tr>
     <td align="center"><img src="docs/assets/screenshots/panel-paket-olustur.png" width="440" alt="Yeni paket"><br><sub>Yeni paket: adres otomatik tamamlama ve haritada iğne</sub></td>
-    <td align="center"><img src="docs/assets/screenshots/panel-canli-harita-mobil.png" width="150" alt="Canlı harita (mobil)">&nbsp;<img src="docs/assets/screenshots/panel-paket-olustur-mobil.png" width="150" alt="Yeni paket (mobil)"><br><sub>Panel telefon ekranında da çalışır (duyarlı tasarım)</sub></td>
+    <td align="center"><img src="docs/assets/screenshots/panel-devirler.png" width="440" alt="Devirler"><br><sub>Devirler sekmesi: açık teklifler, onaylar, canlı olaylar</sub></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><img src="docs/assets/screenshots/panel-canli-harita-mobil.png" width="150" alt="Canlı harita (mobil)">&nbsp;<img src="docs/assets/screenshots/panel-paket-olustur-mobil.png" width="150" alt="Yeni paket (mobil)">&nbsp;<img src="docs/assets/screenshots/panel-rota-harita-mobil.png" width="150" alt="Rota haritası (mobil)"><br><sub>Panel telefon ekranında da çalışır (duyarlı tasarım)</sub></td>
   </tr>
 </table>
 
+</details>
+
 ### Kurye uygulaması (Android)
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/assets/screenshots/kurye-rotam.png" width="220" alt="Rotam"><br><sub>Rotam: tam ekran harita, numaralı duraklar, alt çekmecede liste</sub></td>
+    <td align="center"><img src="docs/assets/screenshots/kurye-rota-degisti.png" width="220" alt="Rota değişti"><br><sub>Yeni paket rotaya eklenince şerit: "Yeni paket rotana eklendi"</sub></td>
+    <td align="center"><img src="docs/assets/screenshots/kurye-devir-teklif.png" width="220" alt="Devir teklifi"><br><sub>Devir teklifi: geri sayım, kabul / ret</sub></td>
+    <td align="center"><img src="docs/assets/screenshots/kurye-devir-bulusma.png" width="220" alt="Devir buluşma"><br><sub>Devir buluşması: karşı kurye 10 m, 4 haneli kod / QR ile onay</sub></td>
+  </tr>
+</table>
+
+**Uygulama içi navigasyon** ([ADR-0015](docs/kararlar/0015-uygulama-ici-navigasyon.md)): Google Maps gibi yeşil bant, eğik yön-yukarı kamera, Türkçe sesli yönlendirme, otomatik yeniden rota, gündüz / gece teması, koridor etiketleri ve varışta kaydırarak onay. Emülatörde gerçek API + OSRM ile GPS oynatılarak alındı.
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/assets/screenshots/kurye-navigasyon-gunduz.png" width="220" alt="Navigasyon gündüz"><br><sub>Gündüz teması</sub></td>
+    <td align="center"><img src="docs/assets/screenshots/kurye-navigasyon-gece.png" width="220" alt="Navigasyon gece"><br><sub>Gece teması (sistem koyu temasına ya da saate uyar)</sub></td>
+    <td align="center"><img src="docs/assets/screenshots/kurye-navigasyon-koridor.png" width="220" alt="Koridor etiketleri"><br><sub>Koridor etiketleri: önündeki yol</sub></td>
+    <td align="center"><img src="docs/assets/screenshots/kurye-navigasyon-hedef.png" width="220" alt="Hedef ayrıntısı"><br><sub>Hedef ayrıntısı (bina, adres)</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/assets/screenshots/kurye-navigasyon-yeniden-rota.png" width="220" alt="Yeniden rota"><br><sub>Yoldan çıkınca yeniden rota</sub></td>
+    <td align="center"><img src="docs/assets/screenshots/kurye-navigasyon-varis.png" width="220" alt="Varış kartı"><br><sub>Varış: Ara + kaydırarak onay</sub></td>
+    <td align="center" colspan="2"><img src="docs/assets/gifs/kurye-navigasyon.gif" width="220" alt="Navigasyon GIF"><br><sub>Sürüş, sapma ve varış</sub></td>
+  </tr>
+</table>
+
+<details>
+<summary>İterasyon 1 kurye ekranları</summary>
 
 <table>
   <tr>
@@ -108,6 +183,8 @@ Aşağıdaki görüntüler gerçek API ve kurgusal Eskişehir demo verisiyle al�
     <td align="center"><img src="docs/assets/screenshots/kurye-paket-yolda.png" width="220" alt="Paket yolda"><br><sub>Paket yolda: müşteriye git, teslim ettim</sub></td>
   </tr>
 </table>
+
+</details>
 
 ## Mimari
 
@@ -125,13 +202,13 @@ flowchart LR
         API["Backend API<br/>(NestJS + Fastify)"]
         PG[("PostgreSQL<br/>+ PostGIS")]
         RD[("Redis")]
-        RT["OSRM + VROOM<br/>(İterasyon 2)"]
+        RT["OSRM + VROOM<br/>(rota motoru)"]
     end
 
     subgraph Dis["Dış servisler"]
         OFM["OpenFreeMap<br/>(MapLibre karoları)"]
         GEO["Photon / Google Places<br/>(adres arama)"]
-        PUSH["FCM / APNs<br/>(İterasyon 2)"]
+        PUSH["FCM / APNs<br/>(İterasyon 2b)"]
     end
 
     KA <-->|"HTTPS + WebSocket"| API
@@ -139,7 +216,7 @@ flowchart LR
     IP -.->|"HTTPS"| API
     API --> PG
     API --> RD
-    API -.-> RT
+    API --> RT
     API -->|"/geo"| GEO
     KA -->|"harita karoları"| OFM
     YP -->|"harita karoları"| OFM
@@ -172,12 +249,12 @@ flowchart LR
 | Yönetim paneli | React, TypeScript, Vite, Mantine, TanStack Query, MapLibre GL JS | Kabul edildi |
 | Backend | NestJS (Fastify), Drizzle ORM, zod; npm workspaces monorepo | Kabul edildi |
 | API sözleşmesi | OpenAPI 3.1 (contract-first) + JSON WebSocket protokolü, üretilen TS tipleri | Kabul edildi |
-| Veritabanı | PostgreSQL 16 + PostGIS; satır düzeyinde güvenlik (RLS) İterasyon 2'de | Kabul edildi |
+| Veritabanı | PostgreSQL 16 + PostGIS; satır düzeyinde güvenlik (RLS) İterasyon 2b'de | Kabul edildi |
 | Önbellek / pub-sub | Redis | Kabul edildi |
-| Gerçek zamanlı | Düz WebSocket (panel + kurye); push (FCM/APNs) İterasyon 2'de | Kabul edildi |
+| Gerçek zamanlı | Düz WebSocket (panel + kurye); push (FCM/APNs) İterasyon 2b'de | Kabul edildi |
 | Harita | MapLibre + OpenFreeMap (ücretsiz, anahtarsız) | Kabul edildi |
 | Adres | API üzerinden Photon veya Google Places (New), hizmet bölgesi kısıtlı | Kabul edildi |
-| Rota ve optimizasyon | OSRM + VROOM (self-hosted, İterasyon 2) | Kabul edildi |
+| Rota ve optimizasyon | OSRM (motosiklet profili) + VROOM, kendi barındırdığımız Eskişehir çıkarımı; atama motoru saf TypeScript (en ucuz yerleştirme, regret-2 toplu atama) | Çalışıyor |
 | Dağıtım | Android APK + OTA (expo-updates); iOS TestFlight / Custom App | Kabul edildi |
 | Barındırma | Türkiye'de VPS | Taslak |
 
@@ -187,7 +264,8 @@ flowchart LR
 |---|---|---|
 | 0 | Planlama ve araştırma | ✅ Tamamlandı (müşteri keşfi sürüyor) |
 | 1 | Çekirdek: kimlik / tenant, işletme, paket, havuz, yarıçap filtresi, kurye app, canlı harita, konum kesildi uyarısı | ✅ Tamamlandı |
-| 2 | **Ana hedef: rota uyumlu atama** (duraklar, rota optimizasyonu, öneri / otomatik atama, ret ve devir); push bildirim, iOS dağıtımı, OTA / self-update | ⏳ |
+| 2 | **Rota uyumlu atama:** gerçek rota motoru (OSRM + VROOM), rota uyumlu öneri / toplu atama, bekleyenler, ret ve kuryeler arası devir, "Rotam", uygulama içi navigasyon, benchmark | ✅ Tamamlandı |
+| 2b | Platform ve sağlamlaştırma: push (FCM), iOS / TestFlight, RLS, OTA, aynı restoranın mevcut rotadaki paketiyle gruplanması, gerçek cihaz saha testi | ⏳ |
 | 3 | **Eskişehir'e özel harita platformu:** kendi karoları, adres arama ve haftalık OSM güncellemesi; çevrimdışı harita ve eylem kuyruğu; saha verisinden öğrenen teslim noktaları ve hızlar ([ADR-0016](docs/kararlar/0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md), [ADR-0017](docs/kararlar/0017-saha-verisinden-ogrenen-harita.md)) | 📝 Plan hazır |
 | 4 | Hakediş, kasa mutabakatı, ETA gösterimi | ⏳ |
 | 5+ | İşletme paneli, POS / platform entegrasyonları, SoftPOS, faturalama | ⏳ |
@@ -214,6 +292,7 @@ kurye-yonetim-sistemi-showcase/
 └── docs/
     ├── MIMARI.md              # Mimari, veri modeli, akışlar
     ├── YOL-HARITASI.md        # İterasyonlar ve ilerleme
+    ├── benchmark/             # Simülasyon benchmark raporu ve grafiği
     ├── GELISTIRME-SURECI.md   # AI destekli çalışma düzeni
     ├── kararlar/              # Mimari karar kayıtları (ADR)
     └── assets/                # Ekran görüntüleri ve GIF'ler

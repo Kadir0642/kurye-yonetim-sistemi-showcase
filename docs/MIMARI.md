@@ -1,12 +1,12 @@
 # Mimari
 
-> Durum: **İterasyon 1 için kabul edildi** (2026-10-30); **İterasyon 2 spesifikasyonu onaya sunuldu** (2026-11-02): iterasyon-2/SPEC.md, [ADR-0011](kararlar/0011-osrm-motosiklet-profili-ve-rota-altyapisi.md), [ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md), [ADR-0013](kararlar/0013-rota-motoru-siniri-ve-yaklasik-mod.md), [ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md). Yığın ve harita kararları [ADR-0007](kararlar/0007-backend-ve-web-yigini.md) ve [ADR-0008](kararlar/0008-acik-kaynak-harita.md), kurye uygulaması [ADR-0002](kararlar/0002-kurye-uygulamasi-react-native-expo.md), rota uyumlu atama (İterasyon 2 ana hedefi) [ADR-0009](kararlar/0009-rota-uyumlu-atama.md), kuryeler arası devir [ADR-0010](kararlar/0010-kuryeler-arasi-devir.md). İterasyon 1'in kesin şeması, durum makinesi ve protokolleri: İterasyon 1 spesifikasyonu. Pilot müşteri keşfi sürdüğü için ileriki iterasyonlara ait bölümler değişebilir. Gerekçeler için [karar kayıtları](kararlar/README.md), dayanak için araştırma raporları.
+> Durum: **İterasyon 1 için kabul edildi** (2026-10-30); **İterasyon 2 spesifikasyonu onaya sunuldu** (2026-11-02): iterasyon-2/SPEC.md, [ADR-0011](kararlar/0011-osrm-motosiklet-profili-ve-rota-altyapisi.md), [ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md), [ADR-0013](kararlar/0013-rota-motoru-siniri-ve-yaklasik-mod.md), [ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md). Yığın ve harita kararları [ADR-0007](kararlar/0007-backend-ve-web-yigini.md) ve [ADR-0008](kararlar/0008-acik-kaynak-harita.md), kurye uygulaması [ADR-0002](kararlar/0002-kurye-uygulamasi-react-native-expo.md), rota uyumlu atama (İterasyon 2 ana hedefi) [ADR-0009](kararlar/0009-rota-uyumlu-atama.md), kuryeler arası devir [ADR-0010](kararlar/0010-kuryeler-arasi-devir.md), uygulama içi navigasyon [ADR-0015](kararlar/0015-uygulama-ici-navigasyon.md). İterasyon 1'in kesin şeması, durum makinesi ve protokolleri: İterasyon 1 spesifikasyonu. Pilot müşteri keşfi sürdüğü için ileriki iterasyonlara ait bölümler değişebilir. Gerekçeler için [karar kayıtları](kararlar/README.md), dayanak için araştırma raporları.
 
 ## 1. Bileşenler
 
 | Bileşen | Teknoloji | Sorumluluk |
 |---|---|---|
-| Kurye uygulaması | React Native + Expo (TypeScript), tek kod Android + iOS | Vardiya, arka plan konum (expo-location + task manager), havuz, harita (MapLibre), navigasyon devri, teslim; ileride hakediş görünümü |
+| Kurye uygulaması | React Native + Expo (TypeScript), tek kod Android + iOS | Vardiya, arka plan konum (expo-location + task manager), havuz, harita (MapLibre), uygulama içi adım adım navigasyon (İterasyon 2, [ADR-0015](kararlar/0015-uygulama-ici-navigasyon.md); yedek: Google Maps devri), teslim; ileride hakediş görünümü |
 | Yönetim paneli | React + Vite + TypeScript, Mantine, TanStack Query, MapLibre GL JS | İşletme / kurye / paket yönetimi, canlı harita, atama; ileride raporlar |
 | İşletme paneli (sonra) | React + TypeScript | Restoranların kendi siparişlerini girmesi |
 | Ortak sözleşme | OpenAPI 3.1 + WebSocket protokolü (`packages/contracts`) | Üç bileşenin paylaştığı TS tipleri (contract-first) |
@@ -42,7 +42,7 @@ flowchart LR
     subgraph Dis["Dış servisler"]
         OFM["OpenFreeMap<br/>(vektör karolar)"]
         GEO["Photon veya<br/>Google Places (New)"]
-        NAV["Google Maps / Apple Haritalar<br/>(navigasyon uygulaması)"]
+        NAV["Google Maps / Apple Haritalar<br/>(yedek navigasyon devri)"]
         PUSH["FCM / APNs<br/>(İterasyon 2b)"]
     end
 
@@ -58,7 +58,8 @@ flowchart LR
     API -->|"/geo sağlayıcı"| GEO
     KA -->|"MapLibre karoları"| OFM
     YP -->|"MapLibre karoları"| OFM
-    KA -->|"navigasyon intent / URL"| NAV
+    KA -->|"navigasyon rotası: POST /courier/navigation/route"| API
+    KA -.->|"yedek: navigasyon intent / URL"| NAV
     API -.-> PUSH
     PUSH -.-> KA
 ```
@@ -222,8 +223,8 @@ sequenceDiagram
 1. Yönetici paket girer. Adres API'nin `/geo` uçlarıyla otomatik tamamlanır: anahtar varsa Google Places (New) ve session token, yoksa Photon; hizmet bölgesiyle sınırlıdır. Gerekirse haritada iğne sürüklenerek düzeltilir.
 2. Paket `IN_POOL` durumuna geçer. Vardiyadaki kuryelere WebSocket `pool.updated` olayı gider; uygulama, alış noktası kendi yarıçapı içindeyse titreşimle uyarır. Push (FCM/APNs) İterasyon 2b'dedir.
 3. Kurye havuzu yarıçap filtresiyle (PostGIS `ST_DWithin`, alış noktasına göre) görür ve paketi alır. Paket uygulamada MapLibre haritasında açılır; tek dokunuşla navigasyon başlar:
-   - Android: `google.navigation:` intent'i (iki teker modu), olmazsa `geo:`.
-   - iOS: Google Maps veya Apple Haritalar.
+   - **İterasyon 2: uygulama içi adım adım navigasyon** ([ADR-0015](kararlar/0015-uygulama-ici-navigasyon.md), [bölüm 6.3](#63-uygulama-içi-navigasyon-iterasyon-2)).
+   - **Yedek (İterasyon 1 davranışı; rota motoru erişilemezse veya kurye isterse):** Android `google.navigation:` intent'i (iki teker modu), olmazsa `geo:`; iOS Google Maps veya Apple Haritalar.
 4. Çok paketli durumlarda duraklar OSRM + VROOM ile sıralanır (İterasyon 2, [bölüm 6.1](#61-rota-uyumlu-atama-iterasyon-2)). Her durak için ayrı navigasyon başlatılır (durum takibi için); isteğe bağlı olarak çok duraklı Maps URL'si kullanılır (en fazla 9 ara nokta, parçalı).
 
 ### 6.1 Rota uyumlu atama (iterasyon 2)
@@ -241,6 +242,30 @@ sequenceDiagram
 7. Kurye "Rotam" ekranında numaralı durakları görür; panelde rota çizgileri ve öneriler görünür. Alıştan önce gerekçeli ret, alıştan sonra iki devir yolu vardır: yönetici onaylı devir isteği ve kuryeler arası devir ([bölüm 6.2](#62-kuryeler-arası-devir-iterasyon-2)).
 
 Tasarım, algoritma, veri modeli taslağı ve benchmark planı: iterasyon-2/ROTA-UYUMLU-ATAMA.md. Yeni tablolar (`courier_routes`, `route_stops`, `assignment_suggestions`, `package_rejections`, `handover_requests`, `handover_offers`) yukarıdaki diyagramdaki `STOP` kavramının yerini alır.
+
+### 6.3 Uygulama içi navigasyon (iterasyon 2)
+
+> Karar: [ADR-0015](kararlar/0015-uygulama-ici-navigasyon.md). Görev: API tarafı N1, uygulama tarafı N2.
+
+"Navigasyonu başlat" Google Maps'e atmak yerine uygulama içinde Google Maps gibi çalışan bir ekran açar: yeşil üst bant (manevra oku, mesafe, sokak adı, sonraki manevra), eğik ve yön-yukarı kamera, alt çubuk (kalan süre, km, varış saati, Çıkış), Türkçe sesli yönlendirme, yoldan çıkınca otomatik yeniden rota; varışta durak kartı açılır, işlemden sonra sonraki durağa navigasyon kendiliğinden başlar.
+
+```mermaid
+sequenceDiagram
+    participant K as Kurye uygulaması
+    participant A as API (navigation modülü)
+    participant O as OSRM (motosiklet profili)
+    K->>A: POST /courier/navigation/route (konum + stopId | next)
+    A->>A: hedefi çöz (kendi PLANNED durağı, kiracı JWT'den)
+    A->>O: /route/v1 steps=true overview=full
+    O-->>A: geometri + manevralar
+    A->>A: Türkçe talimat + sesli anonslar, geometri aralıkları
+    A-->>K: NavigationRoute
+    Note over K: rotaya oturtma, adım ilerlemesi, expo-speech tr-TR
+    K->>A: yoldan çıkınca aynı uç (yeni konum): yeniden rota
+    A--xK: 503 NAVIGATION_UNAVAILABLE / 422: Google Maps devri
+```
+
+Sunucu durum tutmaz; Türkçe metinler yalnızca sunucuda üretilir. Sınırlar: canlı trafik, şerit ve hız sınırı yok (ADR-0015 madde 5).
 
 ### 6.2 Kuryeler arası devir (iterasyon 2)
 

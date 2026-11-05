@@ -6,8 +6,8 @@ Kapsam, pilot müşteri keşfi sonrasında değişebilir. Her iterasyon bir demo
 |---|---|---|
 | 0 | Planlama ve araştırma | 🚧 Devam ediyor |
 | 1 | Çekirdek | ✅ Uygulandı ve birleştirildi |
-| 2 | **Ana hedef: dinamik, rota uyumlu dağıtım** (tek akıllı rota, en iyi uyan kuryeye tekil ve toplu atama, kararlı yeniden sıralama, öneri / otomatik atama, ret ve devir, benchmark) | 🚧 Spesifikasyon hazır (SPEC) |
-| 2b | Platform ve sağlamlaştırma: RLS, push, iOS, OTA, adres kalitesi testi | ⏳ |
+| 2 | **Ana hedef: dinamik, rota uyumlu dağıtım** (tek akıllı rota, en iyi uyan kuryeye tekil ve toplu atama, kararlı yeniden sıralama, öneri / otomatik atama, ret ve devir, uygulama içi navigasyon, benchmark) | ✅ Uygulandı ve birleştirildi (SPEC) |
+| 2b | Platform ve sağlamlaştırma: RLS, push (FCM), iOS / TestFlight, OTA, aynı restoran gruplaması, gerçek cihaz testi | ⏳ |
 | 3 | **Eskişehir'e özel harita platformu:** kendi karo / geocoder / OSM güncelleme hattı, çevrimdışı harita ve eylem kuyruğu, saha verisinden öğrenen harita, üretim hazırlığı | 📝 Plan hazır (PLAN) |
 | 4 | Hakediş, kasa ve atama (eski İterasyon 3) | ⏳ |
 | 5+ | Genişleme (eski İterasyon 4+) | ⏳ |
@@ -56,31 +56,43 @@ Teknik spesifikasyon: iterasyon-1/SPEC.md. API sözleşmesi `packages/contracts`
 
 ---
 
-## İterasyon 2 — ana hedef: dinamik, rota uyumlu dağıtım 🚧
+## İterasyon 2 — ana hedef: dinamik, rota uyumlu dağıtım ✅
 
 **Hedef:** Birden fazla paket taşıyan kurye paketlerini **tek bir akıllı rota** olarak, haritada numaralı duraklarla ve uygulanabilir en kısa sırayla görür. Yeni paket (veya aynı anda gelen paket**ler**) kuryenin **mevcut rotasına en iyi uyduğu** kuryeye, mevcut paketleri gecikme ve tazelik sınırları içinde tutarak atanır ve rota durak olarak yeniden kurulur. Pilot müşterinin sahadaki sorunu: mevcut yazılım yoldaki kuryeye yeni paketi yalnızca yakınlığa göre atıyor, paket çoğu zaman rota dışında veya ters yönde kalıyor, kuryeler yanlış atanmış paketi bırakıyor, yönetici haritaya bakıp elle yeniden dağıtıyor. Rota uyumlu dağıtım ürünün ayırt edici özelliği ve müşterinin **en yüksek önceliğidir**.
 
-**Teknik spesifikasyon: iterasyon-2/SPEC.md** (sözleşme `packages/contracts` 0.2.0). Tasarım dayanakları: ROTA-UYUMLU-ATAMA.md, KURYE-DEVIR.md. Kararlar: [ADR-0009](kararlar/0009-rota-uyumlu-atama.md), [ADR-0010](kararlar/0010-kuryeler-arasi-devir.md), [ADR-0011](kararlar/0011-osrm-motosiklet-profili-ve-rota-altyapisi.md), [ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md), [ADR-0013](kararlar/0013-rota-motoru-siniri-ve-yaklasik-mod.md), [ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md).
+**Teknik spesifikasyon: iterasyon-2/SPEC.md** (sözleşme `packages/contracts` 0.2.0). Tasarım dayanakları: ROTA-UYUMLU-ATAMA.md, KURYE-DEVIR.md. Kararlar: [ADR-0009](kararlar/0009-rota-uyumlu-atama.md), [ADR-0010](kararlar/0010-kuryeler-arasi-devir.md), [ADR-0011](kararlar/0011-osrm-motosiklet-profili-ve-rota-altyapisi.md), [ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md), [ADR-0013](kararlar/0013-rota-motoru-siniri-ve-yaklasik-mod.md), [ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md), [ADR-0015](kararlar/0015-uygulama-ici-navigasyon.md) (uygulama içi navigasyon, ek kapsam).
 
 Beş paralel görev (gorevler/): **R** rota altyapısı + motor + benchmark, **A2** API rota ve atama alanı, **H2** API devir alanı (A2'nin M1 dönüm noktasından sonra), **B2** panel, **C2** kurye uygulaması. Birleştirme sırası: R → A2 → H2 → B2 → C2 → entegrasyon turu (SPEC §20.5).
 
 **Çekirdek: dinamik rota uyumlu dağıtım** (kabul kriterleri SPEC §19.0 (a)-(f))
-- [ ] OSRM (MLD, motosiklet profili) + VROOM konteynerleri (compose `routing` profili) ve tekrar üretilebilir Eskişehir çıkarımı (osmium, PowerShell + Bash) ([ADR-0011](kararlar/0011-osrm-motosiklet-profili-ve-rota-altyapisi.md))
-- [ ] Kurye başına canlı rota ve duraklar (`courier_routes`, `route_stops`; `PICKUP` / `DROPOFF` / `HANDOVER`)
-- [ ] En ucuz yerleştirme + uygulanabilirlik (kapasite, tazelik 35 dk, **mevcut paket başına gecikme sınırı 8 dk**) + skor + gerekçeli öneri ("Rotası üzerinde, +2 dk"); 25 kurye için < 300 ms
-- [ ] **Toplu atama:** birden çok yeni paketin tüm kuryelerin mevcut rotalarına birlikte yerleştirilmesi (regret-2), aynı restoran siparişlerinin gruplanması ([ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md))
-- [ ] Nihai sıra (VROOM; yokken süreç içi kesin sıralayıcı) ve kararlılık kuralları: kilitli sıradaki durak, 2 dk kazanç eşiği, soğuma, sessiz değişiklik yok
-- [ ] Üç atama modu: `ONERI` (varsayılan), `AKILLI_HAVUZ`, `OTOMATIK` (+ toplu pencere) ve bekleyenler kuyruğu; kiracı ayarları
-- [ ] Rota motoru düşerse açık işaretli yaklaşık mod ve İterasyon 1 davranışına dönüş ([ADR-0013](kararlar/0013-rota-motoru-siniri-ve-yaklasik-mod.md))
-- [ ] Panel: rota çizgileri ve numaralı duraklar (yeni paketle canlı değişim), öneri paneli (ayrıntı + oluşturma), sürükle-bırak atama ve büyük sapma / gecikme uyarısı, bekleyenler ve toplu öneri
-- [ ] Kurye uygulaması "Rotam": numaralı duraklar (liste + harita), sıradaki durağa tek dokunuş navigasyon, rota değişince şerit ("Yeni paket rotana eklendi: +3 dk")
-- [ ] Simülasyon benchmark'ı (`npm run benchmark`): sentetik Eskişehir günü (~20 kurye, ~400 paket, yoğun saatler, aynı restoran siparişleri), "en yakın kurye" ile rota uyumlu atama karşılaştırması (toplam km, ortalama teslim süresi, geç teslim %, geri dönüş); grafik + rapor `docs/benchmark/`
+- [x] OSRM (MLD, motosiklet profili) + VROOM konteynerleri (compose `routing` profili) ve tekrar üretilebilir Eskişehir çıkarımı (osmium, PowerShell + Bash) ([ADR-0011](kararlar/0011-osrm-motosiklet-profili-ve-rota-altyapisi.md))
+- [x] Kurye başına canlı rota ve duraklar (`courier_routes`, `route_stops`; `PICKUP` / `DROPOFF` / `HANDOVER`)
+- [x] En ucuz yerleştirme + uygulanabilirlik (kapasite, tazelik 35 dk, **mevcut paket başına gecikme sınırı 8 dk**) + skor + gerekçeli öneri ("Rotası üzerinde, +2 dk"); 25 kurye için < 300 ms
+- [x] **Toplu atama:** birden çok yeni paketin tüm kuryelerin mevcut rotalarına birlikte yerleştirilmesi (regret-2), aynı restoran siparişlerinin gruplanması ([ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md))
+- [x] Nihai sıra (VROOM; yokken süreç içi kesin sıralayıcı) ve kararlılık kuralları: kilitli sıradaki durak, 2 dk kazanç eşiği, soğuma, sessiz değişiklik yok
+- [x] Üç atama modu: `ONERI` (varsayılan), `AKILLI_HAVUZ`, `OTOMATIK` (+ toplu pencere) ve bekleyenler kuyruğu; kiracı ayarları
+- [x] Rota motoru düşerse açık işaretli yaklaşık mod ve İterasyon 1 davranışına dönüş ([ADR-0013](kararlar/0013-rota-motoru-siniri-ve-yaklasik-mod.md))
+- [x] Panel: rota çizgileri ve numaralı duraklar (yeni paketle canlı değişim), öneri paneli (ayrıntı + oluşturma), sürükle-bırak atama ve büyük sapma / gecikme uyarısı, bekleyenler ve toplu öneri
+- [x] Kurye uygulaması "Rotam": numaralı duraklar (liste + harita), sıradaki durağa tek dokunuş navigasyon (Google Maps devri; uygulama içi navigasyon aşağıda), rota değişince şerit ("Yeni paket rotana eklendi: +3 dk")
+- [x] **Uygulama içi adım adım navigasyon** ([ADR-0015](kararlar/0015-uygulama-ici-navigasyon.md), görevler N1 API + N2 uygulama): "Navigasyonu başlat" Google Maps'e atmak yerine uygulama içinde yeşil bantlı, eğik / yön-yukarı kameralı, Türkçe sesli yönlendirmeli, yoldan çıkınca otomatik yeniden rotalı ekran açar; varışta durak kartı, işlemden sonra sonraki durağa otomatik navigasyon. OSRM kapalıysa Google Maps devri yedek. Canlı trafik, şerit ve hız sınırı yok
+- [x] Simülasyon benchmark'ı (`npm run benchmark`): sentetik Eskişehir günü (~20 kurye, ~400 paket, yoğun saatler, aynı restoran siparişleri), "en yakın kurye" ile rota uyumlu atama karşılaştırması (toplam km, ortalama teslim süresi, geç teslim %, geri dönüş); grafik + rapor `docs/benchmark/`
 
 **Kontrollü ret ve devir**
-- [ ] Gerekçeli ret (alıştan önce) ve yeniden dağıtım; `release` uyumluluğu; ret uyarısı; metrikler (ortalama sapma, elle yeniden atama, ret oranı, kötü atama oranı, zamanında teslim)
-- [ ] Yönetici onaylı devir isteği (yol B) ve kuryeler arası devir (yol A, [ADR-0010](kararlar/0010-kuryeler-arasi-devir.md)): aday listesi, teklif, iki aşama, QR / 4 haneli kod, buluşma yarıçapı, tazeliğin orijinal alıştan sürmesi, nakit sorumluluğu devri, sınırlar, yönetici onayı ve elle onay, metrikler
-- [ ] Kurye uygulaması devir ekranları (aday listesi, teklif kartı, buluşma, kod / QR, QR tarama, nakit onayı); panel devirler sekmesi, onaylar, devir ayarları
-- [ ] KVKK: aydınlatma metni güncellemesi (meslektaşa yakınlık / buluşma konumu, rota motoru), yeni `consentVersion`; açık sorular 24-27'nin pilotla kapatılması
+- [x] Gerekçeli ret (alıştan önce) ve yeniden dağıtım; `release` uyumluluğu; ret uyarısı; metrikler (ortalama sapma, elle yeniden atama, ret oranı, kötü atama oranı, zamanında teslim)
+- [x] Yönetici onaylı devir isteği (yol B) ve kuryeler arası devir (yol A, [ADR-0010](kararlar/0010-kuryeler-arasi-devir.md)): aday listesi, teklif, iki aşama, QR / 4 haneli kod, buluşma yarıçapı, tazeliğin orijinal alıştan sürmesi, nakit sorumluluğu devri, sınırlar, yönetici onayı ve elle onay, metrikler
+- [x] Kurye uygulaması devir ekranları (aday listesi, teklif kartı, buluşma, kod / QR, QR tarama, nakit onayı); panel devirler sekmesi, onaylar, devir ayarları
+- [x] KVKK: aydınlatma metni güncellemesi (TASLAK metin; hukuki onay ve açık soruların pilotla kapatılması açık) (meslektaşa yakınlık / buluşma konumu, rota motoru), yeni `consentVersion`
+
+**Teslim edilen (özet).** Gerçek rota motoru (OSRM motosiklet profili + VROOM; Eskişehir çıkarımı `npm run routing:build` ile tekrar üretilebilir) ve saf TypeScript atama motoru (en ucuz yerleştirme, regret-2 toplu atama, kararlılık kuralları) çalışır; motor düşerse açık işaretli yaklaşık moda iner. Panel: gerçek yolları izleyen rota çizgileri ve numaralı duraklar, öneri paneli, sürükle-bırak atama ve sapma uyarısı, bekleyenler, toplu öneri, devirler, ayarlar ve metrikler. Kurye uygulaması: "Rotam", uygulama içi adım adım navigasyon (gece teması sisteme / saate uyar), gerekçeli ret ve kuryeler arası devir (kod / QR). Benchmark ([docs/benchmark](benchmark/README.md)): sentetik Eskişehir gününde "en yakın kurye"ye göre toplam km -%30 ve geç teslim %19,9 → %3,2 (**simülasyon**, saha sonucu değil). Demo rehberi DEMO.md İterasyon 2 için güncellendi.
+
+**Açık kalanlar (takip işleri):**
+- Aynı restoranın siparişlerini **kuryenin mevcut rotasındaki** paketle gruplama (şimdi yalnızca toplu pencerede gruplanır)
+- **Gerçek cihaz saha testi** (uygulama içi navigasyon ve devir yalnızca emülatörde ve mock / gerçek API ile doğrulandı); Xiaomi / Samsung pil davranışı
+- iOS derlemesi ve TestFlight (Apple Developer hesabı gerekir)
+- Push bildirim (FCM; Firebase projesi gerekir): `CourierNotifier` bağlantı noktası hazır
+- PostgreSQL RLS (ikinci kiracıdan önce zorunlu)
+- Panelde atama önizlemesi (kesikli çizgi) düz çizgidir; gerçek yol geometrisi ile çizmek için öneri yanıtına geometri eklenmeli
+- Sentetik benchmark'ın pilotun gerçek siparişleriyle doğrulanması; `ROUTING_DURATION_FACTOR` kalibrasyonu
 
 **Pilotla doğrulanacak varsayımlar:** kurye başına azami paket, kabul edilebilir sapma, azami teslim süresi, mevcut paket gecikme sınırı, restoran hazırlık süresi bilgisi, otomatik atama tercihi, ret politikası, çoklu restoran alışı, `ROUTING_DURATION_FACTOR` kalibrasyonu ([MIMARI açık sorular 17-29](MIMARI.md#8-açık-sorular)).
 
@@ -96,6 +108,8 @@ Beş paralel görev (gorevler/): **R** rota altyapısı + motor + benchmark, **A
 
 İterasyon 2'den bilinçli olarak ayrılan maddeler (SPEC §1.3). Ön koşulu ürün sahibinin hesap / anahtar sağlaması olanlar işaretlidir.
 
+- [ ] Aynı restoranın siparişlerini kuryenin **mevcut rotasındaki** paketle gruplama (İterasyon 2'de yalnızca toplu pencerede)
+- [ ] Gerçek cihazda saha testi (uygulama içi navigasyon, devir, arka plan konumu; Xiaomi / Samsung)
 - [ ] PostgreSQL RLS (ikinci savunma hattı; `withTenant`, iki DB rolü) — **ikinci kiracı canlıya alınmadan önce zorunlu** ([ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md))
 - [ ] Push bildirim (FCM / APNs): yeni paket, atama, rota değişikliği, devir teklifi — *Firebase projesi gerekir* (`CourierNotifier` bağlantı noktası hazır)
 - [ ] iOS derleme ve TestFlight dağıtımı (EAS Build) — *Apple Developer hesabı gerekir* ([ADR-0003](kararlar/0003-dagitim-apk-self-update.md))

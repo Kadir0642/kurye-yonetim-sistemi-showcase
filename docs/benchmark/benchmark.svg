@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="580" viewBox="0 0 980 580" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<rect width="980" height="580" fill="#ffffff"/>
+<text x="70" y="34" font-size="20" font-weight="600" fill="#1f2328">En yakın kurye ile rota uyumlu atama (sentetik Eskişehir günü)</text>
+<text x="70" y="58" font-size="13" fill="#57606a">10 tohum, ~400 sipariş, 20 kurye; her ölçüt A stratejisine göre normalize (A = 100); çubuk ucu: ortalama, hata çubuğu: tohumlar arası standart sapma</text>
+<line x1="70" x2="960" y1="452" y2="452" stroke="#e5e8eb" stroke-width="1"/>
+<text x="62" y="456" font-size="12" text-anchor="end" fill="#57606a">0</text>
+<line x1="70" x2="960" y1="399.3372781065089" y2="399.3372781065089" stroke="#e5e8eb" stroke-width="1"/>
+<text x="62" y="403.3372781065089" font-size="12" text-anchor="end" fill="#57606a">20</text>
+<line x1="70" x2="960" y1="346.6745562130178" y2="346.6745562130178" stroke="#e5e8eb" stroke-width="1"/>
+<text x="62" y="350.6745562130178" font-size="12" text-anchor="end" fill="#57606a">40</text>
+<line x1="70" x2="960" y1="294.01183431952666" y2="294.01183431952666" stroke="#e5e8eb" stroke-width="1"/>
+<text x="62" y="298.01183431952666" font-size="12" text-anchor="end" fill="#57606a">60</text>
+<line x1="70" x2="960" y1="241.34911242603553" y2="241.34911242603553" stroke="#e5e8eb" stroke-width="1"/>
+<text x="62" y="245.34911242603553" font-size="12" text-anchor="end" fill="#57606a">80</text>
+<line x1="70" x2="960" y1="188.6863905325444" y2="188.6863905325444" stroke="#57606a" stroke-width="1.4" stroke-dasharray="5 4"/>
+<text x="62" y="192.6863905325444" font-size="12" text-anchor="end" fill="#57606a">100</text>
+<line x1="70" x2="960" y1="136.0236686390533" y2="136.0236686390533" stroke="#e5e8eb" stroke-width="1"/>
+<text x="62" y="140.0236686390533" font-size="12" text-anchor="end" fill="#57606a">120</text>
+<text x="18" y="274" font-size="12" fill="#57606a" transform="rotate(-90 18 274)" text-anchor="middle">A stratejisine göre % (A = 100, düşük iyi)</text>
+<rect x="81.0" y="188.7" width="45.625" height="263.3" fill="#8a8f98" rx="2"/>
+<text x="103.8" y="182.7" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">100</text>
+<rect x="132.6" y="222.5" width="45.625" height="229.5" fill="#4f7cac" rx="2"/>
+<line x1="155.4375" x2="155.4375" y1="227.52030745324666" y2="217.431350551842" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="151.4375" x2="159.4375" y1="217.431350551842" y2="217.431350551842" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="151.4375" x2="159.4375" y1="227.52030745324666" y2="227.52030745324666" stroke="#1f2328" stroke-width="1.4"/>
+<text x="155.4" y="211.4" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">87</text>
+<rect x="184.3" y="268.0" width="45.625" height="184.0" fill="#2f9e6d" rx="2"/>
+<line x1="207.0625" x2="207.0625" y1="271.0205522141373" y2="264.9422547939272" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="203.0625" x2="211.0625" y1="264.9422547939272" y2="264.9422547939272" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="203.0625" x2="211.0625" y1="271.0205522141373" y2="271.0205522141373" stroke="#1f2328" stroke-width="1.4"/>
+<text x="207.1" y="258.9" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">70</text>
+<rect x="235.9" y="268.0" width="45.625" height="184.0" fill="#e08a1e" rx="2"/>
+<line x1="258.6875" x2="258.6875" y1="270.6510720996891" y2="265.2858830714692" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="254.6875" x2="262.6875" y1="265.2858830714692" y2="265.2858830714692" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="254.6875" x2="262.6875" y1="270.6510720996891" y2="270.6510720996891" stroke="#1f2328" stroke-width="1.4"/>
+<text x="258.7" y="259.3" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">70</text>
+<text x="181.25" y="474" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">Toplam km</text>
+<rect x="303.5" y="188.7" width="45.625" height="263.3" fill="#8a8f98" rx="2"/>
+<text x="326.3" y="182.7" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">100</text>
+<rect x="355.1" y="209.0" width="45.625" height="243.0" fill="#4f7cac" rx="2"/>
+<line x1="377.9375" x2="377.9375" y1="212.51658474119427" y2="205.51922038976932" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="373.9375" x2="381.9375" y1="205.51922038976932" y2="205.51922038976932" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="373.9375" x2="381.9375" y1="212.51658474119427" y2="212.51658474119427" stroke="#1f2328" stroke-width="1.4"/>
+<text x="377.9" y="199.5" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">92</text>
+<rect x="406.8" y="263.4" width="45.625" height="188.6" fill="#2f9e6d" rx="2"/>
+<line x1="429.5625" x2="429.5625" y1="267.00809375641006" y2="259.8744145806735" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="425.5625" x2="433.5625" y1="259.8744145806735" y2="259.8744145806735" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="425.5625" x2="433.5625" y1="267.00809375641006" y2="267.00809375641006" stroke="#1f2328" stroke-width="1.4"/>
+<text x="429.6" y="253.9" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">72</text>
+<rect x="458.4" y="264.1" width="45.625" height="187.9" fill="#e08a1e" rx="2"/>
+<line x1="481.1875" x2="481.1875" y1="270.1272530826261" y2="258.1481484973325" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="477.1875" x2="485.1875" y1="258.1481484973325" y2="258.1481484973325" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="477.1875" x2="485.1875" y1="270.1272530826261" y2="270.1272530826261" stroke="#1f2328" stroke-width="1.4"/>
+<text x="481.2" y="252.1" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">71</text>
+<text x="403.75" y="474" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">Ortalama teslimat süresi</text>
+<text x="403.75" y="490" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">(sipariş → teslim)</text>
+<rect x="526.0" y="188.7" width="45.625" height="263.3" fill="#8a8f98" rx="2"/>
+<text x="548.8" y="182.7" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">100</text>
+<rect x="577.6" y="285.9" width="45.625" height="166.1" fill="#4f7cac" rx="2"/>
+<line x1="600.4375" x2="600.4375" y1="304.59719751787134" y2="267.13080223732294" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="596.4375" x2="604.4375" y1="267.13080223732294" y2="267.13080223732294" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="596.4375" x2="604.4375" y1="304.59719751787134" y2="304.59719751787134" stroke="#1f2328" stroke-width="1.4"/>
+<text x="600.4" y="261.1" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">63</text>
+<rect x="629.3" y="409.7" width="45.625" height="42.3" fill="#2f9e6d" rx="2"/>
+<line x1="652.0625" x2="652.0625" y1="422.3241279130011" y2="397.0790402122709" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="648.0625" x2="656.0625" y1="397.0790402122709" y2="397.0790402122709" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="648.0625" x2="656.0625" y1="422.3241279130011" y2="422.3241279130011" stroke="#1f2328" stroke-width="1.4"/>
+<text x="652.1" y="391.1" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">16</text>
+<rect x="680.9" y="416.2" width="45.625" height="35.8" fill="#e08a1e" rx="2"/>
+<line x1="703.6875" x2="703.6875" y1="427.76387379090147" y2="404.62390686717407" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="699.6875" x2="707.6875" y1="404.62390686717407" y2="404.62390686717407" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="699.6875" x2="707.6875" y1="427.76387379090147" y2="427.76387379090147" stroke="#1f2328" stroke-width="1.4"/>
+<text x="703.7" y="398.6" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">14</text>
+<text x="626.25" y="474" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">Geç teslim %</text>
+<text x="626.25" y="490" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">(alış → teslim &gt; 35 dk)</text>
+<rect x="748.5" y="188.7" width="45.625" height="263.3" fill="#8a8f98" rx="2"/>
+<text x="771.3" y="182.7" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">100</text>
+<rect x="800.1" y="222.5" width="45.625" height="229.5" fill="#4f7cac" rx="2"/>
+<line x1="822.9375" x2="822.9375" y1="227.52030745324674" y2="217.43135055184206" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="818.9375" x2="826.9375" y1="217.43135055184206" y2="217.43135055184206" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="818.9375" x2="826.9375" y1="227.52030745324674" y2="227.52030745324674" stroke="#1f2328" stroke-width="1.4"/>
+<text x="822.9" y="211.4" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">87</text>
+<rect x="851.8" y="268.0" width="45.625" height="184.0" fill="#2f9e6d" rx="2"/>
+<line x1="874.5625" x2="874.5625" y1="271.0205522141373" y2="264.9422547939272" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="870.5625" x2="878.5625" y1="264.9422547939272" y2="264.9422547939272" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="870.5625" x2="878.5625" y1="271.0205522141373" y2="271.0205522141373" stroke="#1f2328" stroke-width="1.4"/>
+<text x="874.6" y="258.9" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">70</text>
+<rect x="903.4" y="268.0" width="45.625" height="184.0" fill="#e08a1e" rx="2"/>
+<line x1="926.1875" x2="926.1875" y1="270.65107209968915" y2="265.28588307146924" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="922.1875" x2="930.1875" y1="265.28588307146924" y2="265.28588307146924" stroke="#1f2328" stroke-width="1.4"/>
+<line x1="922.1875" x2="930.1875" y1="270.65107209968915" y2="270.65107209968915" stroke="#1f2328" stroke-width="1.4"/>
+<text x="926.2" y="259.3" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">70</text>
+<text x="848.75" y="474" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">Geri dönüş oranı</text>
+<text x="848.75" y="490" font-size="13" font-weight="600" text-anchor="middle" fill="#1f2328">(km / doğrudan km)</text>
+<rect x="70" y="513" width="14" height="14" fill="#8a8f98" rx="2"/>
+<text x="92" y="525" font-size="13" fill="#1f2328">A  En yakın kurye</text>
+<rect x="400" y="513" width="14" height="14" fill="#4f7cac" rx="2"/>
+<text x="422" y="525" font-size="13" fill="#1f2328">D  A + sıra optimizasyonu</text>
+<rect x="70" y="535" width="14" height="14" fill="#2f9e6d" rx="2"/>
+<text x="92" y="547" font-size="13" fill="#1f2328">B  Rota uyumlu (öneri)</text>
+<rect x="400" y="535" width="14" height="14" fill="#e08a1e" rx="2"/>
+<text x="422" y="547" font-size="13" fill="#1f2328">C  Rota uyumlu (otomatik + toplu)</text>
+<text x="960" y="570" font-size="11" text-anchor="end" fill="#57606a">Yol verisi: © OpenStreetMap katkıcıları (ODbL). Veri tamamen kurgusal.</text>
+</svg>

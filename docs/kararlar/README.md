@@ -20,6 +20,7 @@ Mimari ve teknoloji kararları, bağlamı ve alternatifleriyle birlikte burada t
 | [0012](0012-rls-iterasyon-2b-ye-ertelendi.md) | PostgreSQL RLS İterasyon 2b'ye ertelendi; İterasyon 2 tabloları RLS'ye hazır | Önerildi |
 | [0013](0013-rota-motoru-siniri-ve-yaklasik-mod.md) | Rota motoru sınırı, yaklaşık (düşüş) modu ve süreç içi kesin sıralayıcı | Önerildi |
 | [0014](0014-toplu-atama-regret-ekleme.md) | Toplu atama: mevcut rotalara regret-2 ekleme, gecikme sınırı, aynı işletme gruplaması | Önerildi |
+| [0015](0015-uygulama-ici-navigasyon.md) | Uygulama içi adım adım navigasyon: kendi hafif navigasyonumuz (OSRM adımları + MapLibre + Türkçe sesli yönlendirme), Google Maps devri yedek | Kabul edildi |
 | [0016](0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md) | Eskişehir'e özel, kendi barındırdığımız harita platformu (planetiler + PMTiles, kendi Photon, haftalık OSM hattı, çevrimdışı harita); ADR-0008'i kısmen değiştirir | Kabul edildi |
 | [0017](0017-saha-verisinden-ogrenen-harita.md) | Saha verisinden öğrenen harita: öğrenilmiş teslim noktaları ve öğrenilmiş hızlar | Kabul edildi |
 
