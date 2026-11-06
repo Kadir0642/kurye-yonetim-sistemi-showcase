@@ -23,8 +23,14 @@ Mimari ve teknoloji kararları, bağlamı ve alternatifleriyle birlikte burada t
 | [0015](0015-uygulama-ici-navigasyon.md) | Uygulama içi adım adım navigasyon: kendi hafif navigasyonumuz (OSRM adımları + MapLibre + Türkçe sesli yönlendirme), Google Maps devri yedek | Kabul edildi |
 | [0016](0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md) | Eskişehir'e özel, kendi barındırdığımız harita platformu (planetiler + PMTiles, kendi Photon, haftalık OSM hattı, çevrimdışı harita); ADR-0008'i kısmen değiştirir | Kabul edildi |
 | [0017](0017-saha-verisinden-ogrenen-harita.md) | Saha verisinden öğrenen harita: öğrenilmiş teslim noktaları ve öğrenilmiş hızlar | Kabul edildi |
+| [0018](0018-harita-karo-ve-stil-sunumu.md) | Harita karolarının ve stillerin sunumu: API yolu (prod'da Caddy diskten), PMTiles + Range, sürümlü değişmez dosyalar, kendi glyph / sprite | Önerildi |
+| [0019](0019-kurye-cevrimdisi-harita-ve-navigasyon.md) | Kurye uygulamasında çevrimdışı harita (yerel PMTiles, manifest + sha256) ve çevrimdışı navigasyon (rota bacağı önbelleği) | Önerildi |
+| [0020](0020-cevrimdisi-eylem-kuyrugu-ve-idempotency.md) | Çevrimdışı eylem kuyruğu ve sunucu tarafı idempotency (Idempotency-Key, cihaz olay zamanı, çakışma sözleşmesi) | Önerildi |
+| [0021](0021-haftalik-osm-guncelleme-hatti.md) | Haftalık OSM güncelleme hattı: Node orkestra, sürüm dizinleri, iç geçitle mavi / yeşil OSRM ve Photon, kapılar, geri alma | Önerildi |
+| [0022](0022-uretim-dagitimi-ucretsiz-katman.md) | Pilot öncesi üretim dağıtımı, yalnızca ücretsiz bileşenlerle (Caddy + Let's Encrypt, saatlik pg_dump, Uptime Kuma, yalın CI, sırlar, APK imzalama) | Önerildi |
+| [0023](0023-dagitim-algoritmasi-v2.md) | Dağıtım algoritması v2: kayan ufuk toplu atama + sınırlı kuryeler arası ALNS (bayrak arkasında); CBBA yalnızca araştırma taban çizgisi | Önerildi |
 
-İterasyon 1 teknik spesifikasyonu: docs/iterasyon-1/SPEC.md. İterasyon 2 ana hedefi (rota uyumlu atama) tasarımı: docs/iterasyon-2/ROTA-UYUMLU-ATAMA.md. Kuryeler arası devir tasarımı: docs/iterasyon-2/KURYE-DEVIR.md. İterasyon 2 teknik spesifikasyonu: docs/iterasyon-2/SPEC.md. İterasyon 3 (harita platformu) planı: docs/iterasyon-3/PLAN.md. (0015 numarası başka bir çalışma kolunda ayrılmıştır.)
+İterasyon 1 teknik spesifikasyonu: docs/iterasyon-1/SPEC.md. İterasyon 2 ana hedefi (rota uyumlu atama) tasarımı: docs/iterasyon-2/ROTA-UYUMLU-ATAMA.md. Kuryeler arası devir tasarımı: docs/iterasyon-2/KURYE-DEVIR.md. İterasyon 2 teknik spesifikasyonu: docs/iterasyon-2/SPEC.md. İterasyon 3 (harita platformu) planı: docs/iterasyon-3/PLAN.md; İterasyon 3a teknik spesifikasyonu: docs/iterasyon-3/SPEC-3a.md. (0015 numarası başka bir çalışma kolunda ayrılmıştır.)
 
 ## Durumlar
 

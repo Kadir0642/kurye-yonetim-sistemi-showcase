@@ -2,13 +2,13 @@
 
 > Restoranların platform komisyonu ödemeden kendi teslimatını yapabilmesi için, kurye firmalarına yönelik çok kiracılı (multi-tenant) kurye yönetim platformu: mobil kurye uygulaması (Android + iOS), web yönetim paneli ve backend.
 
-**✅ İterasyon 2 tamamlandı · İterasyon 3 (Eskişehir'e özel harita platformu) planlandı**
+**✅ İterasyon 3a tamamlandı** (kendi harita yığınımız, çevrimdışı kurye uygulaması, üretim hazırlığı) · İterasyon 3b-3c (saha verisinden öğrenen harita) planlandı
 
 Pilot bölge: Eskişehir; tasarım çok şehirli kullanıma hazırdır ([ADR-0006](docs/kararlar/0006-hizmet-bolgesi-eskisehir.md)).
 
 > **Bu bir vitrin (showcase) reposudur.** Ürün ticari olduğu için **kaynak kod özel (private) bir depoda tutulur** ve burada yer almaz. Bu depo; proje özetini, mimariyi, karar kayıtlarını (ADR), yapay zekâ destekli geliştirme sürecini, yol haritasını ve ekran görüntülerini içerir. Kaynak kod, mülakatlarda talep üzerine gösterilebilir. Vitrin, her iterasyon sonunda özel depodan güncellenir.
 
-**English summary:** Kurye Yönetim Sistemi is a multi-tenant courier management platform for Turkish courier firms that deliver for many restaurants for a per-package fee. It consists of a React Native + Expo Android courier app (background location, sideloaded APK), a React admin web panel with a live map and a NestJS/PostgreSQL+PostGIS backend. It is developed through an AI-orchestrated workflow (Claude Opus orchestrator + Sonnet sub-agents) with a human product owner; see [docs/GELISTIRME-SURECI.md](docs/GELISTIRME-SURECI.md). **This is a showcase repository:** the source code lives in a private repository because this is a commercial product, and can be demonstrated on request during interviews. This repository contains the architecture, decision records (ADRs), development process, roadmap and screenshots. Iterations 1 and 2 are complete: the screenshots below come from the running system. Iteration 2 delivered route-aware assignment (real OSRM + VROOM engine, suggestions, batch assignment, drag-and-drop with warnings), courier-to-courier handover, a map-first route screen and in-app turn-by-turn navigation; in a synthetic Eskişehir-day simulation (not a field result) it cut total distance by about 30% and late deliveries from 19.9% to 3.2% versus "nearest courier" (see Sonuçlar). Iteration 3 (a self-hosted, Eskişehir-specific map platform) is planned.
+**English summary:** Kurye Yönetim Sistemi is a multi-tenant courier management platform for Turkish courier firms that deliver for many restaurants for a per-package fee. It consists of a React Native + Expo Android courier app (background location, sideloaded APK), a React admin web panel with a live map and a NestJS/PostgreSQL+PostGIS backend. It is developed through an AI-orchestrated workflow (Claude Opus orchestrator + Sonnet sub-agents) with a human product owner; see [docs/GELISTIRME-SURECI.md](docs/GELISTIRME-SURECI.md). **This is a showcase repository:** the source code lives in a private repository because this is a commercial product, and can be demonstrated on request during interviews. This repository contains the architecture, decision records (ADRs), development process, roadmap and screenshots. Iterations 1, 2 and 3a are complete: the screenshots below come from the running system. Iteration 2 delivered route-aware assignment (real OSRM + VROOM engine, suggestions, batch assignment, drag-and-drop with warnings), courier-to-courier handover, a map-first route screen and in-app turn-by-turn navigation; in a synthetic Eskişehir-day simulation (not a field result) it cut total distance by about 30% and late deliveries from 19.9% to 3.2% versus "nearest courier" (see Sonuçlar). Iteration 3a is complete: a self-hosted, Eskişehir-specific map stack (own vector tiles, styles and Photon geocoder, weekly blue/green OSM refresh pipeline) with zero third-party map requests, an offline-capable courier app (4.4 MB offline map, offline turn-by-turn navigation, an idempotent offline action queue with conflict handling) and production-readiness work; field-learned maps (3b-3c) are planned.
 
 ---
 
@@ -69,6 +69,10 @@ Durum: ✅ tamamlandı (İterasyon 1-2), ⏳ planlandı. Ayrıntılı kapsam iç
 - ✅ Üç atama modu (öneri, akıllı havuz, otomatik), bekleyenler kuyruğu, **toplu atama** (aynı restoranın siparişleri aynı kuryede gruplanır)
 - ✅ Rota motoru düşerse açık işaretli yaklaşık mod ve elle atamaya geri dönüş
 - ✅ Simülasyon benchmark'ı: "en yakın kurye" ile karşılaştırma ([sonuçlar](#sonuçlar))
+
+### 🗺️ Kendi harita yığınımız ve çevrimdışı çalışma (İterasyon 3a)
+
+> Harita karoları, stiller, rota motoru ve adres arama **Eskişehir OSM çıkarımından kendi sunucumuzda** üretilir: panelde ve uygulamada üçüncü taraf harita, yazı tipi veya adres servisine **sıfır istek** (ağ sekmesi kanıtlı). Kurye uygulaması 4,4 MB'lık Eskişehir paketini indirir (sha256 doğrulamalı, kaldığı yerden sürer), **uçak modunda** harita, "Rotam" ve adım adım navigasyon çalışır; "Aldım" / "Teslim ettim" eylemleri cihazda kuyruğa girer, bağlantı gelince `Idempotency-Key` ile **tam bir kez** gönderilir (cihaz zamanıyla); başka kuryeye geçmiş pakette açık bir "senkron çakışması" kartı çıkar. Haftalık OSM güncellemesi kapılı, sıfır kesintili mavi / yeşil geçişle yapılır. Kararlar: [ADR-0016](docs/kararlar/0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md), [ADR-0018](docs/kararlar/0018-harita-karo-ve-stil-sunumu.md), [ADR-0019](docs/kararlar/0019-kurye-cevrimdisi-harita-ve-navigasyon.md), [ADR-0020](docs/kararlar/0020-cevrimdisi-eylem-kuyrugu-ve-idempotency.md), [ADR-0021](docs/kararlar/0021-haftalik-osm-guncelleme-hatti.md), [ADR-0022](docs/kararlar/0022-uretim-dagitimi-ucretsiz-katman.md). Adres kalitesi (34 adres, 148 sorgu): <= 50 m isabet %71 -> %83 (sorgu normalleştirmesiyle), ayrıntı ve sınırlar: [adres kalitesi raporu](docs/benchmark/adres-kalitesi/README.md).
 
 ### Sipariş ve paket yönetimi
 - ✅ Sınırsız işletme tanımı, firma başına çok kiracılı yapı (İterasyon 1)
@@ -145,6 +149,31 @@ Aşağıdaki görüntüler gerçek API, gerçek rota motoru (OSRM + VROOM) ve ku
 
 </details>
 
+### Kendi harita yığınımız ve çevrimdışı çalışma (İterasyon 3a)
+
+Aşağıdaki görüntüler emülatörde, **gerçek API + kendi karolarımız + kendi Photon'umuz + gerçek OSRM** ile alınmıştır (kurgusal veri, kişisel veri yok).
+
+<table>
+  <tr>
+    <td colspan="2" align="center"><img src="docs/assets/iterasyon-3a/t-panel-canli-harita-kendi-karo.jpg" width="900" alt="Panel: canlı harita kendi karolarımızla"><br><sub>Panel: canlı harita kendi PMTiles karolarımız ve stilimizle; ağ sekmesinde yalnızca yerel istekler</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/assets/iterasyon-3a/m-harita-hazir.png" width="300" alt="Çevrimdışı harita hazır"><br><sub>Çevrimdışı harita paketi: sürüm, boyut, sha256 doğrulaması</sub></td>
+    <td align="center"><img src="docs/assets/iterasyon-3a/e-ucak-modu-aldim-kaydedildi.png" width="300" alt="Uçak modunda Aldım"><br><sub>Uçak modu: harita yerelden çizilir, "Aldım" kuyruğa alınır ("Çevrimdışı · Son güncelleme")</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/assets/iterasyon-3a/e-cevrimdisi-bekleyen-eylemler-gercek-api.png" width="300" alt="Bekleyen eylemler"><br><sub>Dört bekleyen eylem ve 5 bacaklık navigasyon önbelleği</sub></td>
+    <td align="center"><img src="docs/assets/iterasyon-3a/e-senkron-cakismasi-gercek-api.png" width="300" alt="Senkron çakışması"><br><sub>Bağlantı gelince kuyruk boşalır; başka kuryeye verilen pakette açık çakışma iletisi</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/assets/iterasyon-3a/e-cevrimdisi-navigasyon-api-kapali.png" width="300" alt="Çevrimdışı navigasyon"><br><sub>Sunucu erişilemezken önbellekteki bacakla adım adım navigasyon</sub></td>
+    <td align="center"><img src="docs/assets/iterasyon-3a/m-cevrimdisi-navigasyon.gif" width="300" alt="Çevrimdışı navigasyon GIF"><br><sub>Çevrimdışı navigasyon: yoldan çıkınca "rotaya dön" kılavuzu</sub></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><img src="docs/assets/iterasyon-3a/g-adres-kalitesi.png" width="700" alt="Adres kalitesi"><br><sub>Adres kalitesi testi: genel Photon, kendi Photon, sorgu normalleştirme ve simüle öğrenilmiş nokta</sub></td>
+  </tr>
+</table>
+
 ### Kurye uygulaması (Android)
 
 <table>
@@ -206,7 +235,7 @@ flowchart LR
     end
 
     subgraph Dis["Dış servisler"]
-        OFM["OpenFreeMap<br/>(MapLibre karoları)"]
+        OFM["Kendi PMTiles karoları<br/>(MapLibre)"]
         GEO["Photon / Google Places<br/>(adres arama)"]
         PUSH["FCM / APNs<br/>(İterasyon 2b)"]
     end
@@ -252,7 +281,7 @@ flowchart LR
 | Veritabanı | PostgreSQL 16 + PostGIS; satır düzeyinde güvenlik (RLS) İterasyon 2b'de | Kabul edildi |
 | Önbellek / pub-sub | Redis | Kabul edildi |
 | Gerçek zamanlı | Düz WebSocket (panel + kurye); push (FCM/APNs) İterasyon 2b'de | Kabul edildi |
-| Harita | MapLibre + OpenFreeMap (ücretsiz, anahtarsız) | Kabul edildi |
+| Harita | MapLibre + kendi PMTiles karolarımız ve stillerimiz (OpenStreetMap; ücretsiz, anahtarsız; OpenFreeMap yalnızca geliştirme yedeği) | Kabul edildi |
 | Adres | API üzerinden Photon veya Google Places (New), hizmet bölgesi kısıtlı | Kabul edildi |
 | Rota ve optimizasyon | OSRM (motosiklet profili) + VROOM, kendi barındırdığımız Eskişehir çıkarımı; atama motoru saf TypeScript (en ucuz yerleştirme, regret-2 toplu atama) | Çalışıyor |
 | Dağıtım | Android APK + OTA (expo-updates); iOS TestFlight / Custom App | Kabul edildi |
@@ -266,7 +295,8 @@ flowchart LR
 | 1 | Çekirdek: kimlik / tenant, işletme, paket, havuz, yarıçap filtresi, kurye app, canlı harita, konum kesildi uyarısı | ✅ Tamamlandı |
 | 2 | **Rota uyumlu atama:** gerçek rota motoru (OSRM + VROOM), rota uyumlu öneri / toplu atama, bekleyenler, ret ve kuryeler arası devir, "Rotam", uygulama içi navigasyon, benchmark | ✅ Tamamlandı |
 | 2b | Platform ve sağlamlaştırma: push (FCM), iOS / TestFlight, RLS, OTA, aynı restoranın mevcut rotadaki paketiyle gruplanması, gerçek cihaz saha testi | ⏳ |
-| 3 | **Eskişehir'e özel harita platformu:** kendi karoları, adres arama ve haftalık OSM güncellemesi; çevrimdışı harita ve eylem kuyruğu; saha verisinden öğrenen teslim noktaları ve hızlar ([ADR-0016](docs/kararlar/0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md), [ADR-0017](docs/kararlar/0017-saha-verisinden-ogrenen-harita.md)) | 📝 Plan hazır |
+| 3a | **Eskişehir'e özel harita platformu (kendi yığınımız):** kendi karoları ve stilleri, kendi Photon adres arama, haftalık OSM güncelleme hattı (mavi / yeşil), kurye uygulamasında çevrimdışı harita, navigasyon ve eylem kuyruğu (idempotent), üretim hazırlığı ([ADR-0016](docs/kararlar/0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md), [ADR-0018](docs/kararlar/0018-harita-karo-ve-stil-sunumu.md)-[ADR-0022](docs/kararlar/0022-uretim-dagitimi-ucretsiz-katman.md)) | ✅ Tamamlandı (açık: gerçek cihaz, iOS, FCM, RLS, çevrimdışı ETA soluklaştırma, sürüm derlemesi) |
+| 3b-3c | Saha verisinden öğrenen teslim noktaları ve hızlar ([ADR-0017](docs/kararlar/0017-saha-verisinden-ogrenen-harita.md)) | ⏳ |
 | 4 | Hakediş, kasa mutabakatı, ETA gösterimi | ⏳ |
 | 5+ | İşletme paneli, POS / platform entegrasyonları, SoftPOS, faturalama | ⏳ |
 

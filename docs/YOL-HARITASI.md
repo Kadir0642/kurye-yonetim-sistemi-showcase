@@ -8,7 +8,7 @@ Kapsam, pilot müşteri keşfi sonrasında değişebilir. Her iterasyon bir demo
 | 1 | Çekirdek | ✅ Uygulandı ve birleştirildi |
 | 2 | **Ana hedef: dinamik, rota uyumlu dağıtım** (tek akıllı rota, en iyi uyan kuryeye tekil ve toplu atama, kararlı yeniden sıralama, öneri / otomatik atama, ret ve devir, uygulama içi navigasyon, benchmark) | ✅ Uygulandı ve birleştirildi (SPEC) |
 | 2b | Platform ve sağlamlaştırma: RLS, push (FCM), iOS / TestFlight, OTA, aynı restoran gruplaması, gerçek cihaz testi | ⏳ |
-| 3 | **Eskişehir'e özel harita platformu:** kendi karo / geocoder / OSM güncelleme hattı, çevrimdışı harita ve eylem kuyruğu, saha verisinden öğrenen harita, üretim hazırlığı | 📝 Plan hazır (PLAN) |
+| 3 | **Eskişehir'e özel harita platformu:** kendi karo / geocoder / OSM güncelleme hattı, çevrimdışı harita ve eylem kuyruğu, saha verisinden öğrenen harita, üretim hazırlığı | **3a ✅ tamamlandı** (SPEC-3a; entegrasyon turunda gerçek yığınla doğrulandı, açık maddeler aşağıda); 3b-3c ⏳ (PLAN) |
 | 4 | Hakediş, kasa ve atama (eski İterasyon 3) | ⏳ |
 | 5+ | Genişleme (eski İterasyon 4+) | ⏳ |
 
@@ -122,24 +122,39 @@ Beş paralel görev (gorevler/): **R** rota altyapısı + motor + benchmark, **A
 
 ---
 
-## İterasyon 3 — Eskişehir'e özel harita platformu 📝 <a id="iterasyon-3-harita"></a>
+## İterasyon 3 — Eskişehir'e özel harita platformu (3a ✅, 3b-3c ⏳) <a id="iterasyon-3-harita"></a>
 
 **Hedef:** Tüm harita, rota ve adres verisi kendi sistemimizin içinde çalışır; çalışma zamanında üçüncü taraf harita servisine bağımlılık yoktur. Genel amaçlı haritaları **bizim kullanım alanımızda** (tek şehir, motosikletli kurye, tekrar eden adresler) geçmek; canlı trafik, kapı düzeyi adres, genel POI ve sokak görüntülerinde Google'ın üstün kaldığını kabul etmek.
 
 **Plan: iterasyon-3/PLAN.md.** Kararlar: [ADR-0016](kararlar/0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md) (kendi karolarımız: planetiler + PMTiles; kendi Photon; haftalık kesintisiz OSM güncelleme hattı; çevrimdışı harita), [ADR-0017](kararlar/0017-saha-verisinden-ogrenen-harita.md) (öğrenilmiş teslim noktaları ve öğrenilmiş hızlar). Mimari: [MIMARI §9](MIMARI.md#9-harita-platformu-iterasyon-3).
 
-**3a (hızlı, yüksek değerli)**
-- [ ] Kendi vektör karoları ve kurye stili (3a-1), kendi Photon geocoder'ı (3a-2), haftalık OSM güncelleme hattı (3a-3)
-- [ ] Çevrimdışı harita indirme + sürüm denetimi (3a-4), çevrimdışı rota / durak önbelleği (3a-5)
-- [ ] Çevrimdışı eylem kuyruğu + idempotency (3a-6; bugün yalnızca konum kuyruğu kalıcı)
-- [ ] Ping özetleme, **yalnızca toplama**, pilotun ilk gününden (3a-7)
-- [ ] Adres kalitesi testi, Google'sız (3a-8)
+**3a (hızlı, yüksek değerli)** — teknik spesifikasyon: iterasyon-3/SPEC-3a.md (sözleşme 0.3.0; kararlar [ADR-0018](kararlar/0018-harita-karo-ve-stil-sunumu.md) ... [ADR-0022](kararlar/0022-uretim-dagitimi-ucretsiz-katman.md)). Beş paralel görev (gorevler/): **Q** API (idempotency, harita uçları, rota bacakları, ping toplama), **T** karolar + stiller + panel, **G** Photon + haftalık hat + adres testi, **M** kurye uygulaması çevrimdışı, **P** üretim hazırlığı (ücretsiz). Birleştirme sırası: Q -> T -> G -> M -> P -> entegrasyon turu. Ücretli kalemler yalnızca ürün sahibi kararı (SPEC-3a §18).
+- [x] Kendi vektör karoları ve kurye stili (3a-1), kendi Photon geocoder'ı (3a-2), haftalık OSM güncelleme hattı (3a-3)
+- [x] Çevrimdışı harita indirme + sürüm denetimi (3a-4), çevrimdışı rota / durak önbelleği (3a-5)
+- [x] Çevrimdışı eylem kuyruğu + idempotency (3a-6)
+- [x] Ping özetleme, **yalnızca toplama**, pilotun ilk gününden (3a-7; iş varsayılan kapalı, KVKK P-9 onayına bağlı)
+- [x] Adres kalitesi testi, Google'sız (3a-8); Photon sorgu normalleştirmesi API'de (<= 50 m isabet %71 -> %83, [rapor](benchmark/adres-kalitesi/README.md))
+- [x] Üretim hazırlığı (ücretsiz kısım): prod compose + Caddy, yedek + geri yükleme tatbikatı, izleme, CI, bootstrap komutu (ilk kiracı + OWNER), `postgis/postgis:16-3.6`
+- [x] Entegrasyon turu: gerçek yığınla (kendi karolar + Photon + OSRM/VROOM + API + panel + emülatör) uçtan uca doğrulama; bulunan hatalar düzeltildi (ENTEGRASYON-DURUM.md)
+
+**3a sonrası açık maddeler (follow-up):**
+- [ ] Gerçek cihazda saha testi (CIHAZ-TEST-PROTOKOLU.md); sürüm derlemesi (`KURYE_ALLOW_CLEARTEXT=0`, düz HTTP kapalı) ve JS gömülü APK ile **uçak modunda uygulamayı yeniden başlatma** denemesi (dev client uçak modunda Metro'ya bağlanamıyor)
+- [ ] iOS derlemesi ve cihaz testi; push bildirimleri (FCM / APNs)
+- [ ] Satır düzeyinde güvenlik (RLS) — ikinci kiracıdan önce ([ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md))
+- [ ] Çevrimdışıyken ETA / varış saatlerinin soluklaştırılması (şu an son değer olduğu gibi görünür)
+- [ ] "Çevrimdışı" göstergesini yalnızca cihaz ağına değil sunucuya erişilememesine de bağlamak (zayıf kapsamada ağ "bağlı" görünür; uygulama 4 sn sonra önbellekle açılır)
+- [ ] Panelde `courier.sync_conflict` bildiriminin gerçek akışta ekran görüntüsü; ikinci şehir poligonu için bootstrap seçeneği
+- [ ] Adres kalitesi: site / kampüs kapısı ve belediye binası gibi yerlerde konum düzeltme (öğrenilmiş nokta, 3b-1)
 
 **3b**
 - [ ] Öğrenilmiş teslim noktaları (3b-1), restoran "paket hazır" sinyali + hazırlık süresi öğrenme (3b-2), aynı restoran gruplamayı iyileştirme (3b-3), teslim geofence'i (3b-4)
 
 **3c**
 - [ ] Öğrenilmiş hızların OSRM'ye uygulanması, ETA hatası (MAE) önce / sonra, benchmark güncellemesi (pilot verisi >= 4 hafta gerekir)
+
+**Algoritma v2 kolu (paralel)**
+- [x] Faz 1: araştırma ve benchmark — kayan ufuk toplu atama, kuryeler arası ALNS, CBBA karşılaştırması (DAGITIM-ALGORITMASI-V2.md, benchmark v2, [ADR-0023](kararlar/0023-dagitim-algoritmasi-v2.md), Önerildi)
+- [ ] Faz 2: önerilen bileşenlerin `DISPATCH_V2` bayrağı arkasında üretime alınması (ürün sahibi onayından sonra)
 
 **Pilot öncesi, paralel: üretim hazırlığı** (P-1 ... P-9): Türkiye'de VPS ve boyutlandırma, HTTPS, yedek ve geri yükleme, izleme ve uyarı, log saklama, CI/CD, gizli bilgi politikası, Xiaomi / Samsung gerçek cihaz testi, KVKK hukuki onayı.
 

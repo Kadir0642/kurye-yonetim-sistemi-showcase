@@ -237,7 +237,7 @@ sequenceDiagram
 2. Her aday için (R, D) çifti mevcut durak dizisine en ucuz yerleştirilir (OSRM `table` matrisi); uygulanabilirlik (kapasite, alıştan teslime azami süre) ve skor (sapma + gecikme + bekleme + adalet) hesaplanır.
 3. Moda göre: öneri paneli (`ONERI`), rotaya uyan havuz (`AKILLI_HAVUZ`) veya otomatik atama / bekleyenler kuyruğu (`OTOMATIK`).
 4. Atamadan sonra VROOM nihai sırayı kurar; kilitli sıradaki durak, kazanç eşiği, soğuma süresi ve mevcut paket başına gecikme sınırı (varsayılan 8 dk) rotanın oynamasını ve mevcut paketlerin bozulmasını önler.
-5. Birden çok yeni paket aynı anda geldiğinde (aynı restorandan art arda siparişler, yoğun saat) **toplu atama** tüm kuryelerin mevcut rotalarına birlikte yerleştirir (regret-2); aynı restoranın teslimleri birbirine yakın siparişleri uygunsa tek kuryeye gruplanır ([ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md)).
+5. Birden çok yeni paket aynı anda geldiğinde (aynı restorandan art arda siparişler, yoğun saat) **toplu atama** tüm kuryelerin mevcut rotalarına birlikte yerleştirir (regret-2); aynı restoranın teslimleri birbirine yakın siparişleri uygunsa tek kuryeye gruplanır ([ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md)). **Önerilen v2 (Faz 1 ölçüldü, üretimde değil):** 60 sn kayan ufuk + gecikmeli atama + regret-3 ve bayrak arkasında, sıkı kararlılık sınırlı kuryeler arası ALNS ([ADR-0023](kararlar/0023-dagitim-algoritmasi-v2.md), DAGITIM-ALGORITMASI-V2).
 6. OSRM / VROOM erişilemezse sistem durmaz: süreler kuş uçuşu tahmine düşer, otomatik atama askıya alınır, İterasyon 1 havuz / elle atama davranışı açık bir uyarıyla sürer ([ADR-0013](kararlar/0013-rota-motoru-siniri-ve-yaklasik-mod.md)).
 7. Kurye "Rotam" ekranında numaralı durakları görür; panelde rota çizgileri ve öneriler görünür. Alıştan önce gerekçeli ret, alıştan sonra iki devir yolu vardır: yönetici onaylı devir isteği ve kuryeler arası devir ([bölüm 6.2](#62-kuryeler-arası-devir-iterasyon-2)).
 
@@ -342,7 +342,7 @@ Pilot müşteri keşfi henüz yapılmadı; aşağıdakiler cevap bekliyor.
 
 ## 9. Harita platformu (iterasyon 3)
 
-> Kararlar: [ADR-0016](kararlar/0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md) (kendi karo, geocoder ve güncelleme hattı), [ADR-0017](kararlar/0017-saha-verisinden-ogrenen-harita.md) (saha verisinden öğrenme). Plan: iterasyon-3/PLAN.md. Bu bölüm **hedef mimaridir**; İterasyon 3 tamamlanana kadar §2'deki harici servisler (OpenFreeMap, genel Photon) geçerlidir.
+> Kararlar: [ADR-0016](kararlar/0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md) (kendi karo, geocoder ve güncelleme hattı), [ADR-0017](kararlar/0017-saha-verisinden-ogrenen-harita.md) (saha verisinden öğrenme). Plan: iterasyon-3/PLAN.md; 3a spesifikasyonu: iterasyon-3/SPEC-3a.md (ayrıntı §9.1). Bu bölüm **hedef mimaridir**; İterasyon 3 tamamlanana kadar §2'deki harici servisler (OpenFreeMap, genel Photon) geçerlidir.
 
 İlke: çalışma zamanında üçüncü taraf harita servisi yoktur. Aynı Eskişehir OSM çıkarımı (`eskisehir.osm.pbf`) rotayı, karoları ve adres dizinini besler; üçü her hafta aynı sürümle yenilenir. Kuryenin telefonu karoyu ve rotayı yerelde saklar, eylemleri kalıcı bir kuyruğa yazar.
 
@@ -408,3 +408,15 @@ Ana noktalar:
 - **Rota:** OSRM / VROOM aynı kalır; hız dosyası ve zamansal çarpan 3c'de eklenir. Ping özetleme **ilk günden** çalışır, ham saklama (30 gün) uzamaz.
 - **Çevrimdışı:** uygulama rotayı ve durakları yerelde saklar; eylemler kalıcı kuyrukta, UUID `Idempotency-Key` ve cihaz olay zamanıyla gönderilir (PLAN 3a-6). Bugün yalnızca konum kuyruğu kalıcıdır.
 - **Atıf:** harita üzerinde "© OpenStreetMap katkıcıları, © OpenMapTiles".
+
+### 9.1 İterasyon 3a ayrıntıları (spesifikasyon)
+
+> Teknik spesifikasyon: iterasyon-3/SPEC-3a.md. Kararlar: [ADR-0018](kararlar/0018-harita-karo-ve-stil-sunumu.md) (karo ve stil sunumu), [ADR-0019](kararlar/0019-kurye-cevrimdisi-harita-ve-navigasyon.md) (çevrimdışı harita ve navigasyon), [ADR-0020](kararlar/0020-cevrimdisi-eylem-kuyrugu-ve-idempotency.md) (eylem kuyruğu ve idempotency), [ADR-0021](kararlar/0021-haftalik-osm-guncelleme-hatti.md) (haftalık hat), [ADR-0022](kararlar/0022-uretim-dagitimi-ucretsiz-katman.md) (üretim, ücretsiz katman). Sözleşme `packages/contracts` 0.3.0.
+
+- **Sunum:** ayrı karo sunucusu yok; harita dosyaları API yolu altında (`/api/v1/map/manifest`, `/map/styles/{id}`, `/map/files|glyphs|sprites/{sürüm}/...`, Range ve değişmez önbellek). Üretimde aynı yolları Caddy diskten sunar. Sürüm dizini `MAP_DATA_DIR/releases/<yıl-wHafta>/` + atomik `current.json`.
+- **Stiller:** `admin`, `courier`, `courier-nav-day`, `courier-nav-night`; şablon belirteçleri (`{{TILES_URL}}`, `{{GLYPHS_URL}}`, `{{SPRITE_URL}}`) çevrimiçi API'de, çevrimdışı uygulamada `file://` ile doldurulur. `MAP_STYLE_URL=self` ile panel ve eski uygulama sürümleri config'le geçer.
+- **Çevrimdışı uygulama:** yerel PMTiles (`pmtiles://file://`; yedek MBTiles, son yedek OfflineManager, cihaz spike'ıyla kesinleşir), manifest + sha256 + atomik etkinleştirme; kalıcı rota / paket önbelleği; `POST /courier/route/legs` ile önceden saklanan navigasyon bacakları (çevrimdışıyken yeniden rota yok, "rotaya dön" kılavuzu).
+- **Eylem kuyruğu:** `pickup`, `deliver`, `fail`, `reject`, vardiya bitirme, devir isteği iptali kuyruğa girer; sunucuda `idempotency_keys` (72 sa), `package_events.occurred_at`, reassign edilmiş pakete 409 PACKAGE_NOT_YOURS, `OFFLINE_ACTION_REJECTED` olayı ve panel `courier.sync_conflict`.
+- **Hat:** bağımlılıksız Node orkestra; iç geçit (`routing-gw`, Caddy) arkasında mavi / yeşil OSRM ve Photon; geliştirme modu (`routing:up`) ve hat modu (`pipeline:up`) ayrı.
+- **Ping toplama:** `ping_processing_days` defteri, `segment_speed_stats`, `travel_leg_samples` (kurye kimliği yok); `PING_AGGREGATION_ENABLED=false` varsayılan (KVKK onayıyla açılır).
+- **Üretim:** tek VPS compose (Caddy 80/443 tek açık servis), saatlik şifreli `pg_dump` (RPO 1 sa), Uptime Kuma, yalın GitHub Actions; ücretli kalemler ürün sahibi kararı (SPEC-3a §18).

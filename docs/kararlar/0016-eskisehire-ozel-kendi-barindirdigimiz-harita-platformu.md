@@ -70,3 +70,7 @@ Hizmet bölgesi tektir: Eskişehir ([ADR-0006](0006-hizmet-bolgesi-eskisehir.md)
 | Nominatim'i canlı geocoder yapmak | Yazarken arama için uygun değil; kalıcı PostgreSQL ve daha ağır işletim |
 | Cihaz üstü rota hesaplama (çevrimdışı yönlendirme motoru) | Düşük uçlu Android telefonlarda bellek / pil / uygulama boyutu yükü; şimdilik önbelleğe alınmış rota + "bağlantı gerekli" deneyimi yeterli (PLAN 3a-5). Pilot verisi gerektirirse sonra yeniden değerlendirilir |
 | Raster karolar önceden indirip paketlemek | Vektöre göre 10 kat büyük, stil değişmez, gece modu yok |
+
+## Ölçüm notu (İterasyon 3a, Görev T)
+
+"Dosya boyutu tahmini 15-40 MB" varsayımı ölçüldü ve tahminin **çok altında** çıktı: Eskişehir çıkarımı (bbox `[30.34, 39.655, 30.71, 39.895]`, z0-z14) planetiler ile **2,72 MiB** PMTiles verdi; kurye çevrimdışı paketi (karo + üç stil + sprite + Regular / Bold glyph) **4,18 MiB**. Derleme sıcak önbellekle 91-94 sn, planetiler tepe belleği ~2,6 GB; aynı girdi ve araç sürümüyle iki derleme aynı karo içeriği özetini verir. Ayrıntı ve araç sürümleri: [ADR-0018 uygulama notları](0018-harita-karo-ve-stil-sunumu.md#karo-derlemesi-stiller-ve-panel-görev-t). Sonuç: çevrimdışı paket yeniden indirme politikası (Wi-Fi / şarj koşulları) bu boyutta gevşetilebilir; karar M ve ürün sahibine bırakılır.
