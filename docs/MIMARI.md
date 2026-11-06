@@ -237,9 +237,26 @@ sequenceDiagram
 2. Her aday için (R, D) çifti mevcut durak dizisine en ucuz yerleştirilir (OSRM `table` matrisi); uygulanabilirlik (kapasite, alıştan teslime azami süre) ve skor (sapma + gecikme + bekleme + adalet) hesaplanır.
 3. Moda göre: öneri paneli (`ONERI`), rotaya uyan havuz (`AKILLI_HAVUZ`) veya otomatik atama / bekleyenler kuyruğu (`OTOMATIK`).
 4. Atamadan sonra VROOM nihai sırayı kurar; kilitli sıradaki durak, kazanç eşiği, soğuma süresi ve mevcut paket başına gecikme sınırı (varsayılan 8 dk) rotanın oynamasını ve mevcut paketlerin bozulmasını önler.
-5. Birden çok yeni paket aynı anda geldiğinde (aynı restorandan art arda siparişler, yoğun saat) **toplu atama** tüm kuryelerin mevcut rotalarına birlikte yerleştirir (regret-2); aynı restoranın teslimleri birbirine yakın siparişleri uygunsa tek kuryeye gruplanır ([ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md)). **Önerilen v2 (Faz 1 ölçüldü, üretimde değil):** 60 sn kayan ufuk + gecikmeli atama + regret-3 ve bayrak arkasında, sıkı kararlılık sınırlı kuryeler arası ALNS ([ADR-0023](kararlar/0023-dagitim-algoritmasi-v2.md), DAGITIM-ALGORITMASI-V2).
+5. Birden çok yeni paket aynı anda geldiğinde (aynı restorandan art arda siparişler, yoğun saat) **toplu atama** tüm kuryelerin mevcut rotalarına birlikte yerleştirir (regret-2); aynı restoranın teslimleri birbirine yakın siparişleri uygunsa tek kuryeye gruplanır ([ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md)). **Dağıtım v2 (Faz 2: bayrak arkasında, varsayılan kapalı):** 60 sn kayan ufuk + gecikmeli atama + regret-3; kuryeler arası ALNS yalnızca gölge kipte (öneri kaydedilir, uygulanmaz) ([ADR-0023](kararlar/0023-dagitim-algoritmasi-v2.md), DAGITIM-ALGORITMASI-V2, ayarlar: [bölüm 6.1.1](#611-dağıtım-v2-ayarları-adr-0023-faz-2)).
 6. OSRM / VROOM erişilemezse sistem durmaz: süreler kuş uçuşu tahmine düşer, otomatik atama askıya alınır, İterasyon 1 havuz / elle atama davranışı açık bir uyarıyla sürer ([ADR-0013](kararlar/0013-rota-motoru-siniri-ve-yaklasik-mod.md)).
 7. Kurye "Rotam" ekranında numaralı durakları görür; panelde rota çizgileri ve öneriler görünür. Alıştan önce gerekçeli ret, alıştan sonra iki devir yolu vardır: yönetici onaylı devir isteği ve kuryeler arası devir ([bölüm 6.2](#62-kuryeler-arası-devir-iterasyon-2)).
+
+#### 6.1.1 Dağıtım v2 ayarları (ADR-0023, Faz 2)
+
+İki katmanlı açılış: sunucu bayrağı (ortam değişkeni) **ve** kiracı ayarı birlikte açıksa v2 etkindir (`settings.dispatch.active`). Biri kapalıysa davranış bugünküyle aynıdır (20 sn toplu pencere, regret-2, eşik altı otomatik). Açılış ve geri dönüş: çalışma kitabı §11.
+
+| Ayar | Yer | Varsayılan | Aralık | Etkisi |
+|---|---|---|---|---|
+| `DISPATCH_V2` | Ortam | `false` | `true` / `false` | Ana anahtar. Kapalıyken veritabanındaki kiracı ayarına bakılmaz |
+| `DISPATCH_V2_ALNS_SHADOW` | Ortam | `false` | `true` / `false` | v2 etkin kiracılarda gölge ALNS (her pencere + en çok 60 sn'de bir); öneriler `dispatch_shadow_runs` / `dispatch_shadow_moves` tablolarına yazılır, **atama değişmez** |
+| `settings.dispatch.v2Enabled` | Kiracı (`PATCH /tenant`, OWNER) | `false` | | Firma bazında açılış |
+| `settings.dispatch.windowS` | Kiracı | 60 | 30-60 sn | Pencere W: OTOMATİK modda yeni paket bu süre toplanır, sonra birlikte planlanır; bekletilen varsa pencere W sn'de bir yeniden açılır (bugünkü `assignment.batchWindowS` yerine) |
+| `settings.dispatch.holdDetourMin` | Kiracı | 7 | 0-30 dk | Gecikmeli atama eşiği: birimin en iyi seçeneğinde paket başı sapma bunu aşarsa birim bekletilebilir. **Sapma v2 tanımıyla, paketin kendi alış + teslim servis süresi dahildir** (Faz 1 ayarı bu tanımla yapıldı) |
+| `settings.dispatch.holdMaxMin` | Kiracı | 3 | 0-15 dk | En uzun bekletme: bir pencere daha beklemek sipariş yaşını bunun üstüne çıkaracaksa birim en iyi uygun kuryeye atanır (sapma eşiğinden bağımsız). 0 = bekletme yok |
+
+Sabitler (ADR-0023; kiracı ayarı değildir): regret-3, aynı işletme birimleri (ADR-0014 madde 3), pencerede en çok 40 paket; sert kısıtlar bugünkü motorla aynıdır (kapasite, alıştan teslime `maxPickupToDeliveryMin`, yeni paket alış ETA `maxPickupEtaMin`, mevcut paket başına `maxAddedDelayPerPackageMin`). Gölge ALNS: 250 yineleme, 300 ms süre sınırı, taşıma başına en az 150 sn kazanç, paket başına 1 taşıma, alışa 5 dk kala dondurma. Yaklaşık modda (OSRM yok) pencere paketleri bugünkü gibi havuza açılır; gölge ALNS koşmaz.
+
+Davranış özeti (v2 etkin, OTOMATİK): yeni paket "Atama bekliyor" ile bekleyenlerde görünür; pencere kapanınca (1) atanır (`ASSIGNED_AUTO`, `batch = true`, aynı işletme birimlerinde aynı `groupId`), (2) **"Pencere bekliyor"** (`WINDOW_HOLD`, olay verisinde en iyi seçeneğin sapması) veya (3) **"Uygun kurye yok"** (`NO_FEASIBLE`). Ret ve iade bugünkü anlık yoldan geçer; bekleyenlerin 60 sn'lik yeniden denemesi pencereye girer. Öneriler (ONERI / AKILLI_HAVUZ) anında üretilir; toplu öneri (`POST /dispatch/batch-plan`) v2 etkinken aynı v2 planlayıcısıyla, bekletmesiz üretilir. Gözlem: her pencere kararı `dispatch_windows` tablosuna ve yapılandırılmış günlüğe (`event = dispatch.v2.window`: aday sayısı, paket başına sonuç, sapma, bekletme nedeni) yazılır; özet `GET /metrics/dispatch-v2`.
 
 Tasarım, algoritma, veri modeli taslağı ve benchmark planı: iterasyon-2/ROTA-UYUMLU-ATAMA.md. Yeni tablolar (`courier_routes`, `route_stops`, `assignment_suggestions`, `package_rejections`, `handover_requests`, `handover_offers`) yukarıdaki diyagramdaki `STOP` kavramının yerini alır.
 
@@ -339,6 +356,9 @@ Pilot müşteri keşfi henüz yapılmadı; aşağıdakiler cevap bekliyor.
 | 32 | Teslim geofence'i 150 m, Eskişehir sokaklarında ve apartman / site yapısında uygun mu? Geçersiz kılma oranı ne çıkıyor? | İterasyon 3 3b-4 |
 | 33 | Öğrenilmiş teslim noktası gözlemleri (90 gün), adres özetleri (12 ay) ve anonim hız özetleri için saklama süreleri hukuken uygun mu? | ADR-0017, ADR-0005, İterasyon 3 P-9 |
 | 34 | Pilot ne zaman başlıyor? (öğrenilmiş hızlar için pilottan sonra en az 4 hafta veri gerekir) | İterasyon 3 takvimi, 3c-1 |
+| 35 | İşletme "hazır" sayfasında teslim adresinin ilk parçası (`dropoffHint`) gösterilebilir mi? Bağlantı işletmeye nasıl iletilecek (elle; otomatik SMS / WhatsApp ücretli)? | ADR-0025, SPEC-3b §19 |
+| 36 | Teslim geofence'i ne zaman ENFORCE'a alınır (tüm kuryeler 3b APK'sında, OBSERVE ölçümünden sonra)? Kurye bazlı geçersiz kılma raporu gerekli ve hukuken uygun mu? | ADR-0026, SPEC-3b §19 |
+| 37 | Tahmini hazır zamanı `readyAt`'e otomatik yazılsın mı ve aynı işletme gruplaması ile dağıtım v2 pilotta açılsın mı (benchmark sonucuna göre)? | SPEC-3b §16, §19 |
 
 ## 9. Harita platformu (iterasyon 3)
 
@@ -420,3 +440,13 @@ Ana noktalar:
 - **Hat:** bağımlılıksız Node orkestra; iç geçit (`routing-gw`, Caddy) arkasında mavi / yeşil OSRM ve Photon; geliştirme modu (`routing:up`) ve hat modu (`pipeline:up`) ayrı.
 - **Ping toplama:** `ping_processing_days` defteri, `segment_speed_stats`, `travel_leg_samples` (kurye kimliği yok); `PING_AGGREGATION_ENABLED=false` varsayılan (KVKK onayıyla açılır).
 - **Üretim:** tek VPS compose (Caddy 80/443 tek açık servis), saatlik şifreli `pg_dump` (RPO 1 sa), Uptime Kuma, yalın GitHub Actions; ücretli kalemler ürün sahibi kararı (SPEC-3a §18).
+
+### 9.2 İterasyon 3b ayrıntıları (spesifikasyon)
+
+> Teknik spesifikasyon: iterasyon-3/SPEC-3b.md. Kararlar: [ADR-0025](kararlar/0025-isletme-hazir-baglantisi.md) (işletme "hazır" bağlantısı), [ADR-0026](kararlar/0026-teslim-geofence-politikasi.md) (teslim geofence politikası); ADR-0017 ve ADR-0014'e güncelleme notları. Sözleşme `packages/contracts` 0.4.0.
+
+- **Veri modeli** (migration `0005_iterasyon3b`): `address_book_entries` (HMAC adres anahtarı, öğrenilmiş / sabitlenmiş nokta, güven), `delivery_point_observations` (kurye kimliği ve saat yok, 90 gün), `business_pickup_points` + `pickup_point_observations` (işletme kapısı önerisi), `preparation_time_stats` (işletme x hafta-saati histogram), `business_ready_links` (jeton özeti); `packages` += etkin teslim noktası (`dropoff_target_location`), `ready_at_source`, `ready_signaled_at`, `ready_estimate`; `route_stops.arrived_at`.
+- **Etkin teslim noktası:** rota, navigasyon ve geofence `COALESCE(dropoff_target_location, dropoff_location)` kullanır; öğrenme `DELIVERY_POINT_LEARNING_ENABLED` (KVKK onayıyla) açılır.
+- **Hazır sinyali:** panel, kurye ve girişsiz işletme bağlantısı aynı `READY_SIGNALED` olayını ve `READY_AT_CHANGED` yeniden planını üretir; tahmin her pakete saklanır, `readyAt`'e yazılması kiracı ayarıdır.
+- **Gruplama:** κ / bağlama `suggest` ve v2 kayan ufukta, τ ve işletme duyarlı kapanış yalnızca v2'de (`settings.dispatch.grouping`, varsayılan kapalı); v1 `planBatch` değişmez.
+- **Geofence:** `OFF | OBSERVE | ENFORCE` (varsayılan OBSERVE), gerekçeli geçersiz kılma, öğrenmeden dışlama, adres kalitesi metriği (kurye kırılımı yok).

@@ -57,3 +57,7 @@ Maliyet, tekil atamadaki skorun aynısıdır (ADR-0009: sapma + α·gecikme + β
 | Paketleri geliş sırasıyla tek tek atamak | Sıraya bağımlı; aynı restoran siparişlerini dağıtabilir (pilotun tarif ettiği sorun) |
 | Tam yeniden optimizasyon (mevcut paketler dahil, kuryeler arası taşıma) | Kuryenin elindeki işin habersiz değişmesi güveni bozar (ADR-0009 kararlılık ilkesi); yönetici ve devir zaten bu işi denetimli yapar |
 | Regret-k (k > 2) veya yerel arama (LNS) | Küçük kazanç beklentisi, daha fazla karmaşıklık; benchmark gösterirse sonra |
+
+## Güncelleme (2026-11-06): İterasyon 3b-3 kapsamı
+
+Madde 3'ün (aynı işletme gruplaması) iyileştirilmesi SPEC-3b §8'de tanımlandı: aynı alış ödülü κ (90 sn), ortak / ayrık değerlendirme τ (0,10), sonradan bağlama (120 sn) ve işletme duyarlı pencere kapanışı (en çok +40 sn). **Kapsam kararı:** değişiklikler dağıtım v2 kayan ufkuna ([ADR-0023](0023-dagitim-algoritmasi-v2.md)) ve `suggest` sıralamasına uygulanır; bu ADR'deki v1 `planBatch` (20 sn pencere, regret-2) **değişmez** ve v2 kapalı kiracılar için donmuş yedek olarak kalır. Gerekçe: v2 OTOMATİK'in hedef yoludur ve 60 sn pencereyi zaten kullanır; iki yolu birlikte değiştirmek doğrulama yükünü ikiye katlar; varsayılan ONERI modunda karar `suggest` ile verildiği için κ ve bağlama v2 kapalıyken de yöneticiye ulaşır. Tümü `settings.dispatch.grouping.enabled` (varsayılan kapalı) arkasındadır; benchmark sonucu (30 tohum, eşleştirilmiş GA, ablation) uygulama görevince buraya eklenir.

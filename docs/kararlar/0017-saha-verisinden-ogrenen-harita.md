@@ -94,3 +94,13 @@ Kısıtlar: konum verisi kurye kişisel verisidir ([ADR-0005](0005-konum-takibi-
 | Teslim noktasını müşteri telefonuna bağlamak | Telefon kişisel veridir; adres anahtarı yeterlidir ve müşteriyi tanımlamaz |
 | Makine öğrenmesi (ör. grafik sinir ağıyla ETA) | Veri azken açıklanamaz ve aşırı uyum riski; parça bazlı karıştırılmış istatistik şeffaf ve hata ayıklanabilir. Veri birikince yeniden değerlendirilir |
 | Teslim noktası olarak her zaman son gözlemi kullanmak | Gürültülüdür; ağırlıklı medyan + güven eşiği daha dayanıklıdır |
+
+## Güncelleme (2026-11-06): İterasyon 3b spesifikasyonu
+
+SPEC-3b §6 A bölümünü uygulanabilir ayrıntıya indirdi; karar özü değişmedi, şu noktalar netleşti:
+
+- **Güven sabitleri:** biçim aynı, başlangıç sabitleri **N0 = 2, S0 = 75 m** (önce 3 ve 40). Gerekçe: σ = 15 m gürültüde 3 / 40 ile eşik (0,6) ancak ~7 gözlemde aşılıyordu; 3a-8 adres testi "k ≥ 3'ten sonra öğrenilmiş noktayı varsayılan yap" önerdi. Yeni sabitlerle σ = 15 m'de 3 gözlem, σ = 30 m'de 5 gözlem eşiği aşar. Uygulama görevi değerleri adres kalitesi simülasyonuyla doğrular ve sonucu buraya "Uygulama notları" olarak ekler.
+- **Adres anahtarı:** açık soru kapandı: **HMAC-SHA256** (sunucu sırrı `ADDRESS_KEY_SECRET`) normalize metin + ~25 m hücre; adres metni adres defterine girmez. Sır döndürülürse öğrenme sıfırlanır (yalnızca sızıntıda).
+- **Saklama:** 90 günü geçen gözlemler silinmeden önce özetin önsel noktasına katlanır (aksi hâlde 12 aylık özet 90. günde boşalırdı); gözlemde tarih saklanır, saat saklanmaz.
+- **Kullanım bayrağı:** gözlem toplama ve kullanım `DELIVERY_POINT_LEARNING_ENABLED` (varsayılan kapalı) ile KVKK onayından sonra açılır; firma bazında `settings.addressBook.useLearnedPoints`.
+- **Geofence ile ilişki:** geçersiz kılınan, düşük doğruluklu ve sahte konumlu teslimler gözlem sayılmaz ([ADR-0026](0026-teslim-geofence-politikasi.md)).
