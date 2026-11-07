@@ -2,7 +2,7 @@
 
 Kurye Yönetim Sistemi'nin kurumsal görsel dili. Navigasyon tasarım varyantı **B · Koyu / premium**'dan türetildi ([seçim kaydı](../navigasyon/secim.md), [B v1 maketi](../navigasyon/b-v1.html)). Ürün başka kurye ekiplerine çok kiracılı olarak satılacağı için tek ve tanınır bir dil hedeflenir: **siyaha yakın yüzeyler, beyaz metin, tek neon yeşil vurgu.**
 
-Tüm değerler: [`tokens.json`](tokens.json). Henüz hiçbir uygulama koduna uygulanmadı.
+Tüm değerler: [`tokens.json`](tokens.json). Uygulandığı yerler: kurye navigasyon ekranı (koyu, uygulama notu) ve kurye uygulamasının diğer ekranları (açık, `courierApp` rolleri, uygulama notu).
 
 ## Renk
 

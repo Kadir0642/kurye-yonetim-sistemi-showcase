@@ -6,7 +6,7 @@
 
 | Bileşen | Teknoloji | Sorumluluk |
 |---|---|---|
-| Kurye uygulaması | React Native + Expo (TypeScript), tek kod Android + iOS | Vardiya, arka plan konum (expo-location + task manager), havuz, harita (MapLibre), uygulama içi adım adım navigasyon (İterasyon 2, [ADR-0015](kararlar/0015-uygulama-ici-navigasyon.md); yedek: Google Maps devri), teslim; ileride hakediş görünümü |
+| Kurye uygulaması | React Native + Expo (TypeScript), tek kod Android + iOS | Vardiya, arka plan konum (expo-location + task manager), havuz, harita (MapLibre), uygulama içi adım adım navigasyon (İterasyon 2, [ADR-0015](kararlar/0015-uygulama-ici-navigasyon.md); yedek: Google Maps devri), teslim; ileride hakediş görünümü. Görsel dil: [ADR-0027](kararlar/0027-marka-kimligi-ve-navigasyon-gorsel-dili.md) (navigasyon ve harita kromu koyu, diğer ekranlar açık; belirteçler `docs/tasarim/marka/tokens.json`) |
 | Yönetim paneli | React + Vite + TypeScript, Mantine, TanStack Query, MapLibre GL JS | İşletme / kurye / paket yönetimi, canlı harita, atama; ileride raporlar |
 | İşletme paneli (sonra) | React + TypeScript | Restoranların kendi siparişlerini girmesi |
 | Ortak sözleşme | OpenAPI 3.1 + WebSocket protokolü (`packages/contracts`) | Üç bileşenin paylaştığı TS tipleri (contract-first) |

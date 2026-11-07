@@ -42,3 +42,13 @@ Uygulama kodu değiştirilmeden üç görsel varyant statik maket olarak hazırl
 - **C · Marka / canlı (teal + turuncu, Nunito, hap biçimli kontroller):** mevcut ekrana en yakın, en ucuz geçiş (S–M). Reddedildi: mevcut teal'ı sürdürür ama "premium araç" algısı vermiyor; teal rota park yeşiliyle karışma riski taşıyor.
 - **B'nin her şey koyu hali (gündüz de koyu harita):** güneşte harita okunmuyor; yalnızca gece modu olarak kaldı.
 - **B'nin gündüz açık krom hali:** güneşte güvenli ama neon beyazda kullanılamıyor (1,0:1); marka gündüz kaybolur.
+
+## Ek (2026-11-07): uygulama içi ekranlar açık
+
+Ürün sahibi, kurye uygulamasının navigasyon dışındaki ekranları için iki tur maketi (`docs/tasarim/kurye-app/`) değerlendirdi ve şunu kararlaştırdı:
+
+1. **Koyu krom yalnızca navigasyon ekranı ve harita kromu içindir** (bu ADR'nin 1-7. maddeleri onlar için aynen geçerli).
+2. Giriş, onboarding, listeler, paket ayrıntısı, profil ve devir ekranları **açık** tema kullanır: maket **A2 "Nötr gri + beyaz kartlar"** (zemin `#F3F4F1`, beyaz kart, hafif gölge). Birincil eylem marka yeşili `#3F6212` + beyaz yazı (7,1:1); neon açık yüzeyde dolgu ya da metin olmaz, yalnızca koyu öğede ya da `#4D7C0F` kenarlı küçük sinyal olarak görünür. Durumlar %10 renk tonu + koyu yazı + ikonla gösterilir. Açık zeminde gövde metni de ≥ 7:1.
+3. Belirteçler `tokens.json → courierApp` (sürüm 1.1.0); uygulama: `docs/tasarim/kurye-app-uygulama-notu.md`.
+4. Uygulama ikonu "K + ok" işareti (koyu arka plan + neon ön plan, uyarlanabilir); açılış ekranı açık zemin + koyu daire içinde neon işaret.
+5. Koyu mod şimdilik yok; sistem koyu temasını izleme ayrı görev.
