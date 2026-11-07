@@ -122,7 +122,7 @@ Durum: ✅ tamamlandı (İterasyon 1-2), ⏳ planlandı. Ayrıntılı kapsam iç
 
 ## Ekran görüntüleri
 
-Aşağıdaki görüntüler gerçek API, gerçek rota motoru (OSRM + VROOM) ve kurgusal Eskişehir demo verisiyle alınmıştır (kişisel veri içermez). Harita verisi © OpenStreetMap katkıcıları (ODbL).
+Aşağıdaki görüntüler (rota haritası, kurye önerileri, uyarı, toplu öneri, GIF) panelin yeni marka temasıyla, **gerçek API, gerçek rota motoru (OSRM + VROOM)** ve kurgusal Eskişehir demo verisiyle alınmıştır (kişisel veri içermez). "Diğer panel ekranları" bölümündeki görüntüler panelin sahte API'siyle (kurgusal veri) alınmıştır. Harita altlığı yalnızca görüntü alımı için ücretsiz OpenFreeMap karolarıdır; harita verisi © OpenStreetMap katkıcıları (ODbL).
 
 ### Yönetim paneli: rota uyumlu atama
 
@@ -132,7 +132,7 @@ Aşağıdaki görüntüler gerçek API, gerçek rota motoru (OSRM + VROOM) ve ku
   </tr>
   <tr>
     <td align="center"><img src="docs/assets/screenshots/panel-oneri.png" width="440" alt="Kurye önerileri"><br><sub>Kurye önerileri: "Rotası üzerinde, +3 dk" ile "Ters yön, +6 dk"; satıra gelince rotaya yerleştirme önizlemesi</sub></td>
-    <td align="center"><img src="docs/assets/screenshots/panel-uyari.png" width="440" alt="Büyük sapma uyarısı"><br><sub>Paketi ters yöndeki kuryenin üstüne sürükleyince sapma uyarısı</sub></td>
+    <td align="center"><img src="docs/assets/screenshots/panel-uyari.png" width="440" alt="Büyük sapma uyarısı"><br><sub>Paketi ters yöndeki kuryeye (Demo Kurye 2) atarken sapma uyarısı: "Bu atama +6 dk ekler. Yine de ata?"</sub></td>
   </tr>
   <tr>
     <td align="center"><img src="docs/assets/screenshots/panel-toplu-oneri.png" width="440" alt="Toplu öneri"><br><sub>Toplu öneri: aynı restoranın üç siparişi tek kuryede gruplanır, "önce / sonra" süresi</sub></td>
@@ -189,7 +189,7 @@ Aşağıdaki görüntüler emülatörde, **gerçek API + kendi karolarımız + k
 
 ### İterasyon 3b: öğrenme, hazır sinyali, geofence
 
-Görüntüler kurgusal seed verisiyle alındı (kişisel veri yok). Panel görüntülerinde harita altlığı sahte API'de boş zemindir; kurye görüntüleri emülatörde, mock sunucuyla alındı.
+Görüntüler kurgusal seed verisiyle alındı (kişisel veri yok). Panel görüntülerinde harita altlığı yalnızca görüntü alımı için OpenFreeMap karolarıdır (sahte API'de karo sunucusu yoktur); kurye görüntüleri emülatörde, mock sunucuyla alındı.
 
 <table>
   <tr>

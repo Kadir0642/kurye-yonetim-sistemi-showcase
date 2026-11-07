@@ -52,3 +52,14 @@ Uygulama kodu değiştirilmeden üç görsel varyant statik maket olarak hazırl
 3. Belirteçler `tokens.json → courierApp` (sürüm 1.1.0); uygulama: `docs/tasarim/kurye-app-uygulama-notu.md`.
 4. Uygulama ikonu "K + ok" işareti (koyu arka plan + neon ön plan, uyarlanabilir); açılış ekranı açık zemin + koyu daire içinde neon işaret.
 5. Koyu mod şimdilik yok; sistem koyu temasını izleme ayrı görev.
+
+## Uygulama notları: Panel (2026-11-07)
+
+Ürün sahibi yönetici paneli için üç maket ([`docs/tasarim/panel/`](../tasarim/panel/README.md)) arasından **P2 "Koyu kenar çubuğu + açık içerik"** seçti ([seçim kaydı](../tasarim/panel/secim.md)). Bu ek, Karar 8'deki panel geçişini tamamlar; yeni ADR açılmadı.
+
+1. **Kenar çubuğu koyu, içerik açık:** kenar çubuğu navigasyon kromu `#111318`; içerik kurye uygulamasıyla aynı A2 (zemin `#F3F4F1`, beyaz kart, birincil `#3F6212` + beyaz yazı). Üst çubuk beyaz.
+2. **Neon yalnızca koyu yüzeyde:** etkin menü öğesinde 4 px gösterge + ikon, logo karosu, koyu yüzeydeki odak halkası. Marka README'sindeki ilk taslağın aksine birincil düğme neon dolgu **değildir** (A2 kararıyla uyum).
+3. **Mantine eşlemesi:** 10 tonlu `brand` paleti (7 = `#3F6212`), `primaryShade 7`; Mantine'in yerleşik renk adları marka anlam paletlerine eşlenir (green/teal → başarı, orange/yellow → uyarı, red → tehlike, blue/cyan/violet/grape → bilgi, gray → nötr, indigo/lime → marka). Her palette 9 / 1 (ton metni / ton zemini) ve beyaz / 7 (dolgu) ≥ 4,5:1.
+4. **Paket durum renkleri** SPEC §5 tablosu yerine kurye uygulamasıyla aynı tonları kullanır (`courierApp.packageStatus`: Beklemede / Havuzda / İptal nötr, Atandı uyarı, Yolda bilgi, Teslim edildi başarı, Teslim edilemedi tehlike) ve her durum ayrı ikonla ayrılır.
+5. **Harita:** karo stilleri değişmez. Harita kontrolleri ve harita üstü kartlar navigasyondaki koyu krom; kurye rota paleti aynı kalır; alış / teslim işaretleri kehribar / camgöbeği.
+6. **Belirteçler** `tokens.json → adminPanel` (sürüm 1.2.0); uygulama `apps/admin-web/src/theme/` (tek kaynak, birim testle eşitlenir; `src/theme/` dışında ham hex yasak, testle taranır). Ayrıntı: `docs/tasarim/panel-uygulama-notu.md`.

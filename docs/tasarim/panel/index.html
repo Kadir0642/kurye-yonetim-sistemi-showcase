@@ -1,0 +1,1148 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel Marka Maketleri</title>
+<meta name="description" content="Yönetim paneli (Mantine) marka geçişi maketleri: P1 Açık A2 birebir, P2 Koyu kenar çubuğu + açık içerik, P3 Yoğun operasyon. 8 masaüstü ekran (1440×900) + tablet canlı harita (1024×768), belirteç şeritleri, Mantine eşlemesi, karşılaştırma ve öneri.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap">
+<style>
+  /* ------------------------------------------------------------ sayfa (doküman) */
+  :root {
+    --page: #E9EAED; --ink: #16191E; --muted: #59606B; --card: #FFFFFF; --line: #D7DAE0; --chip: #F1F3F5;
+    --sel: #16191E; --selInk: #FFFFFF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page: #111316; --ink: #E7E9EC; --muted: #9AA1AB; --card: #1A1D22; --line: #2B3038; --chip: #23272E;
+      --sel: #E7E9EC; --selInk: #111316;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #111316; --ink: #E7E9EC; --muted: #9AA1AB; --card: #1A1D22; --line: #2B3038; --chip: #23272E;
+    --sel: #E7E9EC; --selInk: #111316;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--page); color: var(--ink);
+    font-family: Inter, Roboto, system-ui, "Segoe UI", Arial, sans-serif; font-size: 15px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1760px; margin: 0 auto; padding: 28px 16px 72px; }
+  h1 { font-size: 28px; line-height: 1.2; margin: 0 0 6px; letter-spacing: -0.02em; }
+  h2 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
+  h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 18px 0 8px; font-weight: 700; }
+  p { margin: 0 0 10px; }
+  a { color: inherit; }
+  code { font-size: .92em; }
+  .lead { color: var(--muted); max-width: 1040px; }
+  .moment { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; font-size: 14px; margin: 12px 0 0; max-width: 1040px; }
+  .controls { position: sticky; top: 0; z-index: 100; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center;
+    background: color-mix(in srgb, var(--page) 90%, transparent); backdrop-filter: blur(6px); padding: 10px 0; margin: 14px 0; }
+  .seg { display: inline-flex; flex-wrap: wrap; background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 3px; gap: 2px; }
+  .seg button { font: inherit; font-size: 14px; font-weight: 600; border: 0; background: transparent; color: var(--ink); padding: 7px 13px; border-radius: 999px; cursor: pointer; min-height: 36px; }
+  .seg button[aria-pressed="true"] { background: var(--sel); color: var(--selInk); }
+  .seg button:focus-visible { outline: 2px solid #3F6212; outline-offset: 2px; }
+  .ctl-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-right: 6px; }
+  .srow { margin-top: 28px; }
+  .srow > header { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+  .srow > header p { margin: 0; color: var(--muted); font-size: 14px; max-width: 1100px; }
+  .vcols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; align-items: start; }
+  .layout-stack .vcols, .one-variant .vcols { grid-template-columns: minmax(0, 1fr); }
+  @media (max-width: 1100px) { .vcols { grid-template-columns: minmax(0, 1fr); } }
+  .vcell { min-width: 0; }
+  .vcell.big { grid-column: 1 / -1; }
+  .vlabel { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .vlabel .vb { min-width: 34px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-weight: 800; font-size: 13px; background: #FFFFFF; color: #3F6212; border: 1.5px solid #3F6212; }
+  .vlabel .hintz { margin-left: auto; font-weight: 600; color: var(--muted); font-size: 12px; }
+  .fw { position: relative; width: 100%; overflow: hidden; border-radius: 12px; box-shadow: 0 0 0 1px var(--line), 0 10px 30px rgba(0,0,0,.10); cursor: zoom-in; background: #F3F4F1; }
+  .vcell.big .fw { cursor: zoom-out; }
+  .fw > .frame { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  .block { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 18px; margin-top: 26px; }
+  .block > h2 { margin-bottom: 6px; }
+  .vgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 12px; align-items: start; }
+  @media (max-width: 1200px) { .vgrid { grid-template-columns: minmax(0, 1fr); } }
+  .vcard { border: 1px solid var(--line); border-radius: 18px; padding: 16px; min-width: 0; }
+  .vcard.rec { border: 2px solid #3F6212; }
+  .vcard .desc { font-size: 14px; }
+  .vcard .desc b { font-weight: 700; }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 6px; }
+  .sw { font-size: 11px; line-height: 1.25; color: var(--muted); }
+  .sw i { display: block; height: 28px; border-radius: 8px; border: 1px solid rgba(127,127,127,.35); margin-bottom: 3px; }
+  .sw b { display: block; color: var(--ink); font-weight: 600; }
+  .kit { border-radius: 14px; padding: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; border: 1px solid var(--line); }
+  pre.mt { background: #111318; color: #E7E9EC; border-radius: 12px; padding: 12px 14px; font-size: 12px; line-height: 1.5; overflow-x: auto; margin: 0; white-space: pre; }
+  pre.mt .c { color: #9AA1AB; }
+  pre.mt .s { color: #D4FF66; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; background: #3F6212; color: #FFFFFF; margin-bottom: 6px; }
+  table.cmp { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; font-size: 14px; }
+  .cmp th, .cmp td { text-align: left; padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+  .cmp thead th { border-top: 0; background: var(--chip); font-size: 13px; }
+  .table-wrap { overflow-x: auto; margin-top: 10px; }
+  .recbox { border: 2px solid #3F6212; border-radius: 16px; padding: 14px 16px; margin-top: 14px; font-size: 14.5px; }
+  .recbox ol { margin: 6px 0 0; padding-left: 20px; }
+  .recbox li { margin: 4px 0; }
+  footer { margin-top: 24px; font-size: 12.5px; color: var(--muted); }
+
+  /* ------------------------------------------------------------ uygulama (maket içi) */
+  /* Ortak A2 rolleri (tokens.json → courierApp). Neon yalnızca koyu öğede ya da #4D7C0F kenarlı küçük sinyal. */
+  .ui {
+    --bg: #F3F4F1; --surf: #FFFFFF; --line: #E4E6E1; --line2: #D5D9DF; --ctlLine: #808896; --text: #111318; --muted: #4A5260; --ph: #5F6672;
+    --pri: #3F6212; --priH: #365314; --tint: #ECEFE7; --tintT: #365314; --focus: #3F6212; --thead: #FAFAF8;
+    font-family: Inter, Roboto, system-ui, "Segoe UI", Arial, sans-serif; color: var(--text); font-size: var(--fs); line-height: 1.43;
+    -webkit-font-smoothing: antialiased; text-align: left;
+  }
+  .p1, .p2 { --fs: 14px; --rowH: 52px; --cardR: 14px; --r: 10px; --pad: 24px; --gap: 16px; --sideW: 240px; --topH: 60px; --h1: 26px; }
+  .p3 { --fs: 13px; --rowH: 40px; --cardR: 10px; --r: 8px; --pad: 16px; --gap: 10px; --sideW: 76px; --topH: 52px; --h1: 20px; }
+  .p1, .p3 { --side: #FFFFFF; --sideT: #111318; --sideM: #4A5260; --sideLine: #E4E6E1; --sideAct: #ECEFE7; --sideActT: #365314; --sideIc: #4A5260; --sideActIc: #3F6212; }
+  .p2 { --side: #111318; --sideT: #F5F7FA; --sideM: #B4BAC4; --sideLine: #2A2E36; --sideAct: #22262E; --sideActT: #FFFFFF; --sideIc: #B4BAC4; --sideActIc: #C8FF3A; }
+  .ui *, .ui *::before, .ui *::after { box-sizing: border-box; }
+  .ui svg.ic { flex: none; display: block; }
+  .ui .num { font-family: "Barlow Condensed", "Roboto Condensed", "Arial Narrow", sans-serif; font-variant-numeric: tabular-nums; font-weight: 700; }
+  .ui .tnum { font-variant-numeric: tabular-nums; }
+  .ui .mut { color: var(--muted); }
+  .ui .b6 { font-weight: 600; } .ui .b7 { font-weight: 700; }
+  .ui .ell { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ui .row { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .ui .grow { flex: 1; min-width: 0; }
+  .ui .col { display: flex; flex-direction: column; gap: var(--gap); min-width: 0; }
+
+  .frame { display: grid; grid-template-columns: var(--sideW) minmax(0, 1fr); background: var(--bg); overflow: hidden; position: relative; }
+  .frame.nogrid { display: block; }
+  /* kenar çubuğu */
+  .side { background: var(--side); border-right: 1px solid var(--sideLine); display: flex; flex-direction: column; padding: 14px 12px; gap: 2px; color: var(--sideT); min-height: 0; }
+  .logo { display: flex; align-items: center; gap: 10px; padding: 2px 6px 18px; }
+  .logo .wm { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-weight: 800; font-size: 23px; letter-spacing: 1.2px; line-height: 1; }
+  .logo .tn { font-size: 12px; color: var(--sideM); font-weight: 500; margin-top: 3px; white-space: nowrap; }
+  .nav { display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 12px; border-radius: var(--r); font-weight: 600; font-size: 14px; color: var(--sideT); position: relative; white-space: nowrap; }
+  .nav svg { color: var(--sideIc); }
+  .nav.on { background: var(--sideAct); color: var(--sideActT); }
+  .nav.on svg { color: var(--sideActIc); }
+  .nav .bdg { margin-left: auto; min-width: 22px; height: 22px; border-radius: 11px; background: #C5221F; color: #FFFFFF; font-size: 12px; font-weight: 700; display: grid; place-items: center; padding: 0 6px; }
+  .nav .kb { margin-left: auto; font-size: 11px; color: var(--sideM); font-weight: 600; }
+  .sgroup { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--sideM); padding: 14px 12px 6px; }
+  .sfoot { margin-top: auto; display: flex; flex-direction: column; gap: 2px; }
+  .sfoot .ver { font-size: 11.5px; color: var(--sideM); padding: 8px 12px 0; }
+  /* P1: etkin öğede küçük neon sinyal (yeşil kenarlı) */
+  .p1 .nav.on::after { content: ""; position: absolute; right: 12px; top: 50%; margin-top: -4px; width: 8px; height: 8px; border-radius: 4px; background: #C8FF3A; box-shadow: inset 0 0 0 1.5px #4D7C0F; }
+  .p1 .nav.on .bdg { margin-right: 14px; }
+  /* P2: koyu yüzeyde 4 px neon gösterge (paneldeki tek neon) */
+  .p2 .nav.on::before { content: ""; position: absolute; left: -12px; top: 8px; bottom: 8px; width: 4px; border-radius: 0 3px 3px 0; background: #C8FF3A; }
+  .p2 .side { border-right: 0; }
+  /* P3: 76 px ikon rayı */
+  .side.railx { padding: 10px 8px; align-items: stretch; }
+  .railx .logo { padding: 2px 0 12px; justify-content: center; }
+  .railx .nav { flex-direction: column; height: 58px; gap: 4px; justify-content: center; padding: 0 2px; font-size: 12px; font-weight: 600; }
+  .p3 .railx .nav.on::before, .p1 .railx .nav.on::before { content: ""; position: absolute; left: -8px; top: 12px; bottom: 12px; width: 3px; border-radius: 0 3px 3px 0; background: #3F6212; }
+  .p2 .railx .nav.on::before { left: -8px; top: 12px; bottom: 12px; }
+  .p1 .railx .nav.on::after { display: none; }
+  .railx .nav .bdg { position: absolute; top: 4px; right: 10px; min-width: 18px; height: 18px; font-size: 11px; margin: 0 !important; }
+
+  /* üst çubuk */
+  .mainc { display: flex; flex-direction: column; min-width: 0; min-height: 0; position: relative; }
+  .top { height: var(--topH); flex: none; background: #FFFFFF; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; padding: 0 var(--pad); }
+  .srch { width: 380px; }
+  .p3 .srch { width: 300px; }
+  .kbd { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--line2), inset 0 -1px 0 var(--line2); font-size: 11.5px; font-weight: 700; color: var(--muted); background: #FFFFFF; font-family: Inter, sans-serif; }
+  .live { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line2); font-weight: 600; font-size: 13px; white-space: nowrap; background: #FFFFFF; }
+  .live i { width: 10px; height: 10px; border-radius: 5px; background: #C8FF3A; box-shadow: inset 0 0 0 1.5px #4D7C0F; display: block; }
+  .p2 .live i { background: #047857; box-shadow: none; }
+  .ava { width: 34px; height: 34px; border-radius: 17px; background: var(--tint); color: var(--tintT); display: grid; place-items: center; font-weight: 800; font-size: 14px; flex: none; }
+  .who { line-height: 1.2; } .who b { display: block; font-size: 13.5px; } .who span { font-size: 12px; color: var(--muted); }
+  .counters { display: flex; gap: 4px; align-items: center; }
+  .cnt { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: 8px; font-size: 12.5px; font-weight: 600; white-space: nowrap; background: #F6F7F5; }
+  .cnt b { font-family: "Barlow Condensed", sans-serif; font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  /* sayfa */
+  .pg { flex: 1; min-height: 0; overflow: hidden; padding: var(--pad); display: flex; flex-direction: column; gap: var(--gap); position: relative; }
+  .pg.flush { padding: 0; gap: 0; }
+  .ph1 { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex: none; }
+  .ph1 h1 { margin: 0; font-size: var(--h1); line-height: 1.15; letter-spacing: -0.4px; font-weight: 700; }
+  .ph1 .sub { font-size: 13.5px; color: var(--muted); margin-top: 4px; }
+  .p3 .ph1 { align-items: center; }
+  .p3 .ph1 .sub { margin-top: 0; font-size: 13px; }
+
+  /* düğmeler ve denetimler (masaüstü: hedef ≥ 40 px) */
+  .bt { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: var(--r); font-weight: 600; font-size: 14px; white-space: nowrap; border: 0; flex: none; position: relative; }
+  .bt.pri { background: var(--pri); color: #FFFFFF; }
+  .bt.sec { background: #FFFFFF; color: var(--text); box-shadow: inset 0 0 0 1px var(--ctlLine); }
+  .bt.ton { background: var(--tint); color: var(--tintT); }
+  .bt.dan { background: #FFFFFF; color: #C5221F; box-shadow: inset 0 0 0 1px #C5221F; }
+  .bt.ghost { background: transparent; color: var(--priH); padding: 0 10px; }
+  .bt.ghostd { background: transparent; color: #C5221F; padding: 0 10px; }
+  .bt.dis { background: #ECEEF1; color: #5F6672; }
+  .bt.sm { height: 32px; padding: 0 10px; font-size: 13px; }
+  .bt.sm::before { content: ""; position: absolute; left: 0; right: 0; top: -4px; bottom: -4px; } /* 40 px dokunma alanı */
+  .ib { width: 40px; height: 40px; border-radius: var(--r); display: grid; place-items: center; color: var(--muted); flex: none; position: relative; }
+  .ib.bd { box-shadow: inset 0 0 0 1px var(--line2); background: #FFFFFF; }
+  .ib .dot { position: absolute; top: 4px; right: 3px; min-width: 18px; height: 18px; border-radius: 9px; background: #C5221F; color: #FFFFFF; font-size: 11px; font-weight: 700; display: grid; place-items: center; padding: 0 5px; box-shadow: 0 0 0 2px #FFFFFF; }
+  .focus { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .fld { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .fld > label { font-size: 13px; font-weight: 600; color: var(--text); }
+  .fld .hint { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+  .in { height: 40px; border-radius: var(--r); background: #FFFFFF; box-shadow: inset 0 0 0 1px var(--ctlLine); display: flex; align-items: center; gap: 8px; padding: 0 12px; font-size: 14px; color: var(--text); min-width: 0; white-space: nowrap; overflow: hidden; }
+  .in .ph { color: var(--ph); }
+  .in.focus { box-shadow: inset 0 0 0 2px var(--focus); outline: none; }
+  .in.err { box-shadow: inset 0 0 0 2px #C5221F; }
+  .in .end { margin-left: auto; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .in .ic { color: var(--muted); }
+  .in.ro { background: #F6F7F5; }
+  .tg { width: 40px; height: 22px; border-radius: 11px; background: #808896; position: relative; flex: none; }
+  .tg::after { content: ""; position: absolute; left: 3px; top: 3px; width: 16px; height: 16px; border-radius: 8px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(0,0,0,.25); }
+  .tg.on { background: var(--pri); }
+  .tg.on::after { left: 21px; }
+  .swr { display: flex; gap: 12px; align-items: flex-start; min-height: 40px; padding-top: 2px; }
+  .swr .t { font-weight: 600; } .swr .d { font-size: 12.5px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+  .rd { width: 20px; height: 20px; border-radius: 10px; box-shadow: inset 0 0 0 1.5px #808896; background: #FFFFFF; flex: none; }
+  .rd.on { box-shadow: inset 0 0 0 6px var(--pri); }
+  .cb { width: 18px; height: 18px; border-radius: 5px; box-shadow: inset 0 0 0 1.5px #808896; background: #FFFFFF; flex: none; display: grid; place-items: center; color: #FFFFFF; }
+  .cb.on { background: var(--pri); box-shadow: none; }
+  .cb.mix { background: var(--pri); box-shadow: none; }
+
+  /* durum çipi: %10 ton + koyu yazı + ikon (renge dayanmaz) */
+  .ch { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px 0 8px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; flex: none; line-height: 1; }
+  .ch .ic { width: 15px; height: 15px; }
+  .p3 .ch { height: 22px; padding: 0 8px 0 6px; border-radius: 6px; font-size: 12px; gap: 5px; }
+  .p3 .ch .ic { width: 14px; height: 14px; }
+  .t-neutral { background: #EDEEEF; color: #111318; } .t-neutral .ic { color: #4A5260; }
+  .t-success { background: #E6F2EE; color: #064E3B; } .t-success .ic { color: #047857; }
+  .t-warning { background: #F8EEE6; color: #7C2D12; } .t-warning .ic { color: #B45309; }
+  .t-danger { background: #F9E9E9; color: #7F1D1D; } .t-danger .ic { color: #C5221F; }
+  .t-info { background: #E7F1F4; color: #164E63; } .t-info .ic { color: #0E7490; }
+  .t-brand { background: #ECEFE7; color: #365314; } .t-brand .ic { color: #3F6212; }
+  .ch.out { background: #FFFFFF; box-shadow: inset 0 0 0 1px var(--line2); color: var(--text); }
+  .code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 11.5px; font-weight: 600; color: var(--muted); letter-spacing: .02em; }
+
+  /* kart, tablo, sekme */
+  .cd { background: var(--surf); border-radius: var(--cardR); border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(17,19,24,.04), 0 2px 8px rgba(17,19,24,.04); min-width: 0; }
+  .p3 .cd { box-shadow: none; }
+  .cd.pad { padding: 18px 20px; }
+  .p3 .cd.pad { padding: 12px 14px; }
+  .cd h2, .ui .h2 { font-size: 16px; font-weight: 700; margin: 0; letter-spacing: -0.1px; }
+  .p3 .cd h2, .p3 .h2 { font-size: 14px; }
+  .cdh { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+  .p3 .cdh { padding: 8px 12px; }
+  .tbw { overflow: hidden; min-height: 0; }
+  table.tb { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
+  .tb th { position: sticky; top: 0; z-index: 1; background: var(--thead); font-size: 12px; font-weight: 700; color: var(--muted); text-align: left; padding: 0 12px; height: 40px; border-bottom: 1px solid var(--line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .p3 .tb th { height: 32px; font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; padding: 0 8px; }
+  .tb th.r, .tb td.r { text-align: right; }
+  .tb th .ic { display: inline-block; vertical-align: -3px; margin-left: 2px; }
+  .tb td { height: var(--rowH); padding: 0 12px; border-bottom: 1px solid var(--line); vertical-align: middle; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .p3 .tb td { padding: 0 8px; }
+  .tb td .two { display: block; white-space: normal; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .p3 .tb tbody tr:nth-child(even) td { background: #FAFAF8; }
+  .tb tr.sel td { background: #F4F7EE !important; }
+  .tb tr.kf { outline: 2px solid var(--focus); outline-offset: -2px; }
+  .tb tr.hov td { background: #F6F7F5; }
+  .tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--line); flex: none; }
+  .tab { height: 42px; padding: 0 14px; display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; font-size: 14px; }
+  .tab.on { color: var(--text); border-color: var(--pri); }
+  .tab .n { min-width: 22px; height: 20px; border-radius: 10px; padding: 0 6px; background: #EDEEEF; color: #111318; font-size: 12px; font-weight: 700; display: grid; place-items: center; }
+  .tab.on .n { background: var(--tint); color: var(--tintT); }
+  .p3 .tab { height: 36px; font-size: 13px; padding: 0 10px; }
+  .sg { display: inline-flex; background: #ECEEF1; border-radius: var(--r); padding: 3px; flex: none; }
+  .sg span { height: 34px; padding: 0 12px; display: flex; align-items: center; gap: 6px; border-radius: calc(var(--r) - 2px); font-weight: 600; color: var(--muted); font-size: 13px; white-space: nowrap; }
+  .sg span.on { background: #FFFFFF; color: var(--text); box-shadow: 0 1px 2px rgba(17,19,24,.10); }
+  .sg span b { font-family: "Barlow Condensed", sans-serif; font-size: 16px; font-variant-numeric: tabular-nums; }
+  .al { display: flex; gap: 10px; padding: 12px 14px; border-radius: var(--r); font-size: 13.5px; align-items: flex-start; line-height: 1.45; }
+  .al .ic { margin-top: 1px; }
+  .kpi { padding: 14px 16px; }
+  .kpi .k { font-size: 11.5px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .kpi .v { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-size: 36px; font-weight: 700; line-height: 1.05; font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .kpi .v small { font-size: 20px; font-weight: 600; color: var(--muted); margin-left: 2px; }
+  .kpi .s { font-size: 12.5px; color: var(--muted); }
+  .p3 .kpi { padding: 9px 12px; }
+  .p3 .kpi .v { font-size: 28px; }
+  .p3 .kpi .k { font-size: 11px; }
+  .mtr { display: grid; grid-template-columns: minmax(0, 120px) minmax(0, 1fr) 36px; gap: 10px; align-items: center; font-size: 13px; min-height: 26px; }
+  .mtr .tr { height: 6px; border-radius: 3px; background: #ECEEF1; position: relative; overflow: hidden; }
+  .mtr .tr i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; background: #4D7C0F; }
+  .mtr .tr i.w { background: #B45309; }
+  .mtr .tr i.n { background: #808896; }
+  .mtr b { text-align: right; font-variant-numeric: tabular-nums; }
+  .grid { display: grid; gap: var(--gap); min-width: 0; }
+  .g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } .g5 { grid-template-columns: repeat(5, minmax(0, 1fr)); } .g6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .lbl { font-size: 11.5px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+  .sep { height: 1px; background: var(--line); flex: none; }
+
+  /* harita ve kontroller */
+  .mapbox { position: relative; overflow: hidden; min-height: 0; }
+  .mapbox > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .mapN { display: none; }
+  body.tiles-dark .mapN { display: block; }
+  body.tiles-dark .mapD { display: none; }
+  .mctl { position: absolute; z-index: 3; background: #FFFFFF; color: var(--text); border-radius: 10px; box-shadow: 0 1px 3px rgba(17,19,24,.18), 0 4px 12px rgba(17,19,24,.10); display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+  .mctl .ic { color: var(--muted); }
+  .mctl.zoom { flex-direction: column; gap: 0; }
+  .mctl.zoom span { width: 40px; height: 40px; display: grid; place-items: center; }
+  .mctl.zoom span + span { border-top: 1px solid var(--line); }
+  /* P2 her zaman, P1 / P3 yalnızca koyu karoda: navigasyondaki koyu krom */
+  .p2 .mctl, body.tiles-dark .mctl { background: #111318; color: #F5F7FA; box-shadow: 0 0 0 1px rgba(255,255,255,.14), 0 8px 24px rgba(0,0,0,.35); }
+  .p2 .mctl .ic, body.tiles-dark .mctl .ic { color: #B4BAC4; }
+  .p2 .mctl.zoom span + span, body.tiles-dark .mctl.zoom span + span { border-color: #2A2E36; }
+  .mctl .mut { color: var(--muted); }
+  .p2 .mctl .mut, body.tiles-dark .mctl .mut { color: #B4BAC4; }
+  .mctl .ch.t-danger { }
+  .p2 .mctl .ch.t-danger, body.tiles-dark .mctl .ch.t-danger { background: #3A1517; color: #FF7A7A; }
+  .p2 .mctl .ch.t-danger .ic, body.tiles-dark .mctl .ch.t-danger .ic { color: #FF7A7A; }
+  .attr { position: absolute; right: 8px; bottom: 6px; z-index: 3; font-size: 11px; color: #4A5260; background: rgba(255,255,255,.85); padding: 2px 8px; border-radius: 6px; }
+  body.tiles-dark .attr { background: rgba(17,19,24,.85); color: #B4BAC4; }
+  .legend i { width: 10px; height: 10px; display: inline-block; border-radius: 3px; }
+
+  /* katmanlar */
+  .scrim { position: absolute; inset: 0; background: rgba(17,19,24,.36); z-index: 20; }
+  .drawer { position: absolute; top: 0; right: 0; bottom: 0; width: 480px; background: #FFFFFF; z-index: 21; box-shadow: -8px 0 32px rgba(17,19,24,.18); display: flex; flex-direction: column; }
+  .dock { width: 440px; flex: none; background: #FFFFFF; border-left: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; }
+  .modal { position: absolute; z-index: 21; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 620px; background: #FFFFFF; border-radius: 18px; box-shadow: 0 24px 64px rgba(17,19,24,.28); display: flex; flex-direction: column; }
+  .p3 .modal { border-radius: 12px; }
+  .mh { display: flex; align-items: center; gap: 10px; padding: 16px 16px 12px 22px; }
+  .mh h2 { flex: 1; font-size: 18px; font-weight: 700; margin: 0; }
+  .mb { padding: 0 22px 18px; display: flex; flex-direction: column; gap: 14px; }
+  .mf { display: flex; justify-content: flex-end; gap: 10px; padding: 14px 22px; border-top: 1px solid var(--line); }
+  .kv { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 8px 12px; font-size: 13.5px; }
+  .kv dt { color: var(--muted); font-weight: 600; } .kv dd { margin: 0; font-weight: 500; }
+  .tl { display: flex; flex-direction: column; gap: 0; }
+  .tl .e { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 10px; align-items: start; padding-bottom: 12px; position: relative; font-size: 13px; }
+  .tl .e::before { content: ""; position: absolute; left: 13px; top: 26px; bottom: 0; width: 2px; background: var(--line); }
+  .tl .e:last-child::before { display: none; }
+  .tl .e .o { width: 28px; height: 28px; border-radius: 14px; display: grid; place-items: center; }
+  .savebar { position: absolute; left: var(--pad); right: var(--pad); bottom: 16px; z-index: 5; background: #111318; color: #F5F7FA; border-radius: 14px; padding: 10px 10px 10px 18px; display: flex; align-items: center; gap: 12px; box-shadow: 0 12px 32px rgba(17,19,24,.30); font-size: 14px; font-weight: 600; }
+  .savebar .bt.pri { background: #C8FF3A; color: #0B0D10; } /* neon dolgu yalnızca koyu yüzeyde */
+  .savebar .bt.sec { background: transparent; color: #F5F7FA; box-shadow: inset 0 0 0 1px #4A5260; }
+  .p1 .savebar, .p3 .savebar { background: #FFFFFF; color: var(--text); box-shadow: 0 0 0 1px var(--line), 0 12px 32px rgba(17,19,24,.16); }
+  .p1 .savebar .bt.pri, .p3 .savebar .bt.pri { background: var(--pri); color: #FFFFFF; }
+  .p1 .savebar .bt.sec, .p3 .savebar .bt.sec { color: var(--text); box-shadow: inset 0 0 0 1px var(--ctlLine); }
+  .optc { border-radius: var(--r); box-shadow: inset 0 0 0 1px var(--line2); padding: 14px; display: flex; gap: 12px; align-items: flex-start; background: #FFFFFF; min-width: 0; }
+  .optc.on { box-shadow: inset 0 0 0 2px var(--pri); background: #F7F9F3; }
+  .optc .t { font-weight: 700; font-size: 14.5px; display: flex; align-items: center; gap: 8px; }
+  .optc .d { font-size: 12.5px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
+  .p3 .optc { padding: 10px; }
+  .snav { width: 220px; flex: none; display: flex; flex-direction: column; gap: 2px; }
+  .snav span { height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: var(--r); font-weight: 600; color: var(--muted); font-size: 13px; }
+  .snav span.on { background: #FFFFFF; color: var(--text); box-shadow: inset 0 0 0 1px var(--line); }
+  .snav span.on .ic { color: var(--pri); }
+  .bulk { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 8px 0 12px; background: #111318; color: #F5F7FA; border-radius: 10px; font-size: 13px; font-weight: 600; flex: none; }
+  .bulk .bt.sm { background: #22262E; color: #F5F7FA; }
+  .bulk .bt.sm.neo { background: #C8FF3A; color: #0B0D10; }
+  .keys { display: flex; gap: 14px; align-items: center; font-size: 12px; color: var(--muted); flex: none; flex-wrap: wrap; }
+  .keys span { display: inline-flex; align-items: center; gap: 5px; }
+  .swatch-r { width: 4px; align-self: stretch; border-radius: 2px; flex: none; }
+
+  /* giriş */
+  .login { display: grid; place-items: center; height: 100%; background: var(--bg); position: relative; }
+  .lcard { width: 440px; background: #FFFFFF; border-radius: 20px; border: 1px solid var(--line); box-shadow: 0 2px 8px rgba(17,19,24,.06), 0 12px 32px rgba(17,19,24,.06); padding: 32px; display: flex; flex-direction: column; gap: 16px; }
+  .ltile { border-radius: 12px; display: grid; place-items: center; flex: none; }
+</style>
+</head>
+<body>
+<div class="wrap" id="top">
+  <h1>Yönetim paneli · marka maketleri (P1 / P2 / P3)</h1>
+  <p class="lead">Yönetim panelinin (Mantine) ürün marka diline geçişi için üç varyant. Hepsi kurye uygulamasında onaylanan <b>A2 "Nötr gri + beyaz kartlar"</b> diliyle uyumlu: nötr gri zemin <code>#F3F4F1</code>, beyaz kartlar, birincil eylem marka yeşili <code>#3F6212</code> + beyaz yazı, Inter (arayüz) ve Barlow Condensed (sayılar). Harita karoları kendi stilinde kalır; değişen yalnızca çevresindeki krom. Uygulama kodu değişmedi; önce seçim, sonra kod. Kurye uygulaması maketleri: <a href="../kurye-app/index-acik.html">../kurye-app/index-acik.html</a>, marka belirteçleri: <a href="../marka/tokens.json">../marka/tokens.json</a>, açıklama ve uygulama planı: <a href="README.md">README.md</a>.</p>
+  <p class="moment"><b>Renk kuralı (üçünde ortak):</b> neon <code>#C8FF3A</code> beyaz üzerinde 1,0:1 olduğu için açık yüzeyde <b>dolgu ya da metin olmaz</b>. Yalnızca koyu öğede (logo karosu, P2 kenar çubuğu, koyu harita kromu, koyu kaydetme çubuğu) ya da <code>#4D7C0F</code> kenarlı küçük bir sinyal noktası olarak görünür. Durumlar %10 renk tonu + koyu yazı + ikonla (yalnızca renge dayanmaz). Gövde metni ≥ 7:1, ikincil metin <code>#4A5260</code> beyazda 7,9:1, gri zeminde 7,1:1. Tüm ad, adres, numara ve bağlantılar kurgusaldır.</p>
+
+  <div class="controls" role="toolbar" aria-label="Görünüm ayarları">
+    <div><span class="ctl-label">Ekran</span><span class="seg" data-key="screen">
+      <button data-val="all">Tümü</button><button data-val="giris">Giriş</button><button data-val="harita">Canlı harita</button><button data-val="paketler">Paketler</button><button data-val="adres">Adres defteri</button><button data-val="isletmeler">İşletmeler + QR</button><button data-val="teslim">Teslim ve hazırlık</button><button data-val="dagitim">Dağıtım v2</button><button data-val="metrikler">Metrikler</button><button data-val="tablet">Tablet</button>
+    </span></div>
+    <div><span class="ctl-label">Varyant</span><span class="seg" data-key="variant"><button data-val="all">Üçü</button><button data-val="1">P1</button><button data-val="2">P2</button><button data-val="3">P3</button></span></div>
+    <div><span class="ctl-label">Düzen</span><span class="seg" data-key="layout"><button data-val="side">Yan yana</button><button data-val="stack">Alt alta (okunur)</button></span></div>
+    <div><span class="ctl-label">Harita karosu</span><span class="seg" data-key="tiles"><button data-val="light">Açık (gündüz)</button><button data-val="dark">Koyu</button></span></div>
+  </div>
+  <p class="lead" style="font-size:13.5px">Bir çerçeveye tıklayınca tam genişlikte açılır (yeniden tıklayınca küçülür). Çerçeveler 1440×900 (tablet 1024×768) çizilip sığacak kadar küçültülür. Sayfa tek dosyadır; JavaScript satır içidir, dosyayı doğrudan tarayıcıda açmak yeterli (sunucu gerekmez; <code>python -m http.server</code> ile de açılır). İnternet yoksa yazı tipleri sistem yazı tiplerine düşer.</p>
+
+  <noscript><p><b>Çerçeveler JavaScript ile çizilir.</b> Açıklamalar, karşılaştırma ve öneri için <code>README.md</code>.</p></noscript>
+
+  <div id="rows"></div>
+
+  <section class="block" aria-labelledby="vars">
+    <h2 id="vars">Varyantlar: kimin için, ödünleşimler, belirteçler, Mantine eşlemesi</h2>
+    <div class="vgrid" id="variants"></div>
+  </section>
+
+  <section class="block" aria-labelledby="cmp">
+    <h2 id="cmp">Karşılaştırma</h2>
+    <div class="table-wrap">
+      <table class="cmp">
+        <thead><tr><th>Ölçüt</th><th>P1 · Açık A2 birebir</th><th>P2 · Koyu kenar çubuğu + açık içerik</th><th>P3 · Yoğun operasyon</th></tr></thead>
+        <tbody>
+          <tr><td>Kimin için</td><td>İşletme sahibi, ara sıra giren yönetici, ayarlar ve raporlar</td><td>Paneli gün boyu açık tutan menajer / dispeçer; satış demosu</td><td>Yoğun saatte 30+ paketi aynı anda izleyen dispeçer</td></tr>
+          <tr><td>Göz yorgunluğu (8 saat ekran)</td><td>Orta: ekranın tamamı açık, en parlak varyant (gri zemin saf beyazdan iyi)</td><td><b>En düşük:</b> çevre görüşteki geniş sabit alan koyu; okunan alan açık. Parlaklık sınırı okuma alanının dışında, sabit</td><td>Orta: parlaklık P1 kadar; küçük yazı odak yorgunluğu yapar, ama tarama ve kaydırma azalır</td></tr>
+          <tr><td>Bilgi yoğunluğu (paket listesi, 1440×900)</td><td>~12 satır (52 px), bugünkü panelle aynı</td><td>~12 satır (52 px)</td><td><b>~17 satır (40 px), %40 fazla</b>; üstte canlı sayaçlar, yan panelde ayrıntı</td></tr>
+          <tr><td>Kurye uygulamasıyla tutarlılık</td><td><b>Birebir</b> (aynı zemin, kart, düğme, çip)</td><td>İçerik birebir; kenar çubuğu navigasyon kromuyla aynı</td><td>Renkler birebir, ölçek daha sıkı</td></tr>
+          <tr><td>Marka varlığı</td><td>Düşük: neon yalnızca logo karosunda; "herhangi bir yeşil SaaS" gibi durabilir</td><td><b>Yüksek:</b> neon koyu kenar çubuğunda yaşar, kurye navigasyonuyla aynı koyu krom</td><td>Düşük (P1 kadar)</td></tr>
+          <tr><td>Koyu harita karosuyla</td><td>Koyu harita açık çerçevede "delik" gibi durur; kontroller koyu karoda koyu kroma geçer</td><td><b>En uyumlu:</b> koyu kenar çubuğu + koyu harita kesintisiz koyu "L"; kontroller hep koyu krom</td><td>P1 ile aynı</td></tr>
+          <tr><td>Erişilebilirlik</td><td>Metin ≥ 7:1, odak halkası 2 px yeşil, hedef 40 px</td><td>Aynı; kenar çubuğunda beyaz 17,3:1, ikincil <code>#B4BAC4</code> 9,5:1</td><td>Aynı oranlar; 13 px gövde (en küçük yazı 11,5 px büyük harf başlık), klavye ile tam gezinme</td></tr>
+          <tr><td>Öğrenme / alışkanlık</td><td>Bugünkü düzen; yalnızca renk ve logo değişir</td><td>Bugünkü düzen; kenar çubuğu koyulaşır</td><td>Yeni alışkanlık: ikon rayı, yan panel, kısayollar</td></tr>
+          <tr><td>Tablet (1024)</td><td>Kenar çubuğu çekmeceye (burger) iner</td><td>Koyu ikon rayına iner (marka korunur)</td><td>İkon rayı zaten dar; en çok alan haritaya kalır</td></tr>
+          <tr><td>Mantine ile uygulama eforu</td><td><b>S–M</b>: tema + logo + StatusChip; sayfalar çoğunlukla kendiliğinden geçer</td><td><b>M</b>: P1 + koyu Navbar / NavLink stili, harita kontrolleri koyu krom</td><td><b>L</b>: P1 + tablo yeniden düzeni, yan panel, klavye gezinme, ikon rayı</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="recbox">
+      <span class="tag">Öneri</span>
+      <div><b>P2 · Koyu kenar çubuğu + açık içerik</b>; P3'ün yoğunluğu ayrı bir varyant değil, sonraki aşamada <b>"Yoğunluk: Rahat / Sıkı"</b> kullanıcı seçeneği (yalnızca Paketler ve Canlı harita listeleri).</div>
+      <ol>
+        <li><b>Marka:</b> neon açık yüzeyde yaşayamıyor; panelde neonun meşru tek evi koyu bir yüzey. P2 bunu kalıcı bir yere (kenar çubuğu) koyar, içeriği A2 açık bırakır. Ürün sahibinin kararıyla birebir: "uygulama içi açık, navigasyon / harita koyu".</li>
+        <li><b>Uzun süre ekrana bakan menajer:</b> geniş, sabit, koyu bir şerit toplam parlaklığı düşürür ve parlaklık sınırı okuma alanının dışında kalır. Okunan tablo ve formlar P1 ile aynı (≥ 7:1).</li>
+        <li><b>Harita köprüsü:</b> koyu karo seçildiğinde kenar çubuğu + harita kesintisiz koyu; harita kontrolleri kurye navigasyonuyla aynı koyu krom (bir bileşen dili).</li>
+        <li><b>Efor makul (M):</b> farkın tamamı tema + AppShell + iki CSS sınıfı. P3'ün kazanımı (yoğunluk) Mantine <code>size</code> ve CSS değişkenleriyle aynı bileşenlere sonradan eklenebilir; ikon rayı ve klavye kısayolları bağımsız küçük işler.</li>
+        <li><b>P1 neden değil:</b> en ucuz ve en güvenli, ama marka neredeyse görünmez; satılacak üründe panel kimliksiz kalır. P2'den P1'e dönüş tek bir tema satırı (kenar çubuğu rengi), yani risk düşük.</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>Statik tasarım dokümanı; uygulama kodu değişmedi. Yazı tipleri Google Fonts (Inter, Barlow Condensed; OFL), ikonlar satır içi Lucide tarzı SVG (ISC); uygulamada mevcut Tabler ikonları (MIT) çizgi kalınlığı 2 ile kullanılır. Harita çizimleri temsilîdir (gerçek karo değil).</footer>
+</div>
+<script>
+(function () {
+  'use strict';
+  var VK = ['1', '2', '3'];
+  var NAME = { '1': 'P1 · Açık A2 birebir', '2': 'P2 · Koyu kenar çubuğu + açık içerik', '3': 'P3 · Yoğun operasyon' };
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  // ------------------------------------------------------------ ikonlar (Lucide tarzı, 24 ızgara)
+  var P = {
+    map: '<path d="M9 3 3 6v15l6-3 6 3 6-3V3l-6 3-6-3z"/><path d="M9 3v15M15 6v15"/>',
+    pkg: '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/>',
+    handover: '<path d="M7 17 3 13l4-4"/><path d="M3 13h13"/><path d="m17 7 4 4-4 4"/><path d="M21 11H8"/>',
+    store: '<path d="M3 9.5 4.5 4h15L21 9.5"/><path d="M4 9.5V20h16V9.5"/><path d="M9.5 20v-5.5h5V20"/>',
+    book: '<path d="M5 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5z"/><path d="M5 3v18M3 7h4M3 12h4M3 17h4"/><circle cx="12.5" cy="10" r="2.2"/><path d="M9.5 15.5a3.2 3.2 0 0 1 6 0"/>',
+    bike: '<circle cx="5.5" cy="17" r="3.5"/><circle cx="18.5" cy="17" r="3.5"/><path d="M5.5 17 9 9h5l4.5 8M14 9l-1-3h-3M9 9l3.5 8"/>',
+    chart: '<path d="M3 3v18h18"/><path d="M7 16v-5M12 16V7M17 16v-8"/>',
+    gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',
+    search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    minus: '<path d="M5 12h14"/>',
+    alert: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    clock: '<circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3.5 2"/>',
+    layers: '<path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/>',
+    arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    ban: '<circle cx="12" cy="12" r="9.5"/><path d="m5.3 5.3 13.4 13.4"/>',
+    x: '<path d="M18 6 6 18M6 6l12 12"/>',
+    chevD: '<path d="m6 9 6 6 6-6"/>',
+    chevR: '<path d="m9 18 6-6-6-6"/>',
+    sort: '<path d="m7 15 5 5 5-5M7 9l5-5 5 5"/>',
+    down: '<path d="M12 5v14M6 13l6 6 6-6"/>',
+    cal: '<rect x="3" y="4.5" width="18" height="17" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
+    info: '<circle cx="12" cy="12" r="9.5"/><path d="M12 16v-4.5M12 8h.01"/>',
+    copy: '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/>',
+    link: '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
+    more: '<circle cx="12" cy="5" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="19" r="1.4" fill="currentColor"/>',
+    pin: '<path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>',
+    phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>',
+    wallet: '<rect x="2.5" y="6" width="19" height="14" rx="2"/><path d="M16 13h2M2.5 10h19M6 6l9-3 1.5 3"/>',
+    filter: '<path d="M3 5h18l-7 8.5V20l-4-2v-4.5z"/>',
+    expand: '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>',
+    locate: '<path d="M2 12h3M19 12h3M12 2v3M12 19v3"/><circle cx="12" cy="12" r="7"/>',
+    route: '<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>',
+    refresh: '<path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/>',
+    help: '<circle cx="12" cy="12" r="9.5"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/>',
+    keyboard: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 13h.01M18 13h.01M8 16h8"/>',
+    shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+    eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+    qr: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/>',
+    timer: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M10 2h4"/>',
+    server: '<rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01"/>',
+    sliders: '<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',
+    menu: '<path d="M4 6h16M4 12h16M4 18h16"/>'
+  };
+  function ic(name, size, color, sw) {
+    size = size || 20;
+    return '<svg class="ic" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="' + (color || 'currentColor') + '" stroke-width="' + (sw || 2) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + P[name] + '</svg>';
+  }
+
+  // ------------------------------------------------------------ logo ("K + ok": koyu karo + neon işaret)
+  function glyph(color) {
+    return '<g fill="none" stroke="' + color + '" stroke-width="11" stroke-linejoin="miter" stroke-linecap="butt">' +
+      '<path d="M38 30 V78"/><path d="M42 58 L66 31"/><path d="M50 50 L64 66"/></g>' +
+      '<path d="M58 72 L74 79 L71 61 Z" fill="' + color + '" stroke="' + color + '" stroke-width="2" stroke-linejoin="round"/>';
+  }
+  function tile(size, onDark) {
+    return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 108 108" aria-hidden="true" style="display:block;flex:none">' +
+      '<rect width="108" height="108" rx="26" fill="#0A0C0F"' + (onDark ? ' stroke="rgba(255,255,255,.18)" stroke-width="3"' : '') + '/>' + glyph('#C8FF3A') + '</svg>';
+  }
+
+  // ------------------------------------------------------------ durum ve tonlar (tokens.json → courierApp.packageStatus)
+  var ST = {
+    CREATED: ['t-neutral', 'clock', 'Beklemede'], IN_POOL: ['t-neutral', 'layers', 'Havuzda'], ASSIGNED: ['t-warning', 'store', 'Atandı'],
+    PICKED_UP: ['t-info', 'arrow', 'Yolda'], DELIVERED: ['t-success', 'check', 'Teslim edildi'], CANCELLED: ['t-neutral', 'ban', 'İptal'],
+    FAILED: ['t-danger', 'alert', 'Teslim edilemedi']
+  };
+  var TONE_ICON = { 't-neutral': '#4A5260', 't-success': '#047857', 't-warning': '#B45309', 't-danger': '#C5221F', 't-info': '#0E7490', 't-brand': '#3F6212' };
+  function chip(k) { var s = ST[k]; return '<span class="ch ' + s[0] + '">' + ic(s[1], 15) + esc(s[2]) + '</span>'; }
+  function tchip(tone, icon, text) { return '<span class="ch ' + tone + '">' + (icon ? ic(icon, 15) : '') + esc(text) + '</span>'; }
+
+  // ------------------------------------------------------------ küçük bileşenler
+  function bt(kind, label, icon, extra) { return '<span class="bt ' + kind + (extra ? ' ' + extra : '') + '">' + (icon ? ic(icon, 18) : '') + (label ? esc(label) : '') + '</span>'; }
+  function inp(value, o) {
+    o = o || {};
+    return '<div class="in' + (o.cls ? ' ' + o.cls : '') + '"' + (o.w ? ' style="width:' + o.w + 'px"' : '') + '>' + (o.icon ? ic(o.icon, 18) : '') +
+      (o.ph ? '<span class="ph ell">' + esc(o.ph) + '</span>' : '<span class="ell">' + esc(value) + '</span>') + (o.end ? '<span class="end">' + o.end + '</span>' : '') + '</div>';
+  }
+  function fld(label, value, o) {
+    o = o || {};
+    return '<div class="fld"' + (o.style ? ' style="' + o.style + '"' : '') + '><label>' + esc(label) + '</label>' + inp(value, o) + (o.hint ? '<div class="hint">' + esc(o.hint) + '</div>' : '') + '</div>';
+  }
+  function sel(label, value, o) { o = o || {}; o.end = ic('chevD', 16); return fld(label, value, o); }
+  function num(label, value, hint, o) { o = o || {}; o.end = '<span class="mut" style="font-size:12.5px">' + (o.unit || '') + '</span>'; o.hint = hint; return fld(label, value, o); }
+  function swr(on, t, d) { return '<div class="swr"><span class="tg' + (on ? ' on' : '') + '"></span><div><div class="t">' + esc(t) + '</div>' + (d ? '<div class="d">' + esc(d) + '</div>' : '') + '</div></div>'; }
+  function kpi(k, v, s, o) { o = o || {}; return '<div class="cd kpi"' + (o.style ? ' style="' + o.style + '"' : '') + '><div class="k">' + esc(k) + '</div><div class="v">' + v + '</div>' + (s ? '<div class="s">' + esc(s) + '</div>' : '') + '</div>'; }
+  function mtr(label, val, max, cls) { return '<div class="mtr"><span class="ell">' + esc(label) + '</span><span class="tr"><i class="' + (cls || '') + '" style="width:' + Math.round(val / max * 100) + '%"></i></span><b>' + val + '</b></div>'; }
+  function alertBox(tone, icon, text) { return '<div class="al ' + tone + '">' + ic(icon, 18) + '<div>' + text + '</div></div>'; }
+
+  // ------------------------------------------------------------ kabuk (kenar çubuğu + üst çubuk)
+  var NAV = [
+    ['harita', 'map', 'Canlı harita', 'Harita'], ['paketler', 'pkg', 'Paketler', 'Paketler'], ['devir', 'handover', 'Devirler', 'Devir'],
+    ['isletmeler', 'store', 'İşletmeler', 'İşletme'], ['adres', 'book', 'Adres defteri', 'Adresler'], ['kuryeler', 'bike', 'Kuryeler', 'Kurye'],
+    ['metrikler', 'chart', 'Metrikler', 'Metrik'], ['ayarlar', 'gear', 'Ayarlar', 'Ayarlar']
+  ];
+  function side(v, active, rail) {
+    var isRail = v === '3' || rail;
+    var h = '<aside class="side' + (isRail ? ' railx' : '') + '">';
+    if (isRail) h += '<div class="logo">' + tile(40, v === '2') + '</div>';
+    else h += '<div class="logo">' + tile(38, v === '2') + '<div><div class="wm">KURYE</div><div class="tn">Demo Kurye · Eskişehir</div></div></div>';
+    NAV.forEach(function (n, i) {
+      var badge = n[0] === 'devir' ? '<span class="bdg">2</span>' : '';
+      h += '<div class="nav' + (n[0] === active ? ' on' : '') + '">' + ic(n[1], isRail ? 22 : 20) + '<span>' + esc(isRail ? n[3] : n[2]) + '</span>' + badge + '</div>';
+      if (!isRail && i === 2) h += '<div class="sgroup">Kayıtlar</div>';
+      if (!isRail && i === 5) h += '<div class="sgroup">Yönetim</div>';
+    });
+    h += '<div class="sfoot">' + (isRail ? '<div class="nav">' + ic('keyboard', 22) + '<span>Kısayol</span></div>' :
+      '<div class="nav">' + ic('help', 20) + '<span>Yardım</span></div><div class="ver">Sürüm 3.4</div>') + '</div>';
+    return h + '</aside>';
+  }
+  function top(v, o) {
+    o = o || {};
+    var h = '<header class="top">';
+    h += '<div class="srch">' + inp('', { icon: 'search', ph: v === '3' ? 'Ara: paket no, müşteri, adres' : 'Paket, müşteri ya da adres ara', end: '<span class="kbd">/</span>' }) + '</div>';
+    if (v === '3' && !o.noCounters) {
+      h += '<div class="counters">' +
+        '<span class="cnt">' + ic('clock', 15, '#4A5260') + 'Beklemede <b>2</b></span>' +
+        '<span class="cnt">' + ic('layers', 15, '#4A5260') + 'Havuzda <b>9</b></span>' +
+        '<span class="cnt">' + ic('store', 15, '#B45309') + 'Atandı <b>4</b></span>' +
+        '<span class="cnt">' + ic('arrow', 15, '#0E7490') + 'Yolda <b>2</b></span>' +
+        '<span class="cnt" style="background:#F9E9E9;color:#7F1D1D">' + ic('alert', 15, '#C5221F') + 'Konum kesildi <b>1</b></span></div>';
+    }
+    h += '<div class="grow"></div>';
+    h += '<span class="live"><i></i>Canlı</span>';
+    h += '<span class="ib">' + ic('alert', 20) + '<span class="dot">1</span></span>';
+    h += '<div class="row" style="gap:8px"><span class="ava">D</span>' + (o.compactUser ? '' : '<div class="who"><b>Demo Sahip</b><span>Sahip</span></div>') + ic('chevD', 16, '#4A5260') + '</div>';
+    return h + '</header>';
+  }
+  function shell(v, active, page, o) {
+    o = o || {};
+    return side(v, active, o.rail) + '<div class="mainc">' + top(v, o) + page + (o.overlay || '') + '</div>' + (o.frameOverlay || '');
+  }
+
+  // ------------------------------------------------------------ harita (temsilî; karo stili değişmez)
+  function rng(seed) { var s = seed; return function () { s = (s * 1664525 + 1013904223) % 4294967296; return s / 4294967296; }; }
+  var DAY = { bg: '#ECEEF1', blk: '#E3E6EA', bld: '#DCE0E5', park: '#D3E2D6', water: '#B5CEE3', minor: '#FFFFFF', minorC: '#CDD3DA', major: '#FFFFFF', majorC: '#A9B2BE', hwy: '#FFFFFF', hwyC: '#9AA4B1', lab: '#2F363F', halo: '#FFFFFF', dist: '#59606B' };
+  var NIGHT = { bg: '#0E1116', blk: '#12161C', bld: '#171C23', park: '#0F1F19', water: '#0A2130', minor: '#1E232B', minorC: '#0E1116', major: '#2C323C', majorC: '#161A20', hwy: '#3A4250', hwyC: '#161A20', lab: '#A3AAB5', halo: '#0E1116', dist: '#8E96A3' };
+  function mapSvg(w, h, night, extra) {
+    var c = night ? NIGHT : DAY, r = rng(7), s = '';
+    s += '<rect width="' + w + '" height="' + h + '" fill="' + c.bg + '"/>';
+    var xs = [], ys = [], x, y;
+    for (x = 40; x < w + 120; x += 120 + Math.round(r() * 50)) xs.push(x);
+    for (y = 30; y < h + 100; y += 95 + Math.round(r() * 40)) ys.push(y);
+    for (var i = 0; i < xs.length - 1; i++) for (var j = 0; j < ys.length - 1; j++) {
+      var bw = xs[i + 1] - xs[i] - 14, bh = ys[j + 1] - ys[j] - 14;
+      s += '<rect x="' + (xs[i] + 7) + '" y="' + (ys[j] + 7) + '" width="' + bw + '" height="' + bh + '" fill="' + c.blk + '"/>';
+      for (var k = 0; k < 3; k++) {
+        var qx = xs[i] + 12 + r() * (bw - 40), qy = ys[j] + 12 + r() * (bh - 34);
+        s += '<rect x="' + qx.toFixed(0) + '" y="' + qy.toFixed(0) + '" width="' + (14 + r() * 20).toFixed(0) + '" height="' + (10 + r() * 16).toFixed(0) + '" fill="' + c.bld + '"/>';
+      }
+    }
+    s += '<path d="M' + (w * .58) + ' ' + (h * .1) + ' h' + (w * .12) + ' v' + (h * .14) + ' l-' + (w * .09) + ' ' + (h * .03) + ' z" fill="' + c.park + '"/>';
+    s += '<rect x="' + (w * .08) + '" y="' + (h * .66) + '" width="' + (w * .1) + '" height="' + (h * .1) + '" rx="6" fill="' + c.park + '"/>';
+    var river = 'M-20 ' + (h * .56) + ' C' + (w * .2) + ' ' + (h * .5) + ' ' + (w * .32) + ' ' + (h * .66) + ' ' + (w * .5) + ' ' + (h * .6) + ' S' + (w * .8) + ' ' + (h * .48) + ' ' + (w + 20) + ' ' + (h * .53);
+    s += '<path d="' + river + '" stroke="' + c.water + '" stroke-width="18" fill="none"/>';
+    function road(d, cls) {
+      var wd = cls === 3 ? [16, 12] : cls === 2 ? [12, 9] : [8, 5.5];
+      var col = cls === 3 ? [c.hwyC, c.hwy] : cls === 2 ? [c.majorC, c.major] : [c.minorC, c.minor];
+      return '<path d="' + d + '" stroke="' + col[0] + '" stroke-width="' + wd[0] + '" fill="none"/><path d="' + d + '" stroke="' + col[1] + '" stroke-width="' + wd[1] + '" fill="none"/>';
+    }
+    var minor = '', major = '';
+    xs.forEach(function (x, i) { var d = 'M' + x + ' -10 V' + (h + 10); if (i % 3 === 1) major += road(d, 2); else minor += road(d, 1); });
+    ys.forEach(function (y, i) { var d = 'M-10 ' + y + ' H' + (w + 10); if (i % 3 === 2) major += road(d, 2); else minor += road(d, 1); });
+    s += minor + major + road('M-10 ' + (h * .92) + ' L' + (w + 10) + ' ' + (h * .18), 3);
+    function lab(x, y, t, big) {
+      return '<text x="' + x + '" y="' + y + '" font-family="Noto Sans, Arial, sans-serif" font-size="' + (big ? 13 : 11) + '" ' + (big ? 'font-weight="700" letter-spacing="1.5"' : '') +
+        ' fill="' + (big ? c.dist : c.lab) + '" stroke="' + c.halo + '" stroke-width="3" paint-order="stroke">' + t + '</text>';
+    }
+    s += lab(w * .18, h * .3, 'TEPEBAŞI', 1) + lab(w * .56, h * .8, 'ODUNPAZARI', 1) + lab(w * .36, h * .63, 'Porsuk Çayı') + lab(w * .66, h * .35, 'Demo Cd.');
+    return s + (extra || '');
+  }
+  function mapBoth(w, h, extraFn) {
+    extraFn = extraFn || function () { return ''; };
+    return '<svg class="mapD" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + mapSvg(w, h, false, extraFn(false)) + '</svg>' +
+      '<svg class="mapN" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + mapSvg(w, h, true, extraFn(true)) + '</svg>';
+  }
+  var RC = ['#2563eb', '#ea580c', '#0d9488', '#c026d3'];
+  function routeP(d, col, night) {
+    return '<path d="' + d + '" stroke="' + (night ? '#0E1116' : '#FFFFFF') + '" stroke-width="8" fill="none" stroke-linejoin="round" stroke-linecap="round"/>' +
+      '<path d="' + d + '" stroke="' + col + '" stroke-width="4.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>';
+  }
+  function courierM(x, y, col, n, o, night) {
+    o = o || {};
+    var s = '';
+    if (o.sel) s += '<circle cx="' + x + '" cy="' + y + '" r="21" fill="none" stroke="' + (night ? '#C8FF3A' : '#111318') + '" stroke-width="3"/>';
+    if (o.stale) s += '<circle cx="' + x + '" cy="' + y + '" r="22" fill="#C5221F" fill-opacity=".18" stroke="#C5221F" stroke-width="2" stroke-dasharray="4 3"/>';
+    s += '<circle cx="' + x + '" cy="' + y + '" r="14" fill="' + col + '" stroke="#FFFFFF" stroke-width="3"/>';
+    s += '<text x="' + x + '" y="' + (y + 4.5) + '" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="800" fill="#FFFFFF">' + n + '</text>';
+    return s;
+  }
+  function pkgM(x, y, tone, night) {
+    var col = TONE_ICON[tone];
+    if (night) col = { 't-neutral': '#A3AAB5', 't-warning': '#FBBF24', 't-info': '#22D3EE', 't-success': '#3DDC97', 't-danger': '#FF7A7A' }[tone] || col;
+    return '<rect x="' + (x - 11) + '" y="' + (y - 11) + '" width="22" height="22" rx="6" fill="' + (night ? '#111318' : '#FFFFFF') + '" stroke="' + col + '" stroke-width="3"/>' +
+      '<rect x="' + (x - 4) + '" y="' + (y - 4) + '" width="8" height="8" rx="2" fill="' + col + '"/>';
+  }
+  function liveMapExtra(w, h) {
+    return function (night) {
+      var s = '';
+      s += routeP('M' + (w * .2) + ' ' + (h * .78) + ' V' + (h * .52) + ' H' + (w * .42) + ' V' + (h * .3), RC[0], night);
+      s += routeP('M' + (w * .62) + ' ' + (h * .62) + ' H' + (w * .78) + ' V' + (h * .2), RC[1], night);
+      s += routeP('M' + (w * .5) + ' ' + (h * .86) + ' V' + (h * .7) + ' H' + (w * .32), RC[2], night);
+      s += pkgM(w * .42, h * .3, 't-info', night) + pkgM(w * .78, h * .2, 't-warning', night) + pkgM(w * .32, h * .7, 't-info', night);
+      s += pkgM(w * .14, h * .4, 't-neutral', night) + pkgM(w * .7, h * .44, 't-neutral', night) + pkgM(w * .86, h * .74, 't-neutral', night) + pkgM(w * .27, h * .2, 't-neutral', night) + pkgM(w * .55, h * .15, 't-warning', night);
+      s += courierM(w * .2, h * .78, RC[0], 1, { sel: 1 }, night) + courierM(w * .62, h * .62, RC[1], 2, {}, night) + courierM(w * .5, h * .86, RC[2], 3, {}, night);
+      s += courierM(w * .88, h * .36, RC[3], 4, { stale: 1 }, night);
+      return s;
+    };
+  }
+  function mapChrome(o) {
+    o = o || {};
+    var lg = function (stroke, label, circle) {
+      return '<span class="row" style="gap:6px">' + (circle ? '<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="#2563eb" stroke="#fff" stroke-width="2"/></svg>' :
+        '<svg width="16" height="16" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="3" fill="none" stroke="' + stroke + '" stroke-width="2.5"/></svg>') + label + '</span>';
+    };
+    return '<div class="mctl zoom" style="left:14px;top:14px"><span>' + ic('plus', 18) + '</span><span>' + ic('minus', 18) + '</span></div>' +
+      '<div class="mctl" style="left:14px;top:106px;width:40px;height:40px;justify-content:center">' + ic('locate', 18) + '</div>' +
+      (o.stale === false ? '' : '<div class="mctl" style="right:14px;top:14px;padding:4px 4px 4px 8px">' + tchip('t-danger', 'alert', 'Konum kesildi: 1') + '<span style="width:40px;height:40px;display:grid;place-items:center">' + ic('expand', 18) + '</span></div>') +
+      (o.legend === false ? '' : '<div class="mctl legend" style="left:14px;bottom:14px;padding:8px 12px;gap:14px;font-size:12px">' +
+        lg('', 'Kurye', 1) + lg('#8E96A3', 'Havuzda') + lg('#B45309', 'Atandı') + lg('#0E7490', 'Yolda') + '</div>') +
+      '<div class="attr">© OpenStreetMap katkıcıları</div>';
+  }
+
+  // ------------------------------------------------------------ QR (temsilî, sabit tohum)
+  function qrSvg(size) {
+    var n = 29, r = rng(42), cell = size / (n + 8), s = '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" aria-hidden="true" style="display:block"><rect width="' + size + '" height="' + size + '" fill="#FFFFFF"/>';
+    function finder(cx, cy) {
+      return [[0, 0, 7, '#111318'], [1, 1, 5, '#FFFFFF'], [2, 2, 3, '#111318']].map(function (f) {
+        return '<rect x="' + ((cx + f[0] + 4) * cell).toFixed(2) + '" y="' + ((cy + f[1] + 4) * cell).toFixed(2) + '" width="' + (f[2] * cell).toFixed(2) + '" height="' + (f[2] * cell).toFixed(2) + '" fill="' + f[3] + '"/>';
+      }).join('');
+    }
+    for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) {
+      var inF = (x < 8 && y < 8) || (x > n - 9 && y < 8) || (x < 8 && y > n - 9);
+      if (!inF && r() > .52) s += '<rect x="' + ((x + 4) * cell).toFixed(2) + '" y="' + ((y + 4) * cell).toFixed(2) + '" width="' + cell.toFixed(2) + '" height="' + cell.toFixed(2) + '" fill="#111318"/>';
+    }
+    return s + finder(0, 0) + finder(n - 7, 0) + finder(0, n - 7) + '</svg>';
+  }
+
+  // ------------------------------------------------------------ kurgusal veri
+  var PK = [
+    ['1031', 'IN_POOL', 'Demo Döner Salonu', 'Müşteri 91', 'Arifiye Mah., Demo Sok. No:3', 'Kapıda nakit', '185,50', '', '12:25', 'Hazır', '4 dk'],
+    ['1030', 'ASSIGNED', 'Kampüs Burger (Demo)', 'Müşteri 90', 'Büyükdere Mah., Demo Sok. No:17', 'Online ödendi', '0,00', 'Demo Kurye 2', '12:21', '~3 dk', '8 dk'],
+    ['1029', 'PICKED_UP', 'Örnek Pide Fırını', 'Müşteri 89', 'Yenibağlar Mah., Demo Sok. No:4', 'Kapıda kart', '416,00', 'Demo Kurye 1', '12:14', 'Alındı', '15 dk'],
+    ['1028', 'IN_POOL', 'Porsuk Çiğ Börek (Demo)', 'Müşteri 88', 'Emek Mah., Demo Sok. No:5', 'Kapıda nakit', '366,50', '', '12:11', '~6 dk', '18 dk'],
+    ['1027', 'CREATED', 'Lezzet Mutfağı (Demo)', 'Müşteri 87', 'Şirintepe Mah., Demo Sok. No:6', 'Kapıda kart', '118,50', '', '12:08', '~12 dk', '21 dk'],
+    ['1026', 'PICKED_UP', 'Köşe Kafe (Demo)', 'Müşteri 86', 'Batıkent Mah., Demo Sok. No:7', 'Online ödendi', '0,00', 'Demo Kurye 3', '12:05', 'Alındı', '24 dk'],
+    ['1025', 'FAILED', 'Kampüs Burger (Demo)', 'Müşteri 85', 'Çamlıca Mah., Demo Sok. No:52', 'Kapıda nakit', '98,50', 'Demo Kurye 1', '12:02', 'Alındı', '27 dk'],
+    ['1024', 'ASSIGNED', 'Demo Döner Salonu', 'Müşteri 84', 'Hoşnudiye Mah., Demo Sok. No:9', 'Kapıda kart', '207,00', 'Demo Kurye 2', '11:59', 'Hazır', '30 dk'],
+    ['1023', 'DELIVERED', 'Örnek Pide Fırını', 'Müşteri 83', 'Osmangazi Mah., Demo Sok. No:10', 'Online ödendi', '0,00', 'Demo Kurye 3', '11:56', 'Alındı', '33 dk'],
+    ['1022', 'IN_POOL', 'Lezzet Mutfağı (Demo)', 'Müşteri 82', 'Vişnelik Mah., Demo Sok. No:20', 'Kapıda nakit', '142,00', '', '11:53', '~2 dk', '36 dk'],
+    ['1021', 'DELIVERED', 'Köşe Kafe (Demo)', 'Müşteri 81', 'Gökmeydan Mah., Demo Sok. No:11', 'Kapıda kart', '76,00', 'Demo Kurye 1', '11:50', 'Alındı', '39 dk'],
+    ['1020', 'CANCELLED', 'Porsuk Çiğ Börek (Demo)', 'Müşteri 80', 'Yenidoğan Mah., Demo Sok. No:24', 'Kapıda nakit', '64,00', '', '11:47', '—', '42 dk'],
+    ['1019', 'DELIVERED', 'Demo Döner Salonu', 'Müşteri 79', 'Kurtuluş Mah., Demo Sok. No:12', 'Online ödendi', '0,00', 'Demo Kurye 2', '11:44', 'Alındı', '45 dk'],
+    ['1018', 'PICKED_UP', 'Kampüs Burger (Demo)', 'Müşteri 78', 'Büyükdere Mah., Demo Sok. No:31', 'Kapıda kart', '233,50', 'Demo Kurye 3', '11:41', 'Alındı', '48 dk'],
+    ['1017', 'DELIVERED', 'Örnek Pide Fırını', 'Müşteri 77', 'Arifiye Mah., Demo Sok. No:14', 'Kapıda nakit', '159,00', 'Demo Kurye 1', '11:38', 'Alındı', '51 dk'],
+    ['1016', 'DELIVERED', 'Köşe Kafe (Demo)', 'Müşteri 76', 'Emek Mah., Demo Sok. No:15', 'Online ödendi', '0,00', 'Demo Kurye 2', '11:35', 'Alındı', '54 dk'],
+    ['1015', 'DELIVERED', 'Lezzet Mutfağı (Demo)', 'Müşteri 75', 'Hoşnudiye Mah., Demo Sok. No:16', 'Kapıda kart', '88,00', 'Demo Kurye 3', '11:32', 'Alındı', '57 dk'],
+    ['1014', 'DELIVERED', 'Demo Döner Salonu', 'Müşteri 74', 'Şirintepe Mah., Demo Sok. No:17', 'Kapıda nakit', '120,00', 'Demo Kurye 1', '11:29', 'Alındı', '60 dk']
+  ];
+  var CR = [
+    ['Demo Kurye 1', 'OK', 'az önce', 2, RC[0], 'Teslim · Yenibağlar Mah.', '4 dk'],
+    ['Demo Kurye 2', 'OK', 'az önce', 2, RC[1], 'Alış · Kampüs Burger', '6 dk'],
+    ['Demo Kurye 3', 'OK', '1 dk önce', 2, RC[2], 'Teslim · Batıkent Mah.', '9 dk'],
+    ['Demo Kurye 4', 'STALE', '10 dk önce', 1, RC[3], 'Teslim · Gökmeydan Mah.', '—'],
+    ['Demo Kurye 5', 'OFF', 'Vardiya dışı', 0, '#B4BAC4', '—', '—']
+  ];
+  function locChip(s, short) {
+    if (s === 'OK') return tchip('t-success', 'check', short ? 'Güncel' : 'Konum güncel');
+    if (s === 'STALE') return tchip('t-danger', 'alert', short ? 'Kesildi' : 'Konum kesildi');
+    return tchip('t-neutral', 'clock', short ? 'Dışında' : 'Vardiya dışı');
+  }
+  function readyCell(t) {
+    if (t === 'Hazır') return tchip('t-success', 'check', 'Hazır');
+    if (t === 'Alındı' || t === '—') return '<span class="mut">' + t + '</span>';
+    return tchip('t-neutral', 'timer', t);
+  }
+
+  // ------------------------------------------------------------ 1 · Giriş
+  function scrGiris(v) {
+    var form = '<div class="row" style="gap:12px">' + tile(48) + '<div><div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-size:28px;letter-spacing:1.4px;line-height:1">KURYE</div><div class="mut" style="font-size:13px">Yönetim paneli</div></div></div>' +
+      '<div><div style="font-size:24px;font-weight:700;letter-spacing:-.3px">Yönetim paneline giriş</div><div class="mut" style="margin-top:4px">Kurye operasyonunuzu tek ekrandan yönetin.</div></div>' +
+      fld('E-posta', 'sahip@demo-kurye.test', {}) +
+      '<div class="fld"><label>Parola</label>' + inp('••••••••••', { cls: 'focus', end: ic('eye', 18) }) + '</div>' +
+      '<div class="row" style="justify-content:space-between"><span class="row" style="gap:8px"><span class="cb on">' + ic('check', 14, '#fff', 3) + '</span>Beni hatırla</span><span class="b6" style="color:var(--priH)">Parolamı unuttum</span></div>' +
+      '<span class="bt pri" style="width:100%;height:44px;font-size:15px">Giriş yap</span>' +
+      alertBox('t-info', 'info', 'Demo hesapları (sahte API): <b>sahip@demo-kurye.test</b>, <b>operator@demo-kurye.test</b>');
+    if (v === '2') {
+      form = form.replace(/^<div class="row" style="gap:12px">.*?Yönetim paneli<\/div><\/div><\/div>/, '');
+      return '<div style="display:grid;grid-template-columns:560px 1fr;height:100%">' +
+        '<div style="background:#111318;color:#F5F7FA;padding:56px;display:flex;flex-direction:column;position:relative;overflow:hidden">' +
+        '<div class="row" style="gap:12px">' + tile(48, true) + '<span style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-size:28px;letter-spacing:1.4px">KURYE</span></div>' +
+        '<div style="margin-top:auto;font-size:40px;font-weight:700;line-height:1.12;letter-spacing:-.8px">Her paket,<br>her kurye,<br>tek ekranda.</div>' +
+        '<div style="margin-top:16px;color:#B4BAC4;font-size:16px;max-width:400px">Canlı harita, rota uyumlu atama ve devir; kurye uygulamasıyla aynı dil.</div>' +
+        '<div style="margin-top:28px;display:flex;gap:18px;color:#B4BAC4;font-size:13px;font-weight:600"><span class="row" style="gap:8px"><i style="width:10px;height:10px;border-radius:5px;background:#C8FF3A;display:block"></i>Canlı konum</span><span>Rota uyumlu atama</span><span>Kuryeler arası devir</span></div>' +
+        '<svg style="position:absolute;right:-60px;top:80px;opacity:.5" width="360" height="360" viewBox="0 0 360 360" aria-hidden="true"><path d="M20 330 V200 H160 V90 H300 V20" fill="none" stroke="#2A2E36" stroke-width="18" stroke-linejoin="round"/><path d="M20 330 V200 H160 V90 H300 V20" fill="none" stroke="#C8FF3A" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round"/></svg>' +
+        '</div><div class="login" style="background:#F3F4F1"><div class="lcard">' + form.replace(tile(48), tile(48)) + '</div></div></div>';
+    }
+    return '<div class="login"><div class="lcard">' + form + '</div><div style="position:absolute;bottom:24px;font-size:12.5px;color:#4A5260">Sürüm 3.4 · Gizlilik · KVKK aydınlatma metni</div></div>';
+  }
+
+  // ------------------------------------------------------------ 2 · Canlı harita
+  function sideCounters(v) {
+    var c = [['CREATED', 2], ['IN_POOL', 9], ['ASSIGNED', 4], ['PICKED_UP', 2], ['DELIVERED', 11], ['CANCELLED', 1], ['FAILED', 1]];
+    return '<div class="grid g4" style="gap:8px;padding:14px 16px 6px">' + c.map(function (x) {
+      var s = ST[x[0]], danger = x[0] === 'FAILED';
+      return '<div style="border-radius:10px;padding:8px 10px;' + (danger ? 'background:#F9E9E9;color:#7F1D1D' : 'background:#F6F7F5') + '">' +
+        '<div class="row" style="gap:6px">' + ic(s[1], 16, TONE_ICON[s[0]]) + '<span class="num" style="font-size:26px;line-height:1.05">' + x[1] + '</span></div>' +
+        '<div style="font-size:12px;font-weight:600;line-height:1.2">' + (x[0] === 'FAILED' ? 'Edilemedi' : s[2]) + '</div></div>';
+    }).join('') + '</div>';
+  }
+  function courierList(v, n) {
+    return CR.slice(0, n || 5).map(function (c, i) {
+      return '<div class="row" style="padding:12px 16px;border-bottom:1px solid var(--line);gap:12px' + (i === 0 ? ';background:#F4F7EE' : '') + '">' +
+        '<span class="swatch-r" style="background:' + c[4] + '"></span><div class="grow"><div class="b7">' + c[0] + '</div><div class="mut" style="font-size:12.5px">Son görülme: ' + c[2] + (c[3] ? ' · ' + c[3] + ' aktif paket' : '') + '</div></div>' + locChip(c[1]) + '</div>';
+    }).join('');
+  }
+  function scrHarita(v, tablet) {
+    var W = tablet ? 1024 : 1440, H = tablet ? 768 : 900;
+    var sideW = v === '3' || tablet ? 76 : 240;
+    var panelW = tablet ? 320 : (v === '3' ? 460 : 380);
+    var mw = W - sideW - panelW, mh = H - (v === '3' ? 52 : 60);
+    var map = '<div class="mapbox" style="flex:1">' + mapBoth(mw, mh, liveMapExtra(mw, mh)) + mapChrome({ legend: !tablet }) + '</div>';
+    var panel;
+    if (v === '3' && !tablet) {
+      var rows = CR.map(function (c, i) {
+        return '<tr' + (i === 0 ? ' class="sel"' : '') + '><td><span class="row" style="gap:8px"><span class="swatch-r" style="background:' + c[4] + ';height:18px"></span><b class="ell">' + c[0].replace('Demo ', '') + '</b></span></td><td>' + locChip(c[1], true) + '</td><td class="r tnum">' + c[3] + '</td><td class="ell">' + c[5] + '</td><td class="r tnum">' + c[6] + '</td></tr>';
+      }).join('');
+      var q = PK.filter(function (p) { return p[1] === 'IN_POOL' || p[1] === 'CREATED'; }).concat([['1013', 'IN_POOL', 'Köşe Kafe (Demo)', '', '', '', '', '', '', '~8 dk', '2 dk'], ['1012', 'IN_POOL', 'Örnek Pide Fırını', '', '', '', '', '', '', 'Hazır', '1 dk']]);
+      var qrows = q.map(function (p, i) {
+        return '<tr' + (i === 1 ? ' class="kf"' : '') + '><td class="b7 tnum">#' + p[0] + '</td><td class="ell">' + p[2] + '</td><td>' + readyCell(p[9]) + '</td><td class="r tnum">' + p[10] + '</td><td class="r"><span class="bt sm ton">Ata</span></td></tr>';
+      }).join('');
+      panel = '<div class="dock" style="width:' + panelW + 'px">' +
+        '<div class="cdh"><span class="h2">Kuryeler</span><span class="mut" style="font-size:12px">4 vardiyada · 1 dışı</span></div>' +
+        '<div class="tbw"><table class="tb"><colgroup><col style="width:104px"><col style="width:104px"><col style="width:44px"><col><col style="width:52px"></colgroup><thead><tr><th>Kurye</th><th>Konum</th><th class="r">Pkt</th><th>Sıradaki durak</th><th class="r">ETA</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+        '<div class="cdh" style="border-top:1px solid var(--line)"><span class="h2">Havuz <span class="mut b6">(9)</span></span><span class="row" style="gap:6px"><span class="kbd">A</span><span class="mut" style="font-size:12px">seçiliyi ata</span></span></div>' +
+        '<div class="tbw"><table class="tb"><colgroup><col style="width:62px"><col><col style="width:96px"><col style="width:52px"><col style="width:64px"></colgroup><thead><tr><th>No</th><th>İşletme</th><th>Hazır</th><th class="r">Yaş</th><th></th></tr></thead><tbody>' + qrows + '</tbody></table></div>' +
+        '</div>';
+    } else {
+      panel = '<div class="dock" style="width:' + panelW + 'px">' + (tablet ? '' : sideCounters(v)) +
+        '<div class="tabs" style="padding:0 12px">' + '<span class="tab on">' + ic('bike', 18) + 'Kuryeler<span class="n">5</span></span><span class="tab">' + ic('layers', 18) + 'Havuz<span class="n">9</span></span></div>' +
+        courierList(v) + '</div>';
+    }
+    return shell(v, 'harita', '<div class="pg flush" style="flex-direction:row">' + map + panel + '</div>', { rail: tablet, compactUser: tablet, noCounters: tablet });
+  }
+
+  // ------------------------------------------------------------ 3 · Paketler + çekmece
+  function pkgTable(v, rowsN, focusIdx, selIdx) {
+    var dense = v === '3';
+    var cols = dense ?
+      [['', 36], ['No', 64], ['Durum', 138], ['İşletme', 158], ['Teslim adresi', 0], ['Hazır', 90], ['Tutar', 80, 'r'], ['Kurye', 104], ['Yaş', 62, 'r']] :
+      [['No', 82], ['Durum', 150], ['İşletme', 190], ['Müşteri', 112], ['Teslim adresi', 0], ['Ödeme', 128], ['Tutar', 96, 'r'], ['Kurye', 130], ['Oluşturma', 104]];
+    var h = '<table class="tb"><colgroup>' + cols.map(function (c) { return '<col' + (c[1] ? ' style="width:' + c[1] + 'px"' : '') + '>'; }).join('') + '</colgroup><thead><tr>' +
+      cols.map(function (c, i) { return '<th' + (c[2] ? ' class="r"' : '') + '>' + (dense && i === 0 ? '<span class="cb mix" style="width:16px;height:16px"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 5h6" stroke="#fff" stroke-width="2"/></svg></span>' : esc(c[0])) + (c[0] === 'Yaş' || c[0] === 'Oluşturma' ? ic('down', 13) : '') + '</th>'; }).join('') + '</tr></thead><tbody>';
+    PK.slice(0, rowsN).forEach(function (p, i) {
+      var cls = (selIdx && selIdx.indexOf(i) >= 0 ? 'sel' : '') + (i === focusIdx ? ' kf' : '');
+      var kurye = p[7] ? esc(p[7]) : '<span class="mut">Atanmadı</span>';
+      if (dense) {
+        h += '<tr class="' + cls + '"><td><span class="cb' + (selIdx && selIdx.indexOf(i) >= 0 ? ' on' : '') + '" style="width:16px;height:16px">' + (selIdx && selIdx.indexOf(i) >= 0 ? ic('check', 12, '#fff', 3) : '') + '</span></td><td class="b7 tnum">#' + p[0] + '</td><td>' + chip(p[1]) + '</td><td class="ell">' + p[2] + '</td><td class="ell">' + p[4] + '</td><td>' + readyCell(p[9]) + '</td><td class="r tnum b6">₺' + p[6] + '</td><td class="ell">' + kurye + '</td><td class="r tnum">' + p[10] + '</td></tr>';
+      } else {
+        h += '<tr class="' + cls + '"><td class="b7 tnum">#' + p[0] + '</td><td>' + chip(p[1]) + '</td><td class="ell">' + p[2] + '</td><td class="ell">' + p[3] + '</td><td><span class="two">' + p[4] + ', Eskişehir</span></td><td class="ell">' + p[5] + '</td><td class="r tnum b6">₺' + p[6] + '</td><td class="ell">' + kurye + '</td><td class="tnum">30.10.2026<br><span class="mut">' + p[8] + '</span></td></tr>';
+      }
+    });
+    return h + '</tbody></table>';
+  }
+  function pkgDetail(v, docked) {
+    var p = PK[1];
+    var body = '<div style="padding:' + (docked ? '12px 14px' : '4px 22px 18px') + ';display:flex;flex-direction:column;gap:' + (docked ? '12px' : '16px') + ';overflow:hidden;flex:1;min-height:0">' +
+      '<div class="row" style="gap:8px;flex-wrap:wrap">' + tchip('t-success', 'check', 'Hazır (işletme bağlantısı)') + tchip('t-neutral', 'timer', 'Oluşturma 12:21 · 8 dk') + '</div>' +
+      '<div class="cd" style="padding:' + (docked ? '10px 12px' : '14px 16px') + ';display:flex;flex-direction:column;gap:12px;box-shadow:none">' +
+        '<div class="row" style="align-items:flex-start;gap:12px">' + '<span style="width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:#F8EEE6;flex:none">' + ic('store', 18, '#B45309') + '</span><div class="grow"><div class="lbl">Alış</div><div class="b6">Kampüs Burger (Demo)</div><div class="mut" style="font-size:13px">Merkez, Demo Sok. No:1</div></div></div>' +
+        '<div class="row" style="align-items:flex-start;gap:12px">' + '<span style="width:32px;height:32px;border-radius:16px;display:grid;place-items:center;background:#E7F1F4;flex:none">' + ic('pin', 18, '#0E7490') + '</span><div class="grow"><div class="lbl">Teslim</div><div class="b6">Büyükdere Mah., Demo Sok. No:17</div><div class="mut" style="font-size:13px">Kat 2, Daire 5 · Öğrenilmiş nokta (%88)</div></div></div>' +
+      '</div>' +
+      '<dl class="kv" style="margin:0"><dt>Müşteri</dt><dd>Müşteri 90 · 0500 000 00 90</dd><dt>Ödeme</dt><dd class="row" style="gap:8px">' + tchip('t-neutral', 'wallet', 'Online ödendi') + '<b class="tnum">₺0,00</b></dd><dt>Kurye</dt><dd class="row" style="gap:8px"><span class="swatch-r" style="background:' + RC[1] + ';height:16px"></span>Demo Kurye 2 · 2 aktif paket</dd><dt>Not</dt><dd>Zil çalışmıyor, arayın.</dd></dl>' +
+      '<div><div class="lbl" style="margin-bottom:10px">Olay geçmişi</div><div class="tl">' +
+        '<div class="e"><span class="o" style="background:#EDEEEF">' + ic('clock', 15, '#4A5260') + '</span><div><b>Paket oluşturuldu</b><div class="mut" style="font-size:12px">Demo Sahip</div></div><span class="mut tnum" style="font-size:12px">12:21</span></div>' +
+        '<div class="e"><span class="o" style="background:#EDEEEF">' + ic('layers', 15, '#4A5260') + '</span><div><b>Havuza gönderildi</b><div class="mut" style="font-size:12px">Otomatik</div></div><span class="mut tnum" style="font-size:12px">12:21</span></div>' +
+        '<div class="e"><span class="o" style="background:#F8EEE6">' + ic('store', 15, '#B45309') + '</span><div><b>Kuryeye atandı</b><div class="mut" style="font-size:12px">Öneriden · sapma +2 dk</div></div><span class="mut tnum" style="font-size:12px">12:23</span></div>' +
+      '</div></div></div>';
+    var head = '<div class="row" style="padding:' + (docked ? '10px 10px 8px 14px' : '16px 14px 12px 22px') + ';gap:10px"><span style="font-size:' + (docked ? '18px' : '22px') + ';font-weight:700" class="tnum">#1030</span>' + chip('ASSIGNED') + '<span class="grow"></span>' + (docked ? '<span class="ib">' + ic('expand', 18) + '</span>' : '') + '<span class="ib' + (docked ? '' : ' bd') + '">' + ic('x', 20) + '</span></div>';
+    var foot = '<div class="row" style="padding:' + (docked ? '10px 14px' : '14px 22px') + ';border-top:1px solid var(--line);gap:8px">' + bt('pri', 'Teslim alındı', 'check') + bt('sec', 'Yeniden ata', 'handover') + '<span class="grow"></span>' + bt('ghostd', 'İptal et') + '</div>';
+    return head + body + foot;
+  }
+  function scrPaketler(v) {
+    if (v === '3') {
+      var quick = '<div class="sg"><span class="on">Etkin <b>17</b></span><span>Beklemede <b>2</b></span><span>Havuzda <b>9</b></span><span>Atandı <b>4</b></span><span>Yolda <b>2</b></span><span>Sorunlu <b>1</b></span><span>Tümü <b>31</b></span></div>';
+      var left = '<div class="pg" style="padding:12px 16px">' +
+        '<div class="ph1"><div class="row" style="gap:12px"><h1>Paketler</h1>' + quick + '</div>' + bt('pri', 'Yeni paket', 'plus') + '</div>' +
+        '<div class="row" style="gap:8px;flex:none">' + inp('', { w: 150, ph: 'İşletme: tümü', end: ic('chevD', 16) }) + inp('', { w: 140, ph: 'Kurye: tümü', end: ic('chevD', 16) }) + inp('Bugün', { w: 150, icon: 'cal' }) + '<span class="grow"></span>' + bt('sec', 'Sütunlar', 'sliders') + bt('sec', 'Dışa aktar', 'down') + '</div>' +
+        '<div class="bulk">' + ic('check', 16, '#C8FF3A') + '<span>3 paket seçildi</span><span class="grow"></span><span class="bt sm neo">Kuryeye ata</span><span class="bt sm">Toplu öneri</span><span class="bt sm">Havuza gönder</span><span class="bt sm" style="padding:0 8px">' + ic('x', 16) + '</span></div>' +
+        '<div class="cd tbw" style="flex:1">' + pkgTable(v, 15, 1, [0, 1, 3]) + '</div>' +
+        '<div class="keys"><span><span class="kbd">J</span><span class="kbd">K</span> satır</span><span><span class="kbd">Enter</span> aç</span><span><span class="kbd">X</span> seç</span><span><span class="kbd">A</span> ata</span><span><span class="kbd">/</span> ara</span><span><span class="kbd">N</span> yeni paket</span><span style="margin-left:auto">Canlı · son olay 3 sn önce</span></div>' +
+        '</div>';
+      return shell(v, 'paketler', '<div class="pg flush" style="flex-direction:row">' + left + '<div class="dock">' + pkgDetail(v, true) + '</div></div>');
+    }
+    var page = '<div class="pg">' +
+      '<div class="ph1"><div><h1>Paketler</h1><div class="sub">31 paket · 17 etkin</div></div>' + bt('pri', 'Yeni paket', 'plus') + '</div>' +
+      '<div class="cd pad" style="padding:14px 16px"><div class="grid" style="grid-template-columns:repeat(4,minmax(0,1fr)) 1.4fr;gap:12px">' +
+        sel('Durum', '', { ph: 'Tümü' }) + sel('İşletme', '', { ph: 'Tümü' }) + sel('Kurye', '', { ph: 'Tümü' }) + fld('Tarih aralığı', '', { ph: 'gg.aa.yyyy – gg.aa.yyyy', icon: 'cal' }) + fld('Ara (no, müşteri adı, telefon)', '', { ph: '#1042, Müşteri 07…', icon: 'search' }) +
+      '</div></div>' +
+      '<div class="cd tbw" style="flex:1">' + pkgTable(v, 12, -1, [1]) + '</div></div>';
+    var ov = '<div class="scrim"></div><div class="drawer">' + pkgDetail(v, false) + '</div>';
+    return shell(v, 'paketler', page, { frameOverlay: ov });
+  }
+
+  // ------------------------------------------------------------ 4 · Adres defteri
+  var AB = [
+    ['Arifiye Mah., Demo Sok. No:3', 'LEARNED', 88, '11,2 / 14', '10 m', '05.11 18:42'],
+    ['Şirintepe Mah., Demo Sok. No:38', 'LEARNED', 81, '8,4 / 9', '14 m', '05.11 17:10'],
+    ['Arifiye Mah., Demo Sok. No:11', 'LEARNING', 42, '2,0 / 2', '22 m', '05.11 16:55'],
+    ['Vişnelik Mah., Demo Sok. No:40', 'OVERRIDDEN', 100, '—', '—', '04.11 20:01'],
+    ['Vişnelik Mah., Demo Sok. No:20', 'LEARNED', 76, '6,1 / 7', '18 m', '04.11 19:30'],
+    ['Büyükdere Mah., Demo Sok. No:17', 'LEARNED', 88, '9,0 / 11', '9 m', '04.11 13:12'],
+    ['Çamlıca Mah., Demo Sok. No:52', 'PROBLEM', 31, '4,2 / 12', '64 m', '04.11 12:40'],
+    ['Yenibağlar Mah., Demo Sok. No:24', 'LEARNING', 35, '1,6 / 2', '30 m', '03.11 21:05'],
+    ['Hoşnudiye Mah., Demo Sok. No:59', 'PROBLEM', 28, '3,0 / 6', '71 m', '03.11 20:14'],
+    ['Emek Mah., Demo Sok. No:31', 'STALE', 54, '1,1 / 5', '25 m', '12.08 18:20'],
+    ['Osmangazi Mah., Demo Sok. No:6', 'LEARNED', 79, '5,8 / 6', '12 m', '02.11 14:02'],
+    ['Batıkent Mah., Demo Sok. No:45', 'LEARNING', 48, '2,4 / 3', '19 m', '02.11 11:48']
+  ];
+  var ABS = { LEARNED: ['t-success', 'check', 'Öğrenildi'], LEARNING: ['t-neutral', 'refresh', 'Öğreniliyor'], OVERRIDDEN: ['t-info', 'pin', 'Sabitlendi'], STALE: ['t-neutral', 'clock', 'Eski'], PROBLEM: ['t-warning', 'alert', 'Sorunlu'] };
+  function scrAdres(v) {
+    var dense = v === '3';
+    var kp = dense ? '<div class="grid g5" style="flex:none">' : '<div class="grid g5" style="flex:none">';
+    kp += kpi('Adres', '12') + kpi('Öğrenilmiş nokta kullanılan', '6') + kpi('Sabitlenen', '1') + kpi('Eski', '1') + kpi('Son 7 gün gözlem', '148') + '</div>';
+    var filters = '<div class="row" style="gap:12px;flex:none;align-items:flex-end">' + sel('Durum', '', { ph: 'Tümü', style: 'width:200px' }) + sel('En az güven', '', { ph: 'Tümü', style: 'width:170px' }) +
+      fld('Adres ara', '', { ph: 'Mahalle, sokak…', icon: 'search', style: 'flex:1' }) + '<div class="swr" style="align-items:center;padding-bottom:8px"><span class="tg"></span><span class="b6">Yalnızca sorunlu</span></div>' + sel('Sıralama', 'Son gözlem', { style: 'width:170px' }) + '</div>';
+    var mw = dense ? 470 : 500, mh = dense ? 560 : 470;
+    var pts = function (night) {
+      var s = '', r = rng(11), cols = night ? ['#3DDC97', '#22D3EE', '#A3AAB5', '#FBBF24'] : ['#047857', '#0E7490', '#808896', '#B45309'];
+      for (var i = 0; i < 22; i++) {
+        var t = i % 7 === 3 ? 3 : i % 5 === 0 ? 1 : i % 3 === 0 ? 2 : 0, x = 30 + r() * (mw - 60), y = 30 + r() * (mh - 60);
+        s += '<circle cx="' + x.toFixed(0) + '" cy="' + y.toFixed(0) + '" r="' + (i === 6 ? 9 : 6.5) + '" fill="' + cols[t] + '" stroke="' + (night ? '#0E1116' : '#FFFFFF') + '" stroke-width="2.5"/>';
+        if (i === 6) s += '<circle cx="' + x.toFixed(0) + '" cy="' + y.toFixed(0) + '" r="16" fill="none" stroke="' + (night ? '#C8FF3A' : '#111318') + '" stroke-width="2.5"/>';
+      }
+      return s;
+    };
+    var leg = '<div class="mctl" style="left:12px;bottom:12px;padding:6px 10px;gap:12px;font-size:12px">' +
+      [['#047857', 'Öğrenilmiş'], ['#0E7490', 'Sabitlenmiş'], ['#808896', 'Öğreniliyor'], ['#B45309', 'Sorunlu']].map(function (l) { return '<span class="row" style="gap:5px"><i style="width:10px;height:10px;border-radius:5px;background:' + l[0] + ';display:block"></i>' + l[1] + '</span>'; }).join('') + '</div>';
+    var map = '<div class="cd mapbox" style="width:' + mw + 'px;flex:none">' + mapBoth(mw, mh, pts) + '<div class="mctl zoom" style="left:12px;top:12px"><span>' + ic('plus', 18) + '</span><span>' + ic('minus', 18) + '</span></div>' + leg + '<div class="attr" style="top:8px;bottom:auto">© OpenStreetMap katkıcıları</div></div>';
+    var rows = AB.map(function (a, i) {
+      var b = ABS[a[1]];
+      return '<tr' + (i === 6 ? ' class="sel' + (dense ? ' kf' : '') + '"' : '') + '><td class="ell b6">' + a[0] + '</td><td>' + tchip(b[0], b[1], b[2]) + '</td><td class="r tnum">%' + a[2] + '</td><td class="r tnum">' + a[3] + '</td><td class="r tnum">' + a[4] + '</td><td class="tnum">' + a[5] + '</td></tr>';
+    }).join('');
+    var table = '<div class="cd tbw" style="flex:1"><table class="tb"><colgroup><col><col style="width:' + (dense ? 128 : 148) + 'px"><col style="width:70px"><col style="width:90px"><col style="width:80px"><col style="width:' + (dense ? 100 : 112) + 'px"></colgroup><thead><tr><th>Adres</th><th>Durum</th><th class="r">Güven</th><th class="r">Gözlem</th><th class="r">Yayılım</th><th>Son gözlem' + ic('down', 13) + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+    var page = '<div class="pg">' + '<div class="ph1"><div><h1>Adres defteri</h1><div class="sub">Kuryelerin teslim anında bıraktığı konumlardan öğrenilen teslim noktaları</div></div>' + bt('sec', 'Dışa aktar', 'down') + '</div>' +
+      kp + filters + '<div class="row" style="gap:var(--gap);align-items:stretch;flex:1;min-height:0">' + map + table + '</div></div>';
+    return shell(v, 'adres', page);
+  }
+
+  // ------------------------------------------------------------ 5 · İşletmeler + QR bağlantı modalı
+  function scrIsletmeler(v) {
+    var B = [['Demo Döner Salonu', 'Merkez, Demo Sok. No:1', 31, '2 etkin'], ['Kampüs Burger (Demo)', 'Büyükdere Mah., Demo Sok. No:2', 22, '1 etkin'], ['Köşe Kafe (Demo)', 'Arifiye Mah., Demo Sok. No:8', 14, '—'],
+      ['Lezzet Mutfağı (Demo)', 'Şirintepe Mah., Demo Sok. No:4', 12, '1 etkin'], ['Örnek Pide Fırını', 'Emek Mah., Demo Sok. No:6', 22, '—'], ['Porsuk Çiğ Börek (Demo)', 'Hoşnudiye Mah., Demo Sok. No:9', 9, '—']];
+    var rows = B.map(function (b, i) {
+      return '<tr><td class="b6 ell">' + b[0] + (i === 4 ? ' <span style="margin-left:6px">' + tchip('t-warning', 'alert', 'Konum düşük') + '</span>' : '') + '</td><td class="ell mut">' + b[1] + '</td><td class="r tnum">' + b[2] + '</td><td>' + tchip('t-success', 'check', 'Aktif') + '</td><td class="ell">' + b[3] + '</td><td class="r"><span class="row" style="justify-content:flex-end;gap:4px">' + bt('ton sm', 'Hazır bağlantısı', 'qr') + '<span class="ib">' + ic('more', 18) + '</span></span></td></tr>';
+    }).join('');
+    var page = '<div class="pg"><div class="ph1"><div><h1>İşletmeler</h1><div class="sub">6 aktif işletme</div></div>' + bt('pri', 'Yeni işletme', 'plus') + '</div>' +
+      '<div class="row" style="gap:12px;flex:none">' + inp('', { icon: 'search', ph: 'İşletme ara', w: 360 }) + '<span class="grow"></span><div class="sg"><span class="on">Aktif</span><span>Arşivli</span></div></div>' +
+      '<div class="cd tbw"><table class="tb"><colgroup><col style="width:300px"><col><col style="width:110px"><col style="width:110px"><col style="width:120px"><col style="width:230px"></colgroup><thead><tr><th>İşletme adı</th><th>Alış adresi</th><th class="r">Bugün paket</th><th>Durum</th><th>Hazır bağlantısı</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+    var modal = '<div class="scrim"></div><div class="modal">' +
+      '<div class="mh"><h2>Hazır bağlantısı: Demo Döner Salonu</h2><span class="ib bd">' + ic('x', 20) + '</span></div>' +
+      '<div class="mb">' +
+        '<div class="mut" style="font-size:13.5px">İşletme bu adresi telefonunda açıp "HAZIR" düğmesine dokunur; giriş gerekmez. Adresi kopyalayıp mesajla gönderin ya da QR kodu okutun.</div>' +
+        '<div class="row" style="gap:10px;align-items:flex-end">' + num('Geçerlilik süresi', '14', '', { unit: 'saat', style: 'width:180px' }) + bt('pri', 'Bağlantı oluştur', 'link') + '</div>' +
+        alertBox('t-warning', 'alert', 'Bu adres yalnızca bir kez gösterilir. Pencereyi kapatınca tekrar görüntülenemez; gerekirse yeni bağlantı üretin.') +
+        '<div class="row" style="gap:16px;align-items:flex-start">' +
+          '<div style="padding:8px;border-radius:12px;box-shadow:inset 0 0 0 1px var(--line);background:#fff;flex:none">' + qrSvg(168) + '</div>' +
+          '<div class="col" style="gap:10px;flex:1"><div class="fld"><label>Bağlantı adresi</label>' + inp('https://panel.demo-kurye.test/isletme#t=Xk29…q7Lm', { cls: 'ro' }) + '</div>' +
+          '<div class="row" style="gap:8px">' + bt('ton', 'Kopyala', 'copy') + bt('sec', 'QR indir', 'down') + '</div>' +
+          '<div class="mut" style="font-size:12.5px">Geçerlilik: 07.11.2026 09:01’e kadar · Okuyucu için beyaz zemin ve sessiz bölge korunur.</div></div>' +
+        '</div>' +
+        '<div><div class="lbl" style="margin-bottom:6px">Etkin bağlantılar</div><table class="tb" style="font-size:13px"><colgroup><col><col><col><col style="width:70px"><col style="width:90px"></colgroup><thead><tr><th>Oluşturma</th><th>Bitiş</th><th>Son kullanım</th><th class="r">Adet</th><th></th></tr></thead><tbody>' +
+          '<tr><td class="tnum">06.11 19:01</td><td class="tnum">07.11 09:01</td><td class="tnum">06.11 20:41</td><td class="r tnum">4</td><td class="r">' + bt('ghostd sm', 'İptal et') + '</td></tr>' +
+          '<tr><td class="tnum">06.11 21:01</td><td class="tnum">07.11 11:01</td><td>Hiç</td><td class="r tnum">0</td><td class="r">' + bt('ghostd sm', 'İptal et') + '</td></tr></tbody></table></div>' +
+      '</div><div class="mf">' + bt('sec', 'Kapat') + '</div></div>';
+    return shell(v, 'isletmeler', page, { frameOverlay: modal });
+  }
+
+  // ------------------------------------------------------------ ayarlar ortak
+  var STABS = ['Firma ayarları', 'Hizmet bölgesi', 'Atama', 'Devir', 'Teslim ve hazırlık', 'Dağıtım (v2)', 'Kullanıcılar'];
+  var SICON = ['store', 'map', 'route', 'handover', 'shield', 'sliders', 'user'];
+  function settingsWrap(v, activeIdx, content, saveBar) {
+    var page;
+    if (v === '3') {
+      page = '<div class="pg" style="flex-direction:row;gap:16px">' +
+        '<div class="snav"><div class="ph1" style="margin-bottom:8px"><h1>Ayarlar</h1></div>' + STABS.map(function (t, i) { return '<span class="' + (i === activeIdx ? 'on' : '') + '">' + ic(SICON[i], 18) + t + '</span>'; }).join('') + '</div>' +
+        '<div class="col" style="flex:1;max-width:1000px;overflow:hidden">' + content + '</div></div>';
+    } else {
+      page = '<div class="pg"><div class="ph1"><div><h1>Ayarlar</h1></div></div>' +
+        '<div class="tabs">' + STABS.map(function (t, i) { return '<span class="tab' + (i === activeIdx ? ' on' : '') + '">' + t + '</span>'; }).join('') + '</div>' +
+        '<div class="col" style="max-width:1000px;overflow:hidden">' + content + '</div></div>';
+    }
+    return shell(v, 'ayarlar', page, { overlay: saveBar || '' });
+  }
+  function saveBar(v, text) {
+    return '<div class="savebar" style="' + (v === '3' ? 'left:252px;max-width:1000px' : 'max-width:1000px') + '">' + ic('info', 18, v === '2' ? '#B4BAC4' : '#4A5260') + '<span>' + text + '</span><span class="grow"></span>' + bt('sec', 'Vazgeç') + bt('pri', 'Kaydet') + '</div>';
+  }
+
+  // ------------------------------------------------------------ 6 · Teslim ve hazırlık (OBSERVE / ENFORCE)
+  function scrTeslim(v) {
+    var dense = v === '3';
+    var opt = function (on, icon, t, code, d, extra) {
+      return '<div class="optc' + (on ? ' on' : '') + '"><span class="rd' + (on ? ' on' : '') + '" style="margin-top:1px"></span><div class="grow"><div class="t">' + ic(icon, 18, on ? '#3F6212' : '#4A5260') + t + (code ? ' <span class="code">' + code + '</span>' : '') + '</div><div class="d">' + d + '</div>' + (extra || '') + '</div></div>';
+    };
+    var c = '<div class="cd pad"><div class="row" style="justify-content:space-between;margin-bottom:12px"><h2>Teslim noktası denetimi (geofence)</h2>' + tchip('t-info', 'eye', 'Şu an: Ölçüm') + '</div>' +
+      '<div class="grid g3" style="gap:12px">' +
+        opt(false, 'ban', 'Kapalı', '', 'Teslimde konum denetimi yapılmaz.') +
+        opt(true, 'eye', 'Ölçüm (varsayılan)', 'OBSERVE', 'Teslim engellenmez; noktadan uzak teslimler ölçülür ve Metrikler › Adres kalitesi’nde görünür. Zorunluya geçmeden önce iki hafta ölçün.') +
+        opt(false, 'shield', 'Zorunlu', 'ENFORCE', 'Kurye teslim noktasının dışındaysa teslimi tamamlayamaz; gerekçe seçerek geçersiz kılar.', '<div class="row" style="gap:6px;margin-top:8px;font-size:12px;color:#7C2D12;font-weight:600">' + ic('alert', 14, '#B45309') + 'Yalnızca tüm kuryeler yeni sürümdeyken açın</div>') +
+      '</div>' +
+      '<div class="grid g2" style="gap:16px;margin-top:16px">' + num('Teslim yarıçapı', '150', 'Öğrenilmiş ya da sabitlenmiş nokta için izin verilen uzaklık (50–500).', { unit: 'm' }) + num('Düşük güven toleransı', '250', 'Nokta yalnızca adres servisinden geliyorsa (100–1000); yarıçaptan küçük olamaz.', { unit: 'm', cls: dense ? 'focus' : '' }) + '</div></div>';
+    c += '<div class="grid g2" style="gap:var(--gap)">' +
+      '<div class="cd pad"><h2 style="margin-bottom:12px">Öğrenilmiş teslim noktaları</h2>' + swr(true, 'Öğrenilmiş teslim noktalarını kullan', 'Rota, navigasyon ve teslim denetiminde güvenilir öğrenilmiş nokta, adres servisi noktasının yerine kullanılır.') + '</div>' +
+      '<div class="cd pad"><h2 style="margin-bottom:12px">İşletme hazır bağlantısı</h2>' + swr(true, 'İşletme bağlantısını aç', 'İşletmeler giriş yapmadan tek dokunuşla "Hazır" diyebilir.') + '</div></div>';
+    c += '<div class="cd pad"><h2 style="margin-bottom:12px">Hazırlık süresi</h2><div class="grid g2" style="gap:16px;align-items:start">' + num('Varsayılan hazırlık süresi', '12', 'Öğrenilmiş tahmin yokken kullanılır (1–90).', { unit: 'dk', cls: dense ? '' : 'focus' }) +
+      swr(false, 'Tahmini hazır zamanını otomatik doldur', 'Hazır zamanı girilmeyen pakette öğrenilmiş tahmin (P60) yazılır.') + '</div></div>';
+    return settingsWrap(v, 4, c, saveBar(v, 'Kaydedilmemiş 1 değişiklik: Varsayılan hazırlık süresi 10 → 12 dk'));
+  }
+
+  // ------------------------------------------------------------ 7 · Dağıtım v2
+  function scrDagitim(v) {
+    var c = '<div class="mut" style="font-size:13.5px;max-width:880px">Dağıtım v2, yalnızca Otomatik atama modunda paketleri kayan bir pencerede toplayıp birlikte planlar ve gerektiğinde kısa süre bekletir. Öneriler her zaman anında üretilir.</div>';
+    c += '<div class="cd pad"><div class="row" style="justify-content:space-between;margin-bottom:12px"><h2>Sunucu durumu</h2><span class="mut" style="font-size:12.5px">Salt okunur</span></div>' +
+      '<div class="grid g3" style="gap:12px">' +
+        '<div class="row" style="gap:10px">' + ic('server', 18, '#4A5260') + '<div class="grow"><div class="code">DISPATCH_V2</div><div class="b6">Sunucu bayrağı</div></div>' + tchip('t-success', 'check', 'Açık') + '</div>' +
+        '<div class="row" style="gap:10px">' + ic('server', 18, '#4A5260') + '<div class="grow"><div class="code">DISPATCH_V2_ALNS_SHADOW</div><div class="b6">Gölge planlayıcı</div></div>' + tchip('t-success', 'check', 'Açık') + '</div>' +
+        '<div class="row" style="gap:10px">' + ic('sliders', 18, '#4A5260') + '<div class="grow"><div class="code">v2</div><div class="b6">Bu firmada etkin</div></div>' + tchip('t-neutral', 'ban', 'Kapalı') + '</div>' +
+      '</div><div style="margin-top:12px">' + alertBox('t-info', 'info', 'v2 yalnızca <b>Otomatik</b> modda otomatik atamayı yönetir.') + '</div></div>';
+    c += '<div class="cd pad">' + swr(false, 'Dağıtım v2 (bu firma için)', 'Açınca aşağıdaki pencere ve bekletme ayarları uygulanır.') +
+      '<div class="grid g3" style="gap:16px;margin-top:14px">' + num('Pencere', '60', 'Paketler bu süre boyunca toplanıp birlikte planlanır (30–60).', { unit: 'sn' }) + num('Bekletme eşiği: paket başı sapma', '7', 'En iyi seçenekte sapma bunu aşarsa paket bekletilebilir (0–30).', { unit: 'dk' }) + num('En uzun bekletme', '3', 'Sipariş girişinden sonra en çok bekleme; 0 = bekletme yok (0–15).', { unit: 'dk' }) + '</div></div>';
+    c += '<div class="cd pad"><div class="row" style="justify-content:space-between;margin-bottom:12px"><h2>Bugünün özeti</h2><span class="mut" style="font-size:12.5px">Salt okunur · her 60 sn yenilenir</span></div>' +
+      '<div class="grid g5" style="gap:10px">' + ['Pencere|148', 'Atanan|196', 'Bekletilen|21', 'Kuyruğa düşen|9', 'Uygulanamayan|1'].map(function (x) { var a = x.split('|'); return '<div style="background:#F6F7F5;border-radius:10px;padding:10px 12px"><div class="lbl">' + a[0] + '</div><div class="num" style="font-size:30px;line-height:1.1">' + a[1] + '</div></div>'; }).join('') + '</div></div>';
+    return settingsWrap(v, 5, c);
+  }
+
+  // ------------------------------------------------------------ 8 · Metrikler
+  function scrMetrikler(v) {
+    var dense = v === '3';
+    var head = '<div class="ph1"><div><h1>Metrikler</h1><div class="sub">Atama, devir, adres kalitesi ve hazırlık göstergeleri</div></div><div class="row" style="gap:8px"><div class="sg"><span class="on">Bugün</span><span>Son 7 gün</span><span>Son 30 gün</span></div>' + bt('sec', 'Dışa aktar', 'down') + '</div></div>';
+    var k1 = [['Atama sayısı', '62', ''], ['Ortalama sapma', '4<small>dk</small>', ''], ['Zamanında teslim', '%93', '49 teslim edilen'], ['Öneri kabul oranı', '%81', ''], ['Kötü atama oranı', '%14', ''], ['Elle yeniden atama', '3', '']];
+    var kp = '<div class="grid ' + (dense ? 'g6' : 'g4') + '" style="flex:none">' + k1.slice(0, dense ? 6 : 4).map(function (k) { return kpi(k[0], k[1], k[2]); }).join('') + '</div>';
+    var src = '<div class="cd pad"><h2 style="margin-bottom:10px">Atama kaynağı</h2>' + mtr('Öneriden', 26, 26) + mtr('Elle', 18, 26) + mtr('Otomatik', 9, 26) + mtr('Sürükle-bırak', 5, 26) + mtr('Toplu', 4, 26) + '</div>';
+    var rej = '<div class="cd pad"><h2 style="margin-bottom:10px">Ret nedenleri</h2>' + mtr('Çok uzak', 2, 4, 'w') + mtr('Ters yönde', 1, 4, 'w') + mtr('Diğer', 1, 4, 'n') + '</div>';
+    var hist = '<div class="cd pad"><div class="row" style="justify-content:space-between;margin-bottom:10px"><h2>Adres kalitesi: uzaklık dağılımı</h2>' + tchip('t-info', 'eye', 'Denetim kipi: Ölçüm') + '</div>' +
+      [['0–25 m', 24], ['25–50 m', 19], ['50–100 m', 14], ['100–150 m', 8], ['150–250 m', 5, 'w'], ['250–500 m', 4, 'w'], ['500 m +', 5, 'w']].slice(0, dense ? 7 : 6).map(function (r) { return mtr(r[0], r[1], 24, r[2]); }).join('') +
+      '<div class="row" style="gap:14px;margin-top:8px;font-size:12px" ><span class="row" style="gap:6px"><i style="width:10px;height:6px;border-radius:3px;background:#4D7C0F;display:block"></i>Yarıçap içinde</span><span class="row" style="gap:6px"><i style="width:10px;height:6px;border-radius:3px;background:#B45309;display:block"></i>Yarıçap dışında (150 m)</span></div></div>';
+    var prob = '<div class="cd tbw"><div class="cdh"><span class="h2">Sorunlu adresler</span><span class="b6" style="color:var(--priH);font-size:13px">Adres defterinde aç</span></div><table class="tb"><colgroup><col><col style="width:70px"><col style="width:80px"><col style="width:64px"></colgroup><thead><tr><th>Adres</th><th class="r">Teslim</th><th class="r">Dışarıda</th><th class="r">Oran</th></tr></thead><tbody>' +
+      [['Çamlıca Mah., Demo Sok. No:52', 12, 5, 42], ['Hoşnudiye Mah., Demo Sok. No:59', 6, 3, 50], ['Şirintepe Mah., Demo Sok. No:38', 9, 2, 22], ['Emek Mah., Demo Sok. No:31', 7, 1, 14]].map(function (r) {
+        return '<tr><td class="ell" style="color:var(--priH);font-weight:600">' + r[0] + '</td><td class="r tnum">' + r[1] + '</td><td class="r tnum">' + r[2] + '</td><td class="r tnum b7">%' + r[3] + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+    var k2 = '<div class="grid ' + (dense ? 'g6' : 'g4') + '" style="flex:none">' + [['Devir teklifi', '14', ''], ['Kabul oranı', '%64', ''], ['Ort. alış bekleme', '2<small>dk</small>', '74 alış'], ['Tahmin hatası (MAE)', '3<small>dk</small>', 'Varsayılan: 4 dk'], ['Ölçülen teslim', '82', ''], ['Noktası dışında', '%15', 'Geçersiz kılma dahil']].slice(0, dense ? 6 : 4).map(function (k) { return kpi(k[0], k[1], k[2]); }).join('') + '</div>';
+    var page = '<div class="pg">' + head + '<div class="lbl" style="font-size:12px">Atama</div>' + kp +
+      '<div class="grid" style="grid-template-columns:1fr 1fr 1.6fr;flex:none">' + src + rej + hist + '</div>' +
+      '<div class="lbl" style="font-size:12px">Devir · hazırlık · adres kalitesi</div>' + k2 +
+      '<div class="grid g2" style="flex:1;min-height:0">' + prob + '<div class="cd pad"><h2 style="margin-bottom:10px">Hazır sinyalleri</h2>' + mtr('İşletme bağlantısı', 31, 31) + mtr('Panel', 14, 31) + mtr('Kurye', 9, 31) + mtr('Kurye "hazır değil"', 5, 31, 'n') + '</div></div></div>';
+    return shell(v, 'metrikler', page);
+  }
+
+  // ------------------------------------------------------------ ekran listesi
+  var SCREENS = [
+    ['giris', 'Giriş', 'P1 / P3 ortalanmış beyaz kart, gri zemin; P2 solda koyu marka paneli (neon yalnızca orada) + sağda açık form. Odaktaki alan 2 px yeşil halka.', scrGiris, 0],
+    ['harita', 'Canlı harita', 'Harita karosu kendi stilinde; değişen kenar çubuğu, kontroller ve sağ panel. Kurye rota renkleri (8 renkli palet) aynı kalır; paket işaretleri durum tonu + biçimle. P2 harita kontrolleri her zaman koyu krom; P1 / P3 yalnızca koyu karoda. P3: kurye tablosu + havuz kuyruğu, klavyeyle atama. Üstteki "Harita karosu" düğmesiyle koyu karoyu deneyin.', function (v) { return scrHarita(v, false); }, 0],
+    ['paketler', 'Paketler + paket çekmecesi', 'P1 / P2: süzgeç kartı, 52 px satır, durum çipi ikon + etiket; paket ayrıntısı sağdan çekmece (eylem hiyerarşisi: yeşil birincil, çerçeveli ikincil, kırmızı metin İptal). P3: hızlı durum süzgeci, 40 px zebra satır, yapışkan başlık, toplu seçim çubuğu, klavye odağı (yeşil çerçeveli satır) ve listeyi kapatmayan yan panel.', scrPaketler, 0],
+    ['adres', 'Adres defteri', 'Sayılar Barlow Condensed; harita ve tablo yan yana, seçili adres haritada koyu halka (koyu karoda neon halka). Durumlar: Öğrenildi (nane), Sabitlendi (camgöbeği), Öğreniliyor / Eski (gri), Sorunlu (kehribar).', scrAdres, 0],
+    ['isletmeler', 'İşletmeler + QR bağlantı modalı', 'Modal: tek seferlik bağlantı uyarısı kehribar tonda, QR beyaz zemin + sessiz bölge (okuyucu için gerekli), "Kopyala" ton düğme, "İptal et" kırmızı metin. Bağlantılar kurgusal (.test alan adı).', scrIsletmeler, 0],
+    ['teslim', 'Ayarlar › Teslim ve hazırlık (OBSERVE / ENFORCE)', 'Geofence kipi radyo yerine seçilebilir kartlar: seçili kart 2 px yeşil çerçeve + açık yeşil zemin; Zorunlu (ENFORCE) kartında uyarı satırı. Kaydedilmemiş değişiklik alttaki kaydetme çubuğunda: P2 koyu çubuk + neon "Kaydet" (neon dolgu yalnızca koyu yüzeyde), P1 / P3 beyaz çubuk + yeşil düğme. P3 ayarlarda sekme yerine dikey alt menü.', scrTeslim, 0],
+    ['dagitim', 'Ayarlar › Dağıtım (v2)', 'Sunucu bayrakları kod adıyla + durum çipi; salt okunur bölümler etiketli. Bugünün özeti gri döşemelerde büyük rakamlar.', scrDagitim, 0],
+    ['metrikler', 'Metrikler', 'KPI kartları (P3’te satırda 6), tek renkli ölçüm çubukları: nötr veri marka yeşili #4D7C0F, olumsuz kehribar #B45309; metin her zaman metin renginde. Çubuk grafik tek seri, ızgara yok, değer yanında.', scrMetrikler, 0],
+    ['tablet', 'Tablet · canlı harita (1024×768)', 'Üç varyantta kenar çubuğu 76 px ikon rayına iner (P2’de koyu ray, neon gösterge korunur); sağ panel 320 px, sayaçlar gizlenir. Dokunma hedefleri 40 px’in üstünde.', function (v) { return scrHarita(v, true); }, 1]
+  ];
+
+  // ------------------------------------------------------------ varyant açıklamaları
+  var DESC = {
+    '1': '<p><b>Kimin için:</b> işletme sahibi, ara sıra giren yönetici, ayarlar ve raporlar; yeni müşteriye "kurye uygulamasıyla aynı ürün" demosu.</p>' +
+      '<p>Kurye uygulamasının A2 belirteçleri birebir: nötr gri zemin, beyaz kart (köşe 14), marka yeşili birincil düğme, Inter. Kenar çubuğu ve üst çubuk beyaz; etkin menü %10 yeşil ton + yeşil ikon + yeşil kenarlı küçük neon nokta. Neon başka yalnızca logo karosunda.</p>' +
+      '<p><b>Göz yorgunluğu:</b> orta; ekranın tamamı açık, uzun süre ekrana bakan menajer için en parlak varyant (gri zemin saf beyazdan iyidir). <b>Bilgi yoğunluğu:</b> bugünkü panelle aynı (~12 paket satırı). <b>Marka tutarlılığı:</b> kurye uygulamasıyla birebir, ama marka neredeyse görünmez. <b>Efor: S–M.</b></p>' +
+      '<p><b>Koyu harita karosuyla:</b> koyu harita açık çerçevede tek koyu alan olur ("delik" etkisi); kontroller koyu karoda koyu kroma geçer, seçili kurye halkası neon olur. Kullanılabilir ama en zayıf uyum.</p>',
+    '2': '<p><b>Kimin için:</b> paneli gün boyu açık tutan menajer / dispeçer ve satış demosu; markanın panelde görünmesi istenen her yer.</p>' +
+      '<p>İçerik P1 ile aynı açık A2. Kenar çubuğu <code>#111318</code> (kurye navigasyon kromu), beyaz metin 17,3:1, ikincil <code>#B4BAC4</code> 9,5:1. Etkin menü <code>#22262E</code> zemin + 4 px neon gösterge + neon ikon: <b>paneldeki tek neon</b> (logo ve koyu kaydetme çubuğu dışında). Üst çubuk beyaz kalır (koyu "L" ağır geldi); canlı bağlantı noktası nane yeşili.</p>' +
+      '<p><b>Göz yorgunluğu:</b> en düşük; çevre görüşteki sabit geniş alan koyu, okunan alan açık, parlaklık sınırı okuma alanının dışında. <b>Bilgi yoğunluğu:</b> P1 ile aynı. <b>Marka:</b> en yüksek, kurye navigasyonuyla aynı koyu krom + neon. <b>Efor: M.</b></p>' +
+      '<p><b>Koyu harita karosuyla:</b> en uyumlu: koyu kenar çubuğu + koyu harita kesintisiz koyu alan; harita kontrolleri her iki karoda da navigasyondaki koyu krom (açık karoda da okunur: beyaz metin 17,3:1, kenar 1 px açık).</p>',
+    '3': '<p><b>Kimin için:</b> yoğun saatte 30+ paketi ve 5+ kuryeyi aynı anda izleyen dispeçer; klavyeyle çalışan deneyimli kullanıcı.</p>' +
+      '<p>P1 paleti, sıkı ölçek: 13 px gövde, 40 px satır, zebra, yapışkan başlık, tabular rakam, kompakt çip (22 px), 76 px ikon rayı, üst çubukta canlı sayaçlar. Paketlerde çekmece yerine yan panel (liste görünür kalır), toplu seçim, J/K/Enter/A/X/N kısayolları ve görünür odak halkası.</p>' +
+      '<p><b>Göz yorgunluğu:</b> orta; parlaklık P1 kadar, küçük yazı odak yorar ama kaydırma ve tarama azalır. <b>Bilgi yoğunluğu:</b> en yüksek (~17 satır, %40 fazla). <b>Marka:</b> P1 kadar düşük. <b>Efor: L</b> (tablo, yan panel, klavye gezinme, ray).</p>' +
+      '<p><b>Koyu harita karosuyla:</b> P1 ile aynı davranış; dar ray sayesinde haritaya en çok alan kalır. Yoğunluk P1 ya da P2’nin üstüne "Sıkı görünüm" olarak da eklenebilir.</p>'
+  };
+  var SW = {
+    '1': [['Zemin', '#F3F4F1'], ['Yüzey', '#FFFFFF'], ['Kenar', '#E4E6E1'], ['Denetim kenarı', '#808896'], ['Metin', '#111318'], ['İkincil', '#4A5260'], ['Birincil', '#3F6212'], ['Basılı', '#365314'], ['Ton', '#ECEFE7'], ['Odak', '#3F6212'], ['Sinyal (kenarlı)', '#C8FF3A'], ['Sinyal kenarı', '#4D7C0F']],
+    '2': [['Kenar çubuğu', '#111318'], ['Etkin öğe', '#22262E'], ['Ç. metni', '#F5F7FA'], ['Ç. ikincil', '#B4BAC4'], ['Neon gösterge', '#C8FF3A'], ['Zemin', '#F3F4F1'], ['Yüzey', '#FFFFFF'], ['Metin', '#111318'], ['İkincil', '#4A5260'], ['Birincil', '#3F6212'], ['Ton', '#ECEFE7'], ['Canlı nokta', '#047857']],
+    '3': [['Zemin', '#F3F4F1'], ['Yüzey', '#FFFFFF'], ['Tablo başlığı', '#FAFAF8'], ['Zebra', '#FAFAF8'], ['Seçili satır', '#F4F7EE'], ['Kenar', '#E4E6E1'], ['Metin', '#111318'], ['İkincil', '#4A5260'], ['Birincil', '#3F6212'], ['Odak', '#3F6212'], ['Toplu çubuk', '#111318'], ['Sinyal (kenarlı)', '#C8FF3A']]
+  };
+  function hl(s) { return esc(s).replace(/(\/\/[^\n]*)/g, '<span class="c">$1</span>').replace(/('[^'\n]*')/g, '<span class="s">$1</span>'); }
+  var MT_BASE =
+    "const brand: MantineColorsTuple = ['#F4F7EE','#ECEFE7','#D9E3C8','#BFD19F',\n" +
+    "  '#9DB86C','#7A9B3F','#4D7C0F','#3F6212','#365314','#263B0E']; // 7 = birincil\n" +
+    "createTheme({\n" +
+    "  colors: { brand },\n" +
+    "  primaryColor: 'brand', primaryShade: { light: 7, dark: 5 },\n" +
+    "  fontFamily: 'Inter, Roboto, system-ui, sans-serif', // @fontsource-variable/inter (OFL)\n" +
+    "  headings: { fontFamily: 'inherit', fontWeight: '700' },\n" +
+    "  other: { numerals: '\"Barlow Condensed\", sans-serif' }, // @fontsource/barlow-condensed\n";
+  var MT = {
+    '1': MT_BASE +
+      "  defaultRadius: 'md', radius: { xs:'4px', sm:'6px', md:'10px', lg:'14px', xl:'20px' },\n" +
+      "  fontSizes: { sm: '14px' }, focusRing: 'auto', // 2 px #3F6212\n" +
+      "  components: {\n" +
+      "    Button:    { defaultProps: { size: 'sm' }, vars: () => ({ root: { '--button-height': '40px' } }) },\n" +
+      "    Input:     { vars: () => ({ wrapper: { '--input-height': '40px' } }) },\n" +
+      "    Card:      { defaultProps: { withBorder: true, radius: 'lg', shadow: 'xs', padding: 'lg' } },\n" +
+      "    Table:     { defaultProps: { verticalSpacing: 'md', highlightOnHover: true } },\n" +
+      "    Tabs:      { defaultProps: { color: 'brand' } },\n" +
+      "    NavLink:   { styles: { root: { borderRadius: 10, fontWeight: 600 } } }, // etkin: brand.1 + brand.8 metin\n" +
+      "    Modal:     { defaultProps: { radius: 'xl', centered: true, overlayProps: { blur: 0, backgroundOpacity: 0.36 } } },\n" +
+      "    Drawer:    { defaultProps: { size: 480, overlayProps: { blur: 0, backgroundOpacity: 0.36 } } }, // bulanıklık yok\n" +
+      "  },\n" +
+      "});\n" +
+      "// cssVariablesResolver.light: --mantine-color-body #F3F4F1, -text #111318,\n" +
+      "//   -dimmed #4A5260, -default-border #E4E6E1\n" +
+      "// Badge yerine <StatusChip status> (ton + ikon + etiket, tokens.packageStatus)\n" +
+      "// AppShell: navbar 240, header 60, kenar çubuğu beyaz",
+    '2': "// P1 temasının tamamı + :\n" +
+      "colors: { brand, ink: ['#F5F7FA','#B4BAC4','#8E96A3','#4A5260','#2A2E36',\n" +
+      "  '#22262E','#1A1E25','#171A20','#111318','#0A0C0F'] },\n" +
+      "components: {\n" +
+      "  AppShellNavbar: { styles: { navbar: { background: 'var(--mantine-color-ink-8)',\n" +
+      "    borderRight: 0, color: 'var(--mantine-color-ink-0)' } } },\n" +
+      "  NavLink: { classNames: { root: 'nav-dark' } },\n" +
+      "}\n" +
+      "// nav-dark.module.css\n" +
+      "// .root { color: #F5F7FA; height: 40px }  .root svg { color: #B4BAC4 }\n" +
+      "// .root[data-active] { background: #22262E; color: #fff }\n" +
+      "// .root[data-active] svg { color: #C8FF3A }\n" +
+      "// .root[data-active]::before { 4 px neon çizgi, sol kenar }\n" +
+      "// .root:focus-visible { outline: 2px solid #C8FF3A } // koyuda neon odak\n" +
+      "// Harita kontrolleri: .map-ctl { background:#111318; color:#F5F7FA;\n" +
+      "//   box-shadow: 0 0 0 1px rgba(255,255,255,.14) } (iki karoda da)\n" +
+      "// Kaydetme çubuğu: koyu yüzey + neon dolgu düğme (#C8FF3A, metin #0B0D10)\n" +
+      "// Header beyaz kalır; canlı nokta success #047857",
+    '3': "// P1 teması + yoğunluk (CSS değişkeni ya da data-density=\"compact\"):\n" +
+      "fontSizes: { xs: '12px', sm: '13px' }, defaultRadius: 'sm', // 8 px\n" +
+      "components: {\n" +
+      "  Table: { defaultProps: { stickyHeader: true, striped: true,\n" +
+      "    highlightOnHover: true, verticalSpacing: 6, horizontalSpacing: 'xs', fz: 'sm' } },\n" +
+      "  Card:  { defaultProps: { shadow: 'none', padding: 'sm', radius: 'md' } },\n" +
+      "  Tabs:  { defaultProps: { variant: 'default' } }, // ayarlarda dikey: orientation='vertical'\n" +
+      "  Button: { vars: () => ({ root: { '--button-height': '40px' } }) }, // hedef yine 40\n" +
+      "}\n" +
+      "// AppShell navbar 76 (ikon + 12 px etiket), header 52 + canlı sayaçlar\n" +
+      "// Klavye: useHotkeys([['j',next],['k',prev],['Enter',open],['a',assign],\n" +
+      "//   ['x',toggle],['n',newPkg],['/',focusSearch]]) (@mantine/hooks)\n" +
+      "// Satır: tabIndex=0, :focus-visible { outline: 2px solid #3F6212; offset:-2px }\n" +
+      "// Ayrıntı: Drawer yerine sağda dock (Grid / flex), liste görünür kalır\n" +
+      "// Toplu seçim: Checkbox + koyu Affix çubuğu (neon yalnızca orada)"
+  };
+  function kit(v) {
+    var navSample = '<div style="background:' + (v === '2' ? '#111318' : '#FFFFFF') + ';border-radius:12px;padding:6px 6px 6px 12px;width:200px;box-shadow:0 0 0 1px #E4E6E1" class="' + (v === '3' ? '' : '') + '">' +
+      '<div class="nav on" style="' + (v === '3' ? 'height:40px;flex-direction:row;font-size:14px;padding:0 12px' : '') + '">' + ic('pkg', 20) + '<span>Paketler</span></div><div class="nav">' + ic('store', 20) + '<span>İşletmeler</span></div></div>';
+    return '<div class="ui p' + v + ' kit" style="background:#F3F4F1;color:#111318">' +
+      bt('pri', 'Kaydet') + bt('sec', 'Vazgeç') + bt('ton', 'Kopyala', 'copy') + bt('dan', 'İptal et') + bt('pri focus', 'Odak') +
+      '<div style="width:100%;display:flex;flex-wrap:wrap;gap:6px">' + Object.keys(ST).map(chip).join('') + '</div>' +
+      '<div style="width:180px">' + inp('150', { cls: 'focus', end: '<span class="mut" style="font-size:12.5px">m</span>' }) + '</div>' + '<span class="tg on"></span><span class="tg"></span><span class="rd on"></span><span class="cb on">' + ic('check', 14, '#fff', 3) + '</span>' +
+      '<span class="live"><i></i>Canlı</span>' + navSample + '</div>';
+  }
+  function variantCards() {
+    return VK.map(function (v) {
+      return '<section class="vcard' + (v === '2' ? ' rec' : '') + '">' + (v === '2' ? '<span class="tag">Öneri</span>' : '') +
+        '<div class="vlabel" style="font-size:16px"><span class="vb">P' + v + '</span>' + esc(NAME[v].replace(/^P\d · /, '')) + '</div>' +
+        '<div class="desc">' + DESC[v] + '</div>' +
+        '<h3>Belirteç şeridi</h3><div class="swatches">' + SW[v].map(function (s) { return '<div class="sw"><i style="background:' + s[1] + '"></i><b>' + s[0] + '</b>' + s[1] + '</div>'; }).join('') + '</div>' +
+        '<h3>Bileşenler</h3>' + kit(v) +
+        '<h3>Mantine eşlemesi (Mantine 9)</h3><pre class="mt">' + hl(MT[v]) + '</pre></section>';
+    }).join('');
+  }
+
+  // ------------------------------------------------------------ çizim, denetimler, ölçekleme
+  var state = { screen: 'all', variant: 'all', layout: 'side', tiles: 'light' };
+  try { var saved = JSON.parse(localStorage.getItem('panelMaket') || 'null'); if (saved) Object.assign(state, saved); } catch (e) { /* depolama yok */ }
+  // Bağlantı: #paketler (tek ekran) ya da #paketler/2 (tek ekran, tek varyant)
+  var hp = location.hash.replace('#', '').split('/');
+  if (hp[0] === 'all' || SCREENS.some(function (s) { return s[0] === hp[0]; })) state.screen = hp[0];
+  if (/^[123]$/.test(hp[1] || '')) state.variant = hp[1];
+  if (hp[2] === 'koyu') state.tiles = 'dark';
+
+  function frame(v, s) {
+    var tablet = s[4], w = tablet ? 1024 : 1440, h = tablet ? 768 : 900;
+    var inner = s[3](v);
+    var nogrid = s[0] === 'giris';
+    return '<div class="vcell"><div class="vlabel"><span class="vb">P' + v + '</span>' + esc(NAME[v].replace(/^P\d · /, '')) + '<span class="hintz">' + w + '×' + h + '</span></div>' +
+      '<div class="fw" role="img" aria-label="' + esc(s[1] + ', ' + NAME[v]) + '" tabindex="0"><div class="frame ui p' + v + (nogrid ? ' nogrid' : '') + '" data-w="' + w + '" data-h="' + h + '" style="width:' + w + 'px;height:' + h + 'px' + (tablet ? ';--sideW:76px;--topH:52px' : '') + '">' + inner + '</div></div></div>';
+  }
+  function render() {
+    var rows = document.getElementById('rows');
+    var vs = state.variant === 'all' ? VK : [state.variant];
+    rows.innerHTML = SCREENS.filter(function (s) { return state.screen === 'all' || state.screen === s[0]; }).map(function (s) {
+      return '<section class="srow" id="s-' + s[0] + '"><header><h2>' + esc(s[1]) + '</h2><p>' + esc(s[2]) + '</p></header><div class="vcols">' + vs.map(function (v) { return frame(v, s); }).join('') + '</div></section>';
+    }).join('');
+    document.body.classList.toggle('layout-stack', state.layout === 'stack');
+    document.body.classList.toggle('one-variant', state.variant !== 'all');
+    document.body.classList.toggle('tiles-dark', state.tiles === 'dark');
+    document.querySelectorAll('.seg').forEach(function (g) {
+      g.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(state[g.dataset.key] === b.dataset.val)); });
+    });
+    fit();
+  }
+  function fit() {
+    document.querySelectorAll('.fw').forEach(function (fw) {
+      var f = fw.firstElementChild, W = +f.dataset.w, H = +f.dataset.h, s = Math.min(1, fw.clientWidth / W);
+      f.style.transform = 'scale(' + s + ')';
+      fw.style.maxWidth = W + 'px';
+      fw.style.height = Math.round(H * s) + 'px';
+    });
+  }
+  document.querySelectorAll('.seg').forEach(function (g) {
+    g.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      state[g.dataset.key] = b.dataset.val;
+      try { localStorage.setItem('panelMaket', JSON.stringify(state)); } catch (err) { /* depolama yok */ }
+      if (g.dataset.key === 'tiles') { document.body.classList.toggle('tiles-dark', state.tiles === 'dark'); g.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(state.tiles === x.dataset.val)); }); return; }
+      render();
+    });
+  });
+  document.getElementById('rows').addEventListener('click', function (e) {
+    var fw = e.target.closest('.fw'); if (!fw) return;
+    fw.parentElement.classList.toggle('big'); fit();
+    fw.scrollIntoView({ block: 'nearest' });
+  });
+  document.getElementById('rows').addEventListener('keydown', function (e) {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('fw')) { e.preventDefault(); e.target.click(); }
+  });
+  window.addEventListener('resize', fit);
+  document.getElementById('variants').innerHTML = variantCards();
+  render();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+})();
+</script>
+</body>
+</html>
