@@ -34,6 +34,7 @@ Mimari ve teknoloji kararları, bağlamı ve alternatifleriyle birlikte burada t
 | [0026](0026-teslim-geofence-politikasi.md) | Teslim kanıtı geofence politikası: ölçüm kipiyle başlangıç, etkin teslim noktasına tolerans, gerekçeli geçersiz kılma, öğrenmeden dışlama | Kabul edildi |
 | [0027](0027-marka-kimligi-ve-navigasyon-gorsel-dili.md) | Marka kimliği ve navigasyon görsel dili: koyu krom + neon yeşil, gündüz açık harita, koyu krom üzerinde metin ≥ 7:1 (önce kurye uygulaması, panel ayrı görev) | Kabul edildi |
 | [0028](0028-havuz-gorunurlugu-ve-atama-kabulu.md) | Havuz görünürlüğü (kiracı ayarı) ve atama kabulü: kabul paket durumu değil atamanın özelliği, veritabanı son tarihi, süre aşımı = sistem reddi (MVP+ 4a) | Kabul edildi |
+| [0029](0029-konum-kademeleri-ve-rota-geri-bildirimi.md) | Konum sıklığı kademeleri (NAVIGATING / MOVING / STATIONARY, hysteresis), panel konum yayınında birleştirme (kurye başına <= 1 olay / 3 sn) ve "Rota yanlış" geri bildirimi (OSM düzeltmesi için kimliksiz GeoJSON) | Kabul edildi |
 
 İterasyon 1 teknik spesifikasyonu: docs/iterasyon-1/SPEC.md. İterasyon 2 ana hedefi (rota uyumlu atama) tasarımı: docs/iterasyon-2/ROTA-UYUMLU-ATAMA.md. Kuryeler arası devir tasarımı: docs/iterasyon-2/KURYE-DEVIR.md. İterasyon 2 teknik spesifikasyonu: docs/iterasyon-2/SPEC.md. İterasyon 3 (harita platformu) planı: docs/iterasyon-3/PLAN.md; İterasyon 3a teknik spesifikasyonu: docs/iterasyon-3/SPEC-3a.md; İterasyon 3b teknik spesifikasyonu: docs/iterasyon-3/SPEC-3b.md. (0015 numarası başka bir çalışma kolunda ayrılmıştır.)
 

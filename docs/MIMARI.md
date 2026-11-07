@@ -271,6 +271,12 @@ Kiracı ayarları `settings.dispatch.poolVisibleToCouriers` (varsayılan `true`)
 - **Atama kabulü:** paket durumu değişmez; atama `accept_state = PENDING` ve `accept_deadline_at` ile başlar (havuzdan alma ve devir doğrudan `ACCEPTED`). `POST /courier/packages/{id}/accept` kabul eder, alış örtük kabuldür. Süre dolunca 5 sn'lik `dispatch-accept-expiry` işi ret yolunu çalıştırır (`IN_POOL`, `package_rejections.reason = TIMEOUT` ile o kurye dışlanır, olay `ASSIGNMENT_EXPIRED`, WS `package.assignment_expired`) ve paketi yeniden dağıtır. Son tarih veritabanındadır (yeniden başlatmaya dayanıklı).
 - **Panel verisi:** `Package.assignment` (kaynak, sıra, sapma, toplu / grup, atayan kullanıcı kimliği, kabul durumu; `packages.assignment_info`), `dispatch.poolEnteredAt` / `poolWaitS`. Ayrıntı: SPEC-4a.
 
+#### 6.1.3 Konum kademeleri ve "Rota yanlış" geri bildirimi (MVP+ 4b, ADR-0029)
+
+- **Konum kademeleri (istemci):** `NAVIGATING` (GPS 2,5 sn, gönderim 5 sn), `ON_SHIFT_MOVING` (5 sn / 15 sn, bugünkü profil), `ON_SHIFT_STATIONARY` (yazılım kademesi: GPS 5 sn, seyreltme / gönderim 60 sn), `OFF_SHIFT` (GPS görevi yok); geçişler hysteresis'li, seyreltme ve gönderim süreleri kademeye göre. `POST /courier/locations` sözleşmesi değişmez.
+- **Panel yayını birleştirme (API):** `courier.position` kiracı + kurye başına en çok 3 sn'de bir (`POSITION_COALESCE_MS`); ilk konum hemen, pencere içindekiler tek olay (en yeni nokta). Tüm noktalar yine `location_pings`'e yazılır.
+- **Rota yanlış:** `route_feedback` tablosu (migration 0007, kiracı kapsamlı, kişisel veri yok), kurye `POST /courier/route-feedback` (çevrimdışı kuyruk, `Idempotency-Key`), panel `GET /route-feedback` + `PATCH /route-feedback/{id}`, OWNER `GET /route-feedback.geojson` (OSM düzenlemesi için kimliksiz). Ayrıntı: SPEC-4b.
+
 Tasarım, algoritma, veri modeli taslağı ve benchmark planı: iterasyon-2/ROTA-UYUMLU-ATAMA.md. Yeni tablolar (`courier_routes`, `route_stops`, `assignment_suggestions`, `package_rejections`, `handover_requests`, `handover_offers`) yukarıdaki diyagramdaki `STOP` kavramının yerini alır.
 
 ### 6.3 Uygulama içi navigasyon (iterasyon 2)
