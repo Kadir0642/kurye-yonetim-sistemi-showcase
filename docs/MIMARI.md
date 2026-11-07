@@ -263,6 +263,14 @@ Sabitler (ADR-0023; kiracı ayarı değildir): regret-3, aynı işletme birimler
 
 Davranış özeti (v2 etkin, OTOMATİK): yeni paket "Atama bekliyor" ile bekleyenlerde görünür; pencere kapanınca (1) atanır (`ASSIGNED_AUTO`, `batch = true`, aynı işletme birimlerinde aynı `groupId`), (2) **"Pencere bekliyor"** (`WINDOW_HOLD`, olay verisinde en iyi seçeneğin sapması) veya (3) **"Uygun kurye yok"** (`NO_FEASIBLE`). Ret ve iade bugünkü anlık yoldan geçer; bekleyenlerin 60 sn'lik yeniden denemesi pencereye girer. Öneriler (ONERI / AKILLI_HAVUZ) anında üretilir; toplu öneri (`POST /dispatch/batch-plan`) v2 etkinken aynı v2 planlayıcısıyla, bekletmesiz üretilir. Gözlem: her pencere kararı `dispatch_windows` tablosuna ve yapılandırılmış günlüğe (`event = dispatch.v2.window`: aday sayısı, paket başına sonuç, sapma, bekletme nedeni) yazılır; özet `GET /metrics/dispatch-v2`.
 
+#### 6.1.2 Dağıtım pilot kipi (MVP+ 4a, ADR-0028)
+
+Kiracı ayarları `settings.dispatch.poolVisibleToCouriers` (varsayılan `true`) ve `settings.dispatch.acceptTimeoutS` (0 = kapalı; 30-600 sn). Pilot: OTOMATİK + gizli havuz + 90 sn (çalışma kitabı §12).
+
+- **Gizli havuz:** kurye havuzu boş döner, havuzdan alma ve "Havuza aç" 409 `POOL_CLOSED`; hiçbir paket açık havuza girmez (POOL / publish AUTO gibi, yaklaşık modda bekleyenlerde kalır). AKILLI_HAVUZ ile birleştirilemez.
+- **Atama kabulü:** paket durumu değişmez; atama `accept_state = PENDING` ve `accept_deadline_at` ile başlar (havuzdan alma ve devir doğrudan `ACCEPTED`). `POST /courier/packages/{id}/accept` kabul eder, alış örtük kabuldür. Süre dolunca 5 sn'lik `dispatch-accept-expiry` işi ret yolunu çalıştırır (`IN_POOL`, `package_rejections.reason = TIMEOUT` ile o kurye dışlanır, olay `ASSIGNMENT_EXPIRED`, WS `package.assignment_expired`) ve paketi yeniden dağıtır. Son tarih veritabanındadır (yeniden başlatmaya dayanıklı).
+- **Panel verisi:** `Package.assignment` (kaynak, sıra, sapma, toplu / grup, atayan kullanıcı kimliği, kabul durumu; `packages.assignment_info`), `dispatch.poolEnteredAt` / `poolWaitS`. Ayrıntı: SPEC-4a.
+
 Tasarım, algoritma, veri modeli taslağı ve benchmark planı: iterasyon-2/ROTA-UYUMLU-ATAMA.md. Yeni tablolar (`courier_routes`, `route_stops`, `assignment_suggestions`, `package_rejections`, `handover_requests`, `handover_offers`) yukarıdaki diyagramdaki `STOP` kavramının yerini alır.
 
 ### 6.3 Uygulama içi navigasyon (iterasyon 2)
