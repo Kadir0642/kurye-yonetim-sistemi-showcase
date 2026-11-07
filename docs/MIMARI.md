@@ -381,6 +381,7 @@ Pilot müşteri keşfi henüz yapılmadı; aşağıdakiler cevap bekliyor.
 | 35 | İşletme "hazır" sayfasında teslim adresinin ilk parçası (`dropoffHint`) gösterilebilir mi? Bağlantı işletmeye nasıl iletilecek (elle; otomatik SMS / WhatsApp ücretli)? | ADR-0025, SPEC-3b §19 |
 | 36 | Teslim geofence'i ne zaman ENFORCE'a alınır (tüm kuryeler 3b APK'sında, OBSERVE ölçümünden sonra)? Kurye bazlı geçersiz kılma raporu gerekli ve hukuken uygun mu? | ADR-0026, SPEC-3b §19 |
 | 37 | Tahmini hazır zamanı `readyAt`'e otomatik yazılsın mı ve aynı işletme gruplaması ile dağıtım v2 pilotta açılsın mı (benchmark sonucuna göre)? | SPEC-3b §16, §19 |
+| 38 | Müşteri adı / telefonu / açık adresi için hukuken uygun saklama süresi nedir? (ürün sahibi geçici olarak 30 gün seçti; yedek süresi N + 35 gün aydınlatma metnine yazılmalı mı?) | ADR-0032, denetim B-08 |
 
 ## 9. Harita platformu (iterasyon 3)
 
