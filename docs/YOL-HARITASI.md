@@ -14,6 +14,7 @@ Kapsam, pilot müşteri keşfi sonrasında değişebilir. Her iterasyon bir demo
 | Güvenlik (P0, CSP + sınırlar) | **Pilot öncesi güvenlik:** panel içerik güvenlik politikası (CSP, önce Report-Only), WebSocket bağlantı sınırları (IP başına 20 kimliksiz, kullanıcı başına 10), `/health` sınırı ve önbelleği, Caddy başlık / gövde sınırı (denetim B-06 P0, B-07, [ADR-0031](kararlar/0031-panel-csp-ve-baglanti-sinirlari.md)) | 🚧 PR açıldı; CSP zorunlu geçişi pilot haftası sonrası |
 | Güvenlik (P0, kimlik) | **Pilot öncesi kimlik sertleştirmesi:** giriş kilidi kimlik + IP (yabancı kuryeyi dışarıda bırakamaz), kimlik başına yüksek eşik ve artan gecikme; kurye / panel şifresi en az 8 karakter + yaygın şifre listesi + telefon içermez; panelin verdiği şifre geçici, kurye uygulamasında ilk girişte şifre değiştirme ekranı ([ADR-0030](kararlar/0030-kimlik-sertlestirme.md), denetim B-04 / B-05, sözleşme 0.6.1) | 🚧 PR #55 açıldı |
 | Güvenlik (P1, KVKK saklama) | **Müşteri verisi saklama süresi (B-08):** kiracı ayarı (yeni kiracıda varsayılan 30 gün, mevcut kiracılar kapalı; 7-365, 0 = kapalı), saatlik anonimleştirme işi, elle çalıştırma ve panel Ayarlar > Gizlilik kartı; tutar / zaman / istatistik / öğrenilmiş noktalar kalır ([ADR-0032](kararlar/0032-musteri-verisi-saklama.md), sözleşme 0.6.2) | 🚧 PR açıldı; süre hukuki görüşe göre değişir |
+| MVP+ 6 | **Kapıda tahsilat mutabakatı:** kurye teslimde nakit / kart / alınamadı işaretler (kısmi tutar + sebep, çevrimdışı kuyrukta teslimle aynı gövde), "Bugün üzerimde" kartı; panelde **Tahsilat** sayfası (kurye başına günlük beklenen / tahsil edilen / kart / alınamayan / teslim edilen kasa / kuryede kalan, **Kasa teslim al**, yalnızca-ekle kayıt, CSV) (SPEC-4c, [ADR-0034](kararlar/0034-kapida-tahsilat-mutabakati.md)) | 🚧 API, mobil, panel ve sözleşme 0.6.4 PR açıldı (migration 0011) |
 | Yük testi darboğazları | **S1 yük testi bulgularının giderilmesi:** panel liste yenilemeleri olay güdümlü ve yoklama seyrek (panel isteği −%55), bekleyenler kuyruğu yeniden deneme aralığı kiracı ayarı (`settings.dispatch.retryIntervalS`, pilot 30 sn) ve kapasite açılınca erken deneme, konum eklemesi `synchronous_commit=off` (izole ekleme p99 93 → 14 ms); yük testine navigasyon / duran konum profilleri ([ADR-0033](kararlar/0033-yuk-testi-darbogazlari.md), rapor) | 🚧 PR açıldı |
 | 4 | Hakediş, kasa ve atama (eski İterasyon 3) | ⏳ |
 | 5+ | Genişleme (eski İterasyon 4+) | ⏳ |
@@ -193,7 +194,7 @@ Beş paralel görev (gorevler/): **R** rota altyapısı + motor + benchmark, **A
 
 - [ ] Paket bazlı hakediş hesabı ve kuryenin hakediş ekranı
 - [ ] Yönetici raporları (kurye, işletme, dönem bazlı)
-- [ ] Kasa / nakit mutabakatı (kapıda ödeme takibi)
+- [x] Kasa / nakit mutabakatı (kapıda ödeme takibi): MVP+ 6 ile ([ADR-0034](kararlar/0034-kapida-tahsilat-mutabakati.md)); hakediş ile birleşik rapor hâlâ açık
 - [ ] ETA hesaplama ve müşteriye gösterimi (rota ETA'ları İterasyon 2'de iç kullanım için üretilir)
 - [ ] Adil atama ağırlıklarının hakedişle birlikte ayarı (temel adalet terimi ve otomatik / akıllı atama İterasyon 2'de gelir)
 

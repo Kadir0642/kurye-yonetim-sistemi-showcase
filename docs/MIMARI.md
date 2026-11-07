@@ -194,6 +194,8 @@ stateDiagram-v2
     CANCELLED --> [*]
 ```
 
+**Kapıda tahsilat (MVP+ 6, [ADR-0034](kararlar/0034-kapida-tahsilat-mutabakati.md)):** teslim eylemi isteğe bağlı `collection` (nakit / kart / alınamadı) taşır; `packages.collected_*` sütunlarına teslimle aynı UPDATE'te yazılır (çevrimdışı kuyrukta aynı gövde ve Idempotency-Key). Kasa teslimleri yalnızca eklenen `cash_handovers` tablosundadır; günlük toplam `GET /payments/daily`.
+
 Durum kodları: `CREATED` (Beklemede), `IN_POOL` (Havuzda), `ASSIGNED` (Atandı), `PICKED_UP` (Yolda), `DELIVERED` (Teslim edildi), `FAILED` (Teslim edilemedi), `CANCELLED` (İptal). Önceki taslaktaki `EN_ROUTE` kaldırıldı; `PICKED_UP` "yolda" anlamına gelir. Havuzdan alma yarışa dayanıklıdır (tek koşullu UPDATE). `PICKED_UP` sonrası iptalin ücret kuralı müşteriyle netleştirilecek.
 
 ## 5. Canlı takip veri akışı
