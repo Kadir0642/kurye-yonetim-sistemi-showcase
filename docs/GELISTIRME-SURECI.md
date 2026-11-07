@@ -67,6 +67,7 @@ Bir görev ancak şunların hepsi sağlanınca tamamlanmış sayılır:
 - [ ] UI değiştiyse README'deki ekran görüntüsü / GIF güncellendi
 - [ ] Demo verisi (seed) ile uçtan uca çalışıyor
 - [ ] Depoda gizli bilgi veya kişisel veri yok
+- [ ] **Güvenlik:** `npm run security` yeşil (güvenlik regresyon testleri: kimlik + rol matrisi, kiracılar arası erişim, JWT kurcalama, işletme bağlantısı, hız sınırı, üretim başlıkları; ardından `npm audit --omit=dev --audit-level=high`). Yeni uç ekleyen görev, sözleşmeye `x-roles` yazar ve kiracıya ait yeni kaynak için kiracılar arası 404 testini ekler. Çalışma zamanı bağımlılığında yeni **high/critical** `npm audit` bulgusu ancak PR açıklamasında "sömürülebilir mi, neden kabul edildi, ne zaman kapanacak" notuyla kabul edilir. Girişsiz (herkese açık) uç, sır / jeton işleme veya log alanı değişikliği ayrıca güvenlik incelemesinden geçer.
 - [ ] Vitrin senkronu yapıldı (iterasyon sonunda `scripts/sync-showcase.ps1`; aşağıya bakın)
 - [ ] Alt ajan özet raporu verildi ve incelendi
 
