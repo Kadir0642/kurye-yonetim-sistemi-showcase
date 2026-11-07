@@ -9,7 +9,7 @@ Kapsam, pilot müşteri keşfi sonrasında değişebilir. Her iterasyon bir demo
 | 2 | **Ana hedef: dinamik, rota uyumlu dağıtım** (tek akıllı rota, en iyi uyan kuryeye tekil ve toplu atama, kararlı yeniden sıralama, öneri / otomatik atama, ret ve devir, uygulama içi navigasyon, benchmark) | ✅ Uygulandı ve birleştirildi (SPEC) |
 | 2b | Platform ve sağlamlaştırma: RLS, push (FCM), iOS / TestFlight, OTA, aynı restoran gruplaması, gerçek cihaz testi | ⏳ |
 | 3 | **Eskişehir'e özel harita platformu:** kendi karo / geocoder / OSM güncelleme hattı, çevrimdışı harita ve eylem kuyruğu, saha verisinden öğrenen harita, üretim hazırlığı | **3a ✅ tamamlandı** (SPEC-3a; entegrasyon turunda gerçek yığınla doğrulandı, açık maddeler aşağıda); **3b ✅ tamamlandı** (SPEC-3b, sözleşme 0.4.0; PR #31-#38 2026-11-07'de birleşti, entegrasyon kaydı; açık: gerçek cihaz, pilot kararları); 3c ⏳ (PLAN) |
-| MVP+ 4a | **Dağıtım pilot kipi:** havuz kuryelerden gizli (kiracı ayarı), atama kabulü ve süre aşımı (pilot 90 sn), panelde atama gerekçesi ve havuz bekleme verisi (SPEC-4a, [ADR-0028](kararlar/0028-havuz-gorunurlugu-ve-atama-kabulu.md)) | 🚧 API ve sözleşme 0.5.0 PR #45; mobil (M4a) ve panel (W4a) ayrı PR'lar |
+| MVP+ 4a | **Dağıtım pilot kipi:** havuz kuryelerden gizli (kiracı ayarı), atama kabulü ve süre aşımı (pilot 90 sn), panelde atama gerekçesi ve havuz bekleme verisi (SPEC-4a, [ADR-0028](kararlar/0028-havuz-gorunurlugu-ve-atama-kabulu.md)) | 🚧 API ve sözleşme 0.5.0 PR #45; mobil (M4a) PR #47; **panel (W4a): havuz görünümü, atama gerekçesi, kabul durumu, pilot ayarları, canlı harita yumuşatma, işletme sayfası tahmini varış** PR açıldı (panel notu) |
 | 4 | Hakediş, kasa ve atama (eski İterasyon 3) | ⏳ |
 | 5+ | Genişleme (eski İterasyon 4+) | ⏳ |
 
