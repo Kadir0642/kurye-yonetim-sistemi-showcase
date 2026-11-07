@@ -333,6 +333,7 @@ Tasarım, veri modeli (`handover_offers`), API eskizi, uç durumlar ve KVKK notl
 - Tenant izolasyonu: her istekte JWT'den gelen `tenant_id` bağlamı, depo katmanında zorunlu filtre ve bileşik yabancı anahtarlar; RLS İterasyon 2b'de ([ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md)).
 - Rota motoru (OSRM / VROOM) yalnızca iç ağda çalışır; kurye konumu üçüncü taraf bir servise gönderilmez.
 - Kimlik: kısa ömürlü JWT access token + rotasyonlu, tek kullanımlık refresh token (yeniden kullanım tespiti).
+- Giriş kilidi ve şifre kuralı ([ADR-0030](kararlar/0030-kimlik-sertlestirme.md)): hatalı giriş sayacı `kimlik + IP` çiftinde (5 / 15 dk), kimlik başına yüksek eşik (50 / saat -> 15 dk kilit) ve 3. hatadan sonra artan gecikme (en çok 5 sn); kilit yalnızca girişi etkiler. Yeni şifre en az 8 karakter, gömülü yaygın şifre listesinde değil, telefon numarasını içermez. Panelin verdiği şifre geçicidir (`users.must_change_password`): kurye kendi şifresini belirleyene kadar yalnızca `/me`, `/me/password` ve `/auth/*` açıktır.
 - Konum yalnızca açık vardiyada; aydınlatma metni ve açık rıza metni ayrı ([ADR-0005](kararlar/0005-konum-takibi-ve-kvkk.md)).
 - Gizli anahtarlar depoda tutulmaz; yapılandırma ortam değişkenleriyle.
 - Depoda müşteri / kurye kişisel verisi yok; demo verisi tamamen kurgusal.
