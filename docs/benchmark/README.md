@@ -36,7 +36,7 @@ Sentetik bir Eskişehir günü (20 kurye, ~400 sipariş, 10 tohum). Her ölçüt
 
 ## Aynı işletme gruplaması (İterasyon 3b-3): gerçek etki v2 taban çizgisine göredir
 
-Ayrıntılı rapor: v2/gruplama.md (30 tohum, eşleştirilmiş %95 GA, ablation). Dikkat: yukarıdaki tablolardaki A (NC) karşılaştırması gruplamanın etkisini **göstermez**; NC'ye göre +33 puanın hemen hemen tamamı dağıtım v2'nin kendisinden (60 sn pencere, regret-3) gelir. Gruplamanın gerçek etkisi RH60-PROD'a (v2, gruplamasız) göre farktır:
+Ayrıntılı rapor: [v2/gruplama.md](v2/gruplama.md) (30 tohum, eşleştirilmiş %95 GA, ablation). Dikkat: yukarıdaki tablolardaki A (NC) karşılaştırması gruplamanın etkisini **göstermez**; NC'ye göre +33 puanın hemen hemen tamamı dağıtım v2'nin kendisinden (60 sn pencere, regret-3) gelir. Gruplamanın gerçek etkisi RH60-PROD'a (v2, gruplamasız) göre farktır:
 
 | Varyant (aynı işletme kümesi aynı kuryede) | Varsayılan gün | Tepe gün |
 |---|---:|---:|
@@ -138,9 +138,9 @@ Hazır zamanının stratejilere nasıl bildirildiği üç koşulda karşılaşt�
 - **Tahmini:** `readyAt` = sipariş girişi + işletme × gün dilimi (tepe / tepe dışı) **P60** hazırlık süresi. Tahmin 14 eğitim gününden (tohum 1001-1014, rapor tohumları 1-10 ile ayrık) öğrenilir; bir kovada 10'dan az gözlem varsa kiracı varsayılanı 12 dk kullanılır. Stratejiler tahmini gerçek gibi kullanır; kurye gerçek hazır anına kadar bekler.
 - **Bilinen:** `readyAt` = gerçek hazır anı.
 
-Geç teslim
+![Geç teslim](ready-3-gec.png)
 
-Alış bekleme
+![Alış bekleme](ready-3-bekleme.png)
 
 Her hücre 10 tohumun ortalaması ± standart sapmasıdır.
 

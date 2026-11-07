@@ -2,7 +2,7 @@
 
 - **Durum:** Kabul edildi (Faz 2: bayrak arkasında). Faz 1 (araştırma + benchmark) tamamlandı; Faz 2 kayan ufku `DISPATCH_V2` arkasında üretime aldı, ALNS yalnızca gölge kipte (`DISPATCH_V2_ALNS_SHADOW`). Gerçek ALNS taşımaları (`DISPATCH_V2_ALNS`) pilot gölge verisine göre ayrı kararla açılır.
 - **Tarih:** 2026-11-06
-- **İlgili:** [ADR-0009](0009-rota-uyumlu-atama.md), [ADR-0013](0013-rota-motoru-siniri-ve-yaklasik-mod.md), [ADR-0014](0014-toplu-atama-regret-ekleme.md), [ADR-0017](0017-saha-verisinden-ogrenen-harita.md); tasarım: DAGITIM-ALGORITMASI-V2.md; sonuçlar: benchmark v2
+- **İlgili:** [ADR-0009](0009-rota-uyumlu-atama.md), [ADR-0013](0013-rota-motoru-siniri-ve-yaklasik-mod.md), [ADR-0014](0014-toplu-atama-regret-ekleme.md), [ADR-0017](0017-saha-verisinden-ogrenen-harita.md); tasarım: DAGITIM-ALGORITMASI-V2.md; sonuçlar: [benchmark v2](../benchmark/v2/README.md)
 
 ## Bağlam
 
@@ -61,4 +61,4 @@
 
 ## Not (2026-11-06): gruplama
 
-İterasyon 3b-3 gruplama sonucu (κ, τ, sonradan bağlama, işletme duyarlı kapanış; v2 yolunda bayraklı): bkz. [ADR-0014 sonuç notu](0014-toplu-atama-regret-ekleme.md) ve benchmark.
+İterasyon 3b-3 gruplama sonucu (κ, τ, sonradan bağlama, işletme duyarlı kapanış; v2 yolunda bayraklı): bkz. [ADR-0014 sonuç notu](0014-toplu-atama-regret-ekleme.md) ve [benchmark](../benchmark/v2/gruplama.md).

@@ -2,7 +2,7 @@
 
 - **Durum:** Kabul edildi (ürün sahibi, 2026-11-06; uygulama ayrı görev)
 - **Tarih:** 2026-11-06
-- **İlgili:** [ADR-0015](0015-uygulama-ici-navigasyon.md) (uygulama içi navigasyon), [ADR-0018](0018-harita-karo-ve-stil-sunumu.md) (stiller, glyph, sprite), [ADR-0004](0004-cok-kiracili-mimari.md) (çok kiracılı), `docs/tasarim/navigasyon/secim.md`, `docs/tasarim/marka/tokens.json`
+- **İlgili:** [ADR-0015](0015-uygulama-ici-navigasyon.md) (uygulama içi navigasyon), [ADR-0018](0018-harita-karo-ve-stil-sunumu.md) (stiller, glyph, sprite), [ADR-0004](0004-cok-kiracili-mimari.md) (çok kiracılı), [`docs/tasarim/navigasyon/secim.md`](../tasarim/navigasyon/secim.md), [`docs/tasarim/marka/tokens.json`](../tasarim/marka/tokens.json)
 
 ## Bağlam
 
@@ -12,7 +12,7 @@ Uygulama içi navigasyon ekranı (ADR-0015) çalışıyor, ama ürün sahibi gö
 
 Kurye kısıtları değişmez: telefon motosiklet tutucusunda, bir bakışta okunur; çok büyük mesafe ve ok, güneşte yüksek kontrast, otomatik gece, ≥ 56 dp eldiven hedefi, kasıtlı çıkış, ses öncelikli, puk alt üçte birde, yön-yukarı eğik kamera.
 
-Uygulama kodu değiştirilmeden üç görsel varyant statik maket olarak hazırlandı ve karşılaştırıldı: `docs/tasarim/navigasyon/index.html` (README ve `tokens.json` ile).
+Uygulama kodu değiştirilmeden üç görsel varyant statik maket olarak hazırlandı ve karşılaştırıldı: [`docs/tasarim/navigasyon/index.html`](../tasarim/navigasyon/index.html) (README ve `tokens.json` ile).
 
 ## Karar
 
@@ -22,8 +22,8 @@ Uygulama kodu değiştirilmeden üç görsel varyant statik maket olarak hazırl
 4. **Başarı rengi nane yeşili `#3DDC97`** (açık zeminde `#047857`): "tamamlandı" anlamı marka neonuyla karışmaz. Uyarı `#FBBF24`, tehlike `#FF7A7A` / dolu `#FF4D4F` + siyah metin, bilgi `#22D3EE`.
 5. **Gece haritası formülle değil, elle ayarlı palet** (`NAV_NIGHT`) ile üretilir; değerler MapLibre katman kimliğiyle tanımlıdır.
 6. **Canlı bulanıklık (blur) kullanılmaz**; "cam" görünümü opak yüzey + ince kenarla. Gölgeler yalnızca Android `elevation`.
-7. **Tek kaynak:** `docs/tasarim/marka/tokens.json`. `navigation.ui` alanları `NavTheme` ile aynı adlı, `navigation.maplibre` alanları `courier-nav-*.json` / `NavMap.tsx` katman kimlikleriyle aynı. Son maket: `docs/tasarim/navigasyon/b-v1.html`.
-8. **Kapsam:** önce kurye uygulaması (navigasyon ekranı, sonra diğer ekranlar). Yönetici paneli **ayrı bir görevde** aynı belirteçlerle geçer (Mantine'de özel 10 tonlu `neon` paleti, koyu kenar çubuğu, açık içerik alanı; bkz. `docs/tasarim/marka/README.md`). Kiracıya özel logo / renk (white-label) bu kararın kapsamı dışında.
+7. **Tek kaynak:** [`docs/tasarim/marka/tokens.json`](../tasarim/marka/tokens.json). `navigation.ui` alanları `NavTheme` ile aynı adlı, `navigation.maplibre` alanları `courier-nav-*.json` / `NavMap.tsx` katman kimlikleriyle aynı. Son maket: [`docs/tasarim/navigasyon/b-v1.html`](../tasarim/navigasyon/b-v1.html).
+8. **Kapsam:** önce kurye uygulaması (navigasyon ekranı, sonra diğer ekranlar). Yönetici paneli **ayrı bir görevde** aynı belirteçlerle geçer (Mantine'de özel 10 tonlu `neon` paleti, koyu kenar çubuğu, açık içerik alanı; bkz. [`docs/tasarim/marka/README.md`](../tasarim/marka/README.md)). Kiracıya özel logo / renk (white-label) bu kararın kapsamı dışında.
 
 ## Sonuçlar
 

@@ -1,6 +1,6 @@
 # ADR-0026: Teslim kanıtı geofence politikası: ölçüm kipiyle başlangıç, etkin teslim noktasına tolerans, gerekçeli geçersiz kılma, öğrenmeden dışlama
 
-- **Durum:** Önerildi (İterasyon 3b spesifikasyonuyla birlikte onaya sunuldu)
+- **Durum:** Kabul edildi (ürün sahibi, 2026-11-06; uygulandı PR #34 + #37)
 - **Tarih:** 2026-11-06
 - **İlgili:** [ADR-0010](0010-kuryeler-arasi-devir.md) (buluşma yarıçapı 150 m), [ADR-0017](0017-saha-verisinden-ogrenen-harita.md) A, [ADR-0020](0020-cevrimdisi-eylem-kuyrugu-ve-idempotency.md), PLAN 3b-4, SPEC-3b §9, İterasyon 2 SPEC §13 (`DeliveryVerifier`)
 

@@ -1,6 +1,6 @@
 # ADR-0025: İşletme "paket hazır" bağlantısı: girişsiz, kısa ömürlü, opak jeton (URL parçasında), yalnızca o işletmenin açık paketleri
 
-- **Durum:** Önerildi (İterasyon 3b spesifikasyonuyla birlikte onaya sunuldu)
+- **Durum:** Kabul edildi (ürün sahibi, 2026-11-06; uygulandı PR #34)
 - **Tarih:** 2026-11-06
 - **İlgili:** [ADR-0004](0004-cok-kiracili-mimari.md), [ADR-0009](0009-rota-uyumlu-atama.md) (`ready_at`), [ADR-0020](0020-cevrimdisi-eylem-kuyrugu-ve-idempotency.md), [ADR-0022](0022-uretim-dagitimi-ucretsiz-katman.md) (HTTPS, sırlar), PLAN 3b-2, SPEC-3b §7.5
 

@@ -2,7 +2,7 @@
 
 > Restoranların platform komisyonu ödemeden kendi teslimatını yapabilmesi için, kurye firmalarına yönelik çok kiracılı (multi-tenant) kurye yönetim platformu: mobil kurye uygulaması (Android + iOS), web yönetim paneli ve backend.
 
-**✅ İterasyon 3a tamamlandı** (kendi harita yığınımız, çevrimdışı kurye uygulaması, üretim hazırlığı) · İterasyon 3b-3c (saha verisinden öğrenen harita) planlandı
+**✅ İterasyon 3a (kendi harita yığınımız, çevrimdışı kurye uygulaması, üretim hazırlığı) ve 3b (öğrenilen teslim noktaları, hazır sinyali, işletme bağlantısı, teslim geofence'i, aynı restoran gruplama, yeni navigasyon görünümü) tamamlandı** · İterasyon 3c (öğrenilmiş hızlar, ETA) planlandı
 
 Pilot bölge: Eskişehir; tasarım çok şehirli kullanıma hazırdır ([ADR-0006](docs/kararlar/0006-hizmet-bolgesi-eskisehir.md)).
 
@@ -18,6 +18,7 @@ Pilot bölge: Eskişehir; tasarım çok şehirli kullanıma hazırdır ([ADR-000
 - [Problem ve çözüm](#problem-ve-çözüm)
 - [Özellikler](#özellikler)
 - [Ekran görüntüleri](#ekran-görüntüleri)
+- [Tasarım](#tasarım)
 - [Mimari](#mimari)
 - [Teknoloji yığını](#teknoloji-yığını)
 - [Yol haritası](#yol-haritası)
@@ -74,6 +75,15 @@ Durum: ✅ tamamlandı (İterasyon 1-2), ⏳ planlandı. Ayrıntılı kapsam iç
 
 > Harita karoları, stiller, rota motoru ve adres arama **Eskişehir OSM çıkarımından kendi sunucumuzda** üretilir: panelde ve uygulamada üçüncü taraf harita, yazı tipi veya adres servisine **sıfır istek** (ağ sekmesi kanıtlı). Kurye uygulaması 4,4 MB'lık Eskişehir paketini indirir (sha256 doğrulamalı, kaldığı yerden sürer), **uçak modunda** harita, "Rotam" ve adım adım navigasyon çalışır; "Aldım" / "Teslim ettim" eylemleri cihazda kuyruğa girer, bağlantı gelince `Idempotency-Key` ile **tam bir kez** gönderilir (cihaz zamanıyla); başka kuryeye geçmiş pakette açık bir "senkron çakışması" kartı çıkar. Haftalık OSM güncellemesi kapılı, sıfır kesintili mavi / yeşil geçişle yapılır. Kararlar: [ADR-0016](docs/kararlar/0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md), [ADR-0018](docs/kararlar/0018-harita-karo-ve-stil-sunumu.md), [ADR-0019](docs/kararlar/0019-kurye-cevrimdisi-harita-ve-navigasyon.md), [ADR-0020](docs/kararlar/0020-cevrimdisi-eylem-kuyrugu-ve-idempotency.md), [ADR-0021](docs/kararlar/0021-haftalik-osm-guncelleme-hatti.md), [ADR-0022](docs/kararlar/0022-uretim-dagitimi-ucretsiz-katman.md). Adres kalitesi (34 adres, 148 sorgu): <= 50 m isabet %71 -> %83 (sorgu normalleştirmesiyle), ayrıntı ve sınırlar: [adres kalitesi raporu](docs/benchmark/adres-kalitesi/README.md).
 
+### 🧭 Saha verisinden öğrenme, hazır sinyali ve teslim doğrulama (İterasyon 3b)
+
+> Adres defteri teslimlerin gerçek konumlarından **öğrenilen teslim noktalarını** tutar (kurye ve paket kimliği saklanmaz; ağırlıklı medyan + güven; yönetici noktayı sabitleyebilir). Restoran "paket hazır" bilgisini panelden, kuryeden ya da **girişsiz tek dokunuşluk işletme bağlantısından** (QR, kısa ömürlü opak jeton) bildirir; sistem işletme bazında hazırlık süresini öğrenip her pakete tahmin yazar. **Teslim geofence'i** kuryenin teslim noktasından uzakta "teslim ettim" demesini ölçer (varsayılan yalnızca ölçüm kipi), açıldığında gerekçeli geçersiz kılma ister ve çevrimdışı kuyrukla uyumludur. **Aynı restoran gruplama** (aynı alış ödülü, sonradan bağlama, ortak / ayrık değerlendirme) 30 tohumlu benchmark ile ölçüldü ve **varsayılan olarak kapalıdır**; önerilen ayarla pilot ölçeğinde aynı işletme oranını v2 taban çizgisine göre varsayılan günde +7,8, tepe günde +9,5 puan artırır (ayrıntı: [gruplama raporu](docs/benchmark/v2/gruplama.md)). Panel ve API kurgusal veriyle gerçek yığına karşı, kurye uygulaması emülatörde mock sunucuyla denendi; gerçek cihaz saha testi ve pilot ayarları açık.
+
+- ✅ Öğrenilmiş teslim noktaları: adres defteri paneli (harita + liste, sabitle / sıfırla), kurye kartında "Öğrenilmiş teslim noktası (N teslim)" rozeti, navigasyon hedefi etkin nokta ([ADR-0017](docs/kararlar/0017-saha-verisinden-ogrenen-harita.md); öğrenme KVKK onayına kadar kapalı)
+- ✅ Hazır sinyali: panel "Hazır" düğmesi, kuryede "Hazır değil" (süre çipleri) / "Hazır oldu", girişsiz işletme bağlantısı ve `/isletme` sayfası ([ADR-0025](docs/kararlar/0025-isletme-hazir-baglantisi.md)); hazırlık süresi tahmini
+- ✅ Teslim geofence'i: ölçüm / zorlama kipleri, uyarı sayfası, gerekçeli geçersiz kılma, adres kalitesi metriği ([ADR-0026](docs/kararlar/0026-teslim-geofence-politikasi.md))
+- ✅ Aynı restoran gruplama: motor ve benchmark hazır, kiracı ayarı kapalı; panelde dağıtım v2 ayar ekranı
+
 ### Sipariş ve paket yönetimi
 - ✅ Sınırsız işletme tanımı, firma başına çok kiracılı yapı (İterasyon 1)
 - ✅ Adres otomatik tamamlama (Photon / Google Places) ile paket ekleme (İterasyon 1)
@@ -87,6 +97,8 @@ Durum: ✅ tamamlandı (İterasyon 1-2), ⏳ planlandı. Ayrıntılı kapsam iç
 - ✅ Paket seçilince adres haritada açılır, tek dokunuşla navigasyon (İterasyon 1)
 - ✅ "Rotam" ekranı: tam ekran harita, numaralı durak listesi, optimal sıra, rota değişince şerit ve titreşim (İterasyon 2)
 - ✅ **Uygulama içi adım adım navigasyon**: eğik yön-yukarı harita, Türkçe sesli yönlendirme, yeniden rota, gündüz / gece teması, varışta kaydırarak onay ([ADR-0015](docs/kararlar/0015-uygulama-ici-navigasyon.md), İterasyon 2)
+- ✅ **Yeni navigasyon görünümü** (marka kimliği B, [ADR-0027](docs/kararlar/0027-marka-kimligi-ve-navigasyon-gorsel-dili.md)): koyu krom + neon vurgu, büyük manevra kartı, yeni ikon seti, gündüz açık "gümüş" harita; harita rota yönüne döner (course-up) ve **akıcılık iyileştirildi** ([ADR-0024](docs/kararlar/0024-navigasyon-render-performansi.md)): emülatörde ortalama kare hızı 23,2 -> 27-34 fps, 100 ms üzeri takılma 71 -> 5-10 (60 fps'e ulaşılamadı; gerçek cihazda ölçülmedi) (İterasyon 3b)
+- ✅ Öğrenilmiş teslim noktası rozeti, "Hazır değil" / "Hazır oldu", teslim geofence uyarısı ve gerekçeli geçersiz kılma (çevrimdışı kuyrukla) (İterasyon 3b)
 - ✅ Kontrollü ret (gerekçeli) ve devir isteği (İterasyon 2)
 - ✅ Kuryeler arası devir: yakındaki meslektaşa teklif, alıştan sonra kod / QR + konum ile fiziksel devir ([ADR-0010](docs/kararlar/0010-kuryeler-arasi-devir.md), İterasyon 2)
 - ⏳ Push bildirim (FCM), OTA güncelleme ve iOS dağıtımı (İterasyon 2b)
@@ -97,6 +109,7 @@ Durum: ✅ tamamlandı (İterasyon 1-2), ⏳ planlandı. Ayrıntılı kapsam iç
 - ✅ Konum kesilme uyarısı (İterasyon 1)
 - ✅ Rota çizgileri ve numaralı duraklar, öneri paneli, sürükle-bırak atama, bekleyenler ve toplu öneri, rota motoru durumu şeridi (İterasyon 2)
 - ✅ Devirler sekmesi, atama ve devir ayarları, metrikler sayfası (İterasyon 2)
+- ✅ Adres defteri, hazır düğmesi ve hazırlık tahmini, işletme bağlantısı (QR), geofence rozetleri, adres kalitesi ile hazırlık / bekleme metrikleri, teslim / hazırlık ve dağıtım v2 ayarları (İterasyon 3b)
 - ⏳ Hakediş ve raporlar (İterasyon 4)
 - ⏳ Kasa / nakit mutabakatı (İterasyon 4)
 - ⏳ ETA gösterimi müşteriye (İterasyon 4)
@@ -174,6 +187,25 @@ Aşağıdaki görüntüler emülatörde, **gerçek API + kendi karolarımız + k
   </tr>
 </table>
 
+### İterasyon 3b: öğrenme, hazır sinyali, geofence
+
+Görüntüler kurgusal seed verisiyle alındı (kişisel veri yok). Panel görüntülerinde harita altlığı sahte API'de boş zemindir; kurye görüntüleri emülatörde, mock sunucuyla alındı.
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/assets/iterasyon-3b/w-adres-defteri.png" width="440" alt="Adres defteri"><br><sub>Adres defteri: öğrenilmiş / sabitlenmiş teslim noktaları, güven ve özet</sub></td>
+    <td align="center"><img src="docs/assets/iterasyon-3b/w-baglanti-qr.png" width="440" alt="İşletme bağlantısı"><br><sub>İşletme "hazır" bağlantısı: QR + URL, bir kez gösterim</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/assets/iterasyon-3b/w-isletme-sayfasi.png" width="440" alt="İşletme sayfası"><br><sub>Girişsiz işletme sayfası: yalnızca o işletmenin açık paketleri, büyük HAZIR düğmesi</sub></td>
+    <td align="center"><img src="docs/assets/iterasyon-3b/w-geofence-rozeti.png" width="440" alt="Geofence rozeti"><br><sub>Paket ayrıntısında teslim geofence rozeti (ölçüm kipi)</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/assets/iterasyon-3b/m-hazir-sure-cipleri.png" width="220" alt="Hazır değil"><br><sub>Kurye: "Hazır değil" süre çipleri</sub></td>
+    <td align="center"><img src="docs/assets/iterasyon-3b/m-geofence-uyari.png" width="220" alt="Geofence uyarısı"><br><sub>Kurye: teslim noktasından uzakta uyarı sayfası</sub></td>
+  </tr>
+</table>
+
 ### Kurye uygulaması (Android)
 
 <table>
@@ -185,7 +217,7 @@ Aşağıdaki görüntüler emülatörde, **gerçek API + kendi karolarımız + k
   </tr>
 </table>
 
-**Uygulama içi navigasyon** ([ADR-0015](docs/kararlar/0015-uygulama-ici-navigasyon.md)): Google Maps gibi yeşil bant, eğik yön-yukarı kamera, Türkçe sesli yönlendirme, otomatik yeniden rota, gündüz / gece teması, koridor etiketleri ve varışta kaydırarak onay. Emülatörde gerçek API + OSRM ile GPS oynatılarak alındı.
+**Uygulama içi navigasyon** ([ADR-0015](docs/kararlar/0015-uygulama-ici-navigasyon.md)): marka görsel diliyle (ADR-0027: koyu krom, neon vurgu, gündüz açık "gümüş" harita) büyük manevra kartı, yön-yukarı kamera, Türkçe sesli yönlendirme, otomatik yeniden rota, gündüz / gece teması, koridor etiketleri ve varışta kaydırarak onay. Emülatörde GPS oynatılarak alındı (kurgusal veri). Tasarım maketleri ve marka belirteçleri: [docs/tasarim/navigasyon](docs/tasarim/navigasyon/README.md), [docs/tasarim/marka](docs/tasarim/marka/README.md). Akıcılık ölçümü emülatörde yapıldı (ort. kare hızı 23,2 -> 27-34 fps); 60 fps'e ulaşılamadı, gerçek cihaz testi açık.
 
 <table>
   <tr>
@@ -214,6 +246,15 @@ Aşağıdaki görüntüler emülatörde, **gerçek API + kendi karolarımız + k
 </table>
 
 </details>
+
+## Tasarım
+
+Kurye uygulamasının navigasyon ekranı için üç görsel varyant ([A Sade, B Koyu / premium, C Marka / canlı](docs/tasarim/navigasyon/README.md)) statik HTML maketleri olarak hazırlandı; ürün sahibi **B**'yi seçti ve bu, ürünün marka dili oldu ([ADR-0027](docs/kararlar/0027-marka-kimligi-ve-navigasyon-gorsel-dili.md)). Maketler indirilip tarayıcıda çift tıklayarak açılır (yazı tipleri için çevrimiçi Google Fonts kullanır; bağlantı yoksa sistem yazı tiplerine düşer).
+
+- [Seçim kaydı](docs/tasarim/navigasyon/secim.md) ve [varyant karşılaştırması](docs/tasarim/navigasyon/README.md)
+- Maketler: [üç varyant yan yana (`index.html`)](docs/tasarim/navigasyon/index.html), [seçilen B'nin son hali (`b-v1.html`)](docs/tasarim/navigasyon/b-v1.html)
+- Belirteçler: [navigasyon `tokens.json`](docs/tasarim/navigasyon/tokens.json), [marka kimliği](docs/tasarim/marka/README.md) ve [marka `tokens.json`](docs/tasarim/marka/tokens.json) (neon `#C8FF3A`, açık zeminde `#3F6212`; koyu zeminde her metin >= 7:1 kontrast)
+- Navigasyon akıcılığı: [ADR-0024](docs/kararlar/0024-navigasyon-render-performansi.md) (emülatörde ort. kare hızı 23,2 -> 27-34 fps; 60 fps elde edilmedi)
 
 ## Mimari
 
@@ -296,7 +337,8 @@ flowchart LR
 | 2 | **Rota uyumlu atama:** gerçek rota motoru (OSRM + VROOM), rota uyumlu öneri / toplu atama, bekleyenler, ret ve kuryeler arası devir, "Rotam", uygulama içi navigasyon, benchmark | ✅ Tamamlandı |
 | 2b | Platform ve sağlamlaştırma: push (FCM), iOS / TestFlight, RLS, OTA, aynı restoranın mevcut rotadaki paketiyle gruplanması, gerçek cihaz saha testi | ⏳ |
 | 3a | **Eskişehir'e özel harita platformu (kendi yığınımız):** kendi karoları ve stilleri, kendi Photon adres arama, haftalık OSM güncelleme hattı (mavi / yeşil), kurye uygulamasında çevrimdışı harita, navigasyon ve eylem kuyruğu (idempotent), üretim hazırlığı ([ADR-0016](docs/kararlar/0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md), [ADR-0018](docs/kararlar/0018-harita-karo-ve-stil-sunumu.md)-[ADR-0022](docs/kararlar/0022-uretim-dagitimi-ucretsiz-katman.md)) | ✅ Tamamlandı (açık: gerçek cihaz, iOS, FCM, RLS, çevrimdışı ETA soluklaştırma, sürüm derlemesi) |
-| 3b-3c | Saha verisinden öğrenen teslim noktaları ve hızlar ([ADR-0017](docs/kararlar/0017-saha-verisinden-ogrenen-harita.md)) | ⏳ |
+| 3b | **Saha verisinden öğrenme ve teslim doğrulama:** öğrenilmiş teslim noktaları, restoran hazır sinyali ve işletme bağlantısı, teslim geofence'i, aynı restoran gruplama (varsayılan kapalı), yeni navigasyon görünümü ve akıcılık ([ADR-0017](docs/kararlar/0017-saha-verisinden-ogrenen-harita.md), [ADR-0024](docs/kararlar/0024-navigasyon-render-performansi.md)-[ADR-0027](docs/kararlar/0027-marka-kimligi-ve-navigasyon-gorsel-dili.md)) | ✅ Tamamlandı (açık: gerçek cihaz, pilot ayar kararları) |
+| 3c | Öğrenilmiş hızlar, ETA hatası önce / sonra (pilot verisi >= 4 hafta gerekir) | ⏳ |
 | 4 | Hakediş, kasa mutabakatı, ETA gösterimi | ⏳ |
 | 5+ | İşletme paneli, POS / platform entegrasyonları, SoftPOS, faturalama | ⏳ |
 

@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Navigasyon Tasarım Varyantları</title>
+<meta name="description" content="Kurye uygulaması adım adım navigasyon ekranı için üç görsel tasarım önerisi (A Sade, B Koyu/premium, C Marka/canlı), gündüz ve gece.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@600;700;800&family=Nunito:wght@600;700;800;900&family=Noto+Sans:wght@500;700&display=swap">
+<style>
+  :root {
+    --page: #E9EAED; --ink: #16191E; --muted: #59606B; --card: #FFFFFF; --line: #D7DAE0; --chip: #F1F3F5;
+    --sel: #16191E; --selInk: #FFFFFF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page: #111316; --ink: #E7E9EC; --muted: #9AA1AB; --card: #1A1D22; --line: #2B3038; --chip: #23272E;
+      --sel: #E7E9EC; --selInk: #111316;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #111316; --ink: #E7E9EC; --muted: #9AA1AB; --card: #1A1D22; --line: #2B3038; --chip: #23272E;
+    --sel: #E7E9EC; --selInk: #111316;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--page); color: var(--ink);
+    font-family: Inter, Roboto, system-ui, "Segoe UI", Arial, sans-serif; font-size: 15px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1520px; margin: 0 auto; padding: 28px 16px 72px; }
+  h1 { font-size: 28px; line-height: 1.2; margin: 0 0 6px; letter-spacing: -0.02em; }
+  h2 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
+  h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 18px 0 8px; font-weight: 700; }
+  p { margin: 0 0 10px; }
+  .lead { color: var(--muted); max-width: 900px; }
+  .intro { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: start; margin-bottom: 18px; }
+  .ref { display: flex; gap: 10px; align-items: flex-start; }
+  .ref figure { margin: 0; text-align: center; font-size: 12px; color: var(--muted); }
+  .ref img { width: 92px; height: auto; border-radius: 12px; border: 1px solid var(--line); display: block; margin-bottom: 4px; }
+  .moment { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; font-size: 14px; margin: 12px 0 0; max-width: 900px; }
+  .controls { position: sticky; top: 0; z-index: 100; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center;
+    background: color-mix(in srgb, var(--page) 88%, transparent); backdrop-filter: blur(6px); padding: 10px 0; margin-bottom: 14px; }
+  .seg { display: inline-flex; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; }
+  .seg button { font: inherit; font-size: 14px; font-weight: 600; border: 0; background: transparent; color: var(--ink); padding: 7px 14px; border-radius: 999px; cursor: pointer; min-height: 36px; }
+  .seg button[aria-pressed="true"] { background: var(--sel); color: var(--selInk); }
+  .ctl-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-right: 6px; }
+  .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: start; }
+  @media (max-width: 1180px) { .cols { grid-template-columns: minmax(0, 1fr); max-width: 720px; margin: 0 auto; } .intro { grid-template-columns: 1fr; } }
+  .col { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 16px; min-width: 0; }
+  .col-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .badge { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-weight: 800; color: #fff; flex: none; }
+  .col-head .sub { font-size: 13px; color: var(--muted); }
+  .phones { display: flex; gap: 12px; justify-content: center; }
+  .phone-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); font-weight: 600; }
+  .desc { margin-top: 14px; font-size: 14.5px; }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 6px; }
+  .sw { font-size: 11px; line-height: 1.25; color: var(--muted); }
+  .sw i { display: block; height: 30px; border-radius: 8px; border: 1px solid rgba(0,0,0,.12); margin-bottom: 3px; }
+  .sw b { display: block; color: var(--ink); font-weight: 600; }
+  .row-label { font-size: 12px; font-weight: 700; margin: 8px 0 4px; }
+  .radii, .shadows { display: flex; flex-wrap: wrap; gap: 10px; }
+  .radius-demo { width: 64px; height: 44px; border: 2px solid var(--ink); border-right: 0; border-bottom: 0; opacity: .75; }
+  .rd { font-size: 11px; color: var(--muted); text-align: center; }
+  .sh-demo { width: 78px; height: 48px; border-radius: 12px; background: #fff; display: grid; place-items: center; font-size: 11px; color: #5F6368; }
+  .shadow-stage { background: #F1EFEA; border-radius: 14px; padding: 14px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .types { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .type-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 6px 12px; border-top: 1px solid var(--line); }
+  .type-row:first-child { border-top: 0; }
+  .type-row small { color: var(--muted); font-size: 11px; white-space: nowrap; }
+  .type-row span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .icons { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .ico { border-radius: 14px; padding: 10px 6px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; text-align: center; line-height: 1.2; }
+  .ui-icons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .ui-icons span { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; }
+  .gallery { border-radius: 16px; padding: 14px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .gallery > * { position: static !important; }
+  .note { font-size: 12.5px; color: var(--muted); }
+  table.cmp { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; font-size: 14px; }
+  .cmp th, .cmp td { text-align: left; padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+  .cmp thead th { border-top: 0; background: var(--chip); font-size: 13px; }
+  .table-wrap { overflow-x: auto; margin-top: 28px; }
+  footer { margin-top: 24px; font-size: 12.5px; color: var(--muted); }
+
+  /* ------------------------------------------------------------------ telefon */
+  .phone-wrap { position: relative; flex: none; }
+  .phone { position: absolute; left: 0; top: 0; width: 410px; height: 864px; transform-origin: 0 0; padding: 10px;
+    border-radius: 58px; background: #0C0D10; box-shadow: 0 0 0 1px #2A2D33 inset, 0 18px 40px rgba(0,0,0,.25); }
+  .screen { position: relative; width: 390px; height: 844px; border-radius: 48px; overflow: hidden; isolation: isolate;
+    font-family: var(--font-ui); color: var(--panelText); -webkit-font-smoothing: antialiased; line-height: 1.2; }
+  .glare .screen { filter: contrast(.78) saturate(.75) brightness(1.08); }
+  .glare .screen::after { content: ""; position: absolute; inset: 0; z-index: 60; pointer-events: none;
+    background: linear-gradient(125deg, rgba(255,255,255,.62) 0%, rgba(255,255,255,.18) 45%, rgba(255,255,255,.42) 100%); }
+  .map { position: absolute; inset: 0; overflow: hidden; }
+  .plane { position: absolute; left: -305px; top: -1156px; width: 1000px; height: 2000px; transform-origin: 500px 2000px; }
+  .plane svg, .overlay { display: block; }
+  .overlay { position: absolute; left: 0; top: 0; }
+  .puck { position: absolute; z-index: 5; pointer-events: none; }
+  .num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+  .statusbar { position: absolute; top: 0; left: 0; right: 0; height: 34px; z-index: 40; display: flex; align-items: center; justify-content: space-between; padding: 4px 30px 0; font: 600 14px/1 var(--font-ui); }
+  .statusbar .sb-icons { display: flex; gap: 6px; align-items: center; }
+  .scrim { position: absolute; top: 0; left: 0; right: 0; height: 64px; z-index: 15; pointer-events: none; }
+  .top { position: absolute; top: 0; left: 0; right: 0; z-index: 20; display: flex; flex-direction: column; }
+  .banner { color: var(--bannerText); }
+  .dist { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-size: calc(var(--fs-distance) * 1px); font-weight: var(--fw-distance); letter-spacing: calc(var(--ls-distance) * 1px); line-height: .95; white-space: nowrap; }
+  .dist .u { font-size: calc(var(--fs-distanceUnit) * 1px); font-weight: var(--fw-distanceUnit); letter-spacing: 0; }
+  .instr { font-size: calc(var(--fs-instruction) * 1px); font-weight: var(--fw-instruction); line-height: 1.2; margin-top: 4px; }
+  .b-main { display: flex; align-items: center; }
+  .b-txt { flex: 1; min-width: 0; }
+  .b-next { display: flex; align-items: center; gap: 10px; font-size: calc(var(--fs-next) * 1px); font-weight: var(--fw-next); min-width: 0; }
+  .b-next .lbl { color: var(--bannerSub); flex: none; }
+  .b-next svg { flex: none; }
+  .nt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
+  .toast { display: flex; align-items: center; gap: 10px; font-size: calc(var(--fs-toast) * 1px); font-weight: var(--fw-toast);
+    background: var(--toastBg); color: var(--toastText); border-radius: calc(var(--r-toast) * 1px); padding: 12px 18px 12px 14px; margin-top: 10px; align-self: center; white-space: nowrap; }
+  .toast svg { color: var(--toastIcon); flex: none; }
+  .speed { position: absolute; left: 12px; bottom: 150px; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: var(--panel); color: var(--panelText); }
+  .speed b { font-family: var(--font-num); font-size: calc(var(--fs-speed) * 1px); font-weight: var(--fw-speed); line-height: 1; }
+  .speed small { font-size: calc(var(--fs-speedUnit) * 1px); font-weight: var(--fw-speedUnit); margin-top: 2px; }
+  .pill { position: absolute; right: 12px; bottom: 150px; z-index: 10; height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 20px 0 16px;
+    font-size: calc(var(--fs-pill) * 1px); font-weight: var(--fw-pill); border-radius: calc(var(--r-pill) * 1px); white-space: nowrap; }
+  .overview { background: var(--panel); color: var(--panelText); }
+  .recenter { height: 64px; background: var(--accent); color: var(--accentText); padding: 0 24px 0 18px; font-size: calc(var(--fs-pill) * 1px + 2px); }
+  .bottom { position: absolute; z-index: 20; display: flex; align-items: center; gap: 8px; background: var(--panel); color: var(--panelText); }
+  .b-info { flex: 1; min-width: 0; }
+  .b-time { font-family: var(--font-num); font-size: calc(var(--fs-time) * 1px); font-weight: var(--fw-time); line-height: 1.05; color: var(--time); white-space: nowrap; }
+  .b-time .u { font-size: .6em; }
+  .b-sub { font-size: calc(var(--fs-sub) * 1px); font-weight: var(--fw-sub); color: var(--panelMuted); margin-top: 3px; white-space: nowrap; }
+  .btn { width: 68px; height: 64px; border-radius: calc(var(--r-button) * 1px); background: var(--surface2); color: var(--panelText);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: calc(var(--fs-button) * 1px); font-weight: var(--fw-button); flex: none; }
+  .btn.exit { background: var(--dangerSoft); color: var(--danger); }
+  .gesture { position: absolute; bottom: 8px; left: 50%; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; z-index: 30; opacity: .55; }
+
+  /* A: Sade */
+  .v-A .top { padding: 40px 10px 0; }
+  .v-A .banner { background: var(--banner); border-radius: calc(var(--r-banner) * 1px); box-shadow: var(--sh1), var(--sh3); padding: 14px 14px 12px 12px; }
+  .v-A .b-main { gap: 12px; }
+  .v-A .tile { width: 76px; height: 76px; border-radius: calc(var(--r-maneuverTile) * 1px); background: var(--maneuverTile); display: grid; place-items: center; flex: none; }
+  .v-A .b-next { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--bannerDivider); }
+  .v-A .toast { box-shadow: var(--sh2); }
+  .v-A .speed { width: 66px; height: 66px; border-radius: 50%; box-shadow: var(--sh2); }
+  .v-A .overview { box-shadow: var(--sh2); }
+  .v-A .overview svg { color: var(--accent); }
+  .v-A .recenter { box-shadow: var(--sh2); }
+  .v-A .bottom { left: 0; right: 0; bottom: 0; border-radius: calc(var(--r-sheet) * 1px) calc(var(--r-sheet) * 1px) 0 0; padding: 20px 12px 30px 18px; box-shadow: var(--sh3); }
+  .v-A .bottom::before { content: ""; position: absolute; top: 8px; left: 50%; width: 36px; height: 4px; margin-left: -18px; border-radius: 2px; background: var(--border); }
+  .v-A.m-night .banner, .v-A.m-night .bottom, .v-A.m-night .speed, .v-A.m-night .overview { box-shadow: 0 0 0 1px var(--border); }
+
+  /* B: Koyu / premium */
+  .v-B .top { padding: 38px 8px 0; }
+  .v-B .banner { background: var(--banner); border: 1px solid var(--glassBorder); border-radius: calc(var(--r-banner) * 1px); box-shadow: var(--sh2); overflow: hidden; }
+  .v-B .b-main { gap: 8px; padding: 10px 16px 8px 6px; }
+  .v-B .b-next { background: rgba(255,255,255,.05); border-top: 1px solid var(--bannerDivider); padding: 10px 16px; }
+  .v-B .b-next .lbl { color: var(--accent); text-transform: uppercase; letter-spacing: .08em; font-size: 12px; font-weight: 800; }
+  .v-B .dist .u { color: var(--bannerSub); }
+  .v-B .toast { align-self: flex-start; margin-left: 2px; box-shadow: var(--sh1); }
+  .v-B .speed { width: 72px; height: 72px; border-radius: calc(var(--r-badge) * 1px); border: 1px solid var(--glassBorder); box-shadow: var(--sh2); }
+  .v-B .speed small { text-transform: uppercase; letter-spacing: .06em; color: var(--panelMuted); }
+  .v-B .overview { border: 1px solid var(--glassBorder); box-shadow: var(--sh2); }
+  .v-B .overview svg { color: var(--accent); }
+  .v-B .recenter { box-shadow: var(--sh2); }
+  .v-B .bottom { left: 8px; right: 8px; bottom: 24px; border-radius: calc(var(--r-sheet) * 1px); padding: 10px 10px 10px 18px; border: 1px solid var(--glassBorder); box-shadow: var(--sh3); }
+  .v-B .btn { text-transform: uppercase; letter-spacing: .04em; }
+  .v-B .btn.exit { box-shadow: inset 0 0 0 1.5px var(--danger); }
+  .v-B .b-sub .eta { color: var(--accent2); }
+
+  /* C: Marka / canlı */
+  .v-C .banner { background: var(--banner); border-radius: 0 0 calc(var(--r-banner) * 1px) calc(var(--r-banner) * 1px); padding: 42px 18px 36px 12px; box-shadow: var(--sh2); }
+  .v-C .b-main { gap: 10px; }
+  .v-C .b-next { align-self: flex-start; max-width: calc(100% - 32px); margin: -26px 0 0 16px; background: var(--nextChip); color: var(--bannerText);
+    border-radius: 999px; padding: 10px 20px 10px 16px; box-shadow: var(--sh1); position: relative; z-index: 2; }
+  .v-C .toast { margin-top: 12px; box-shadow: var(--sh1); }
+  .v-C .speed { width: 68px; height: 68px; border-radius: 50%; box-shadow: var(--sh2), inset 0 0 0 4px var(--accent); }
+  .v-C .overview { box-shadow: var(--sh2); }
+  .v-C .overview svg { color: var(--accent); }
+  .v-C .recenter { background: var(--accentWarm); color: var(--accentWarmText); box-shadow: var(--sh2); }
+  .v-C .bottom { left: 0; right: 0; bottom: 0; border-radius: calc(var(--r-sheet) * 1px) calc(var(--r-sheet) * 1px) 0 0; padding: 16px 12px 30px 20px; box-shadow: var(--sh3); }
+  .v-C .btn { width: 70px; border-radius: 32px; }
+  .v-C .btn.exit { background: var(--danger); color: #FFFFFF; }
+  .v-C.m-night .btn.exit { color: #2A0707; }
+  .v-C.m-night .banner, .v-C.m-night .bottom { box-shadow: 0 0 0 1px var(--border); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="intro">
+    <div>
+      <h1>Navigasyon ekranı: üç tasarım önerisi</h1>
+      <p class="lead">Kurye uygulamasının adım adım navigasyon ekranı için üç görsel dil. Hepsi aynı anı gösterir, aynı bilgiyi taşır ve aynı kuralları korur (çok büyük mesafe ve ok, eldivenle basılabilir 56&nbsp;dp+ hedefler, kasıtlı çıkış, puk alt üçte birde, rota puktan yukarı). Fark yalnızca görünüşte: renkler, köşeler, gölgeler, yazı tipi, ikonlar ve harita paleti. Uygulama kodu henüz değişmedi.</p>
+      <p class="moment"><b>Gösterilen an:</b> 50&nbsp;m sonra Cengiz Topel Caddesi'ne sağa dönüş, ardından Müderris Sokak'a sola. Hız 40&nbsp;km/sa, kalan 1&nbsp;dk · 750&nbsp;m · varış 16:39. Ses açık. Yukarıdaki düğmelerle gündüz / gece, "harita kaydırıldı" (Ortala düğmesi), bildirim ve kaba bir güneş parlaması benzetimi açılıp kapanır.</p>
+    </div>
+    <div class="ref" aria-label="Mevcut ekran">
+      <figure><img src="ref/mevcut-ekran-1.png" alt="Mevcut navigasyon ekranı, gündüz" loading="lazy"><figcaption>Mevcut (1)</figcaption></figure>
+      <figure><img src="ref/mevcut-ekran-2.png" alt="Mevcut navigasyon ekranı, yeni rota bildirimiyle" loading="lazy"><figcaption>Mevcut (2)</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="controls" role="toolbar" aria-label="Görünüm ayarları">
+    <div><span class="ctl-label">Tema</span><span class="seg" data-key="theme"><button data-val="day">Gündüz</button><button data-val="night">Gece</button><button data-val="both">Yan yana</button></span></div>
+    <div><span class="ctl-label">Harita</span><span class="seg" data-key="pan"><button data-val="0">Takipte</button><button data-val="1">Kaydırıldı (Ortala)</button></span></div>
+    <div><span class="ctl-label">Bildirim</span><span class="seg" data-key="toast"><button data-val="1">Göster</button><button data-val="0">Gizle</button></span></div>
+    <div><span class="ctl-label">Güneş</span><span class="seg" data-key="glare"><button data-val="0">Normal</button><button data-val="1">Parlama benzetimi</button></span></div>
+  </div>
+
+  <noscript><p><b>Bu sayfa telefon görünümlerini JavaScript ile çizer.</b> Lütfen tarayıcıda JavaScript'i açın; belirteçler için <code>tokens.json</code>, karşılaştırma için <code>README.md</code> dosyasına bakın.</p></noscript>
+
+  <div class="cols" id="cols"></div>
+
+  <div class="table-wrap">
+    <table class="cmp">
+      <thead><tr><th>Ölçüt</th><th>A · Sade</th><th>B · Koyu / premium</th><th>C · Marka / canlı</th></tr></thead>
+      <tbody>
+        <tr><th>Güneşte okunurluk</th><td>Çok iyi: beyaz kart, siyaha yakın metin (16:1), mavi karoda beyaz ok</td><td>İyi: panel kontrastı çok yüksek ama koyu yüzey ekran camında yansımayı artırır</td><td>Çok iyi: teal bantta beyaz metin (5,5:1), beyaz alt panel</td></tr>
+        <tr><th>Gece</th><td>İyi: koyu gri yüzeyler, kısık harita</td><td>Çok iyi: en az parlama, harita neredeyse siyah</td><td>İyi: koyu teal bant, sıcak kısık harita</td></tr>
+        <tr><th>Eldiven hedefi</th><td>Düğme 68×64, hap 56, Ortala 64</td><td>Düğme 68×64, hap 56, Ortala 64</td><td>Düğme 70×64 hap, hap 56, Ortala 64</td></tr>
+        <tr><th>Uygulama maliyeti</th><td>M</td><td>M</td><td>S–M</td></tr>
+        <tr><th>MapLibre stil değişikliği</th><td>Evet: yol kenarlıkları açılır, ana yol sarısı kısılır, elle gece paleti</td><td>Evet: iki palet de yeni (gümüş gündüz, koyu gece)</td><td>Küçük: sıcak tonlar + elle gece paleti</td></tr>
+        <tr><th>Yeni yazı tipi</th><td>Inter (isteğe bağlı; Roboto ile de çalışır)</td><td>Barlow Condensed (rakamlar) + Inter</td><td>Nunito</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <footer>Yazı tipleri Google Fonts (OFL), ikonlar elle çizilmiş satır içi SVG (Lucide tarzı). Bağlantı yoksa sistem yazı tipleriyle çizilir. Harita etiketleri her varyantta Noto Sans'tır, çünkü harita glyph seti (ADR-0018) değişmiyor. Belirteçler: <code>tokens.json</code> · ayrıntı ve uygulama notları: <code>README.md</code>.</footer>
+</div>
+
+<script id="tokens" type="application/json">{"$description":"Kurye navigasyon ekranı tasarım belirteçleri (A: Sade, B: Koyu/premium, C: Marka/canlı). 'ui.day' / 'ui.night' anahtarları apps/courier-mobile/src/navigation/engine/theme.ts içindeki NavTheme alanlarıyla birebir aynı adlıdır (+ birkaç yeni alan). 'map.day' anahtarları infra/map/scripts/generate-styles.mjs içindeki NAV_DAY paletinin alanlarıdır; 'map.night' önerisi şu an formülle türetilen gece stilinin yerine elle ayarlı palettir. Boyutlar dp (RN) / px (CSS) cinsindendir.","version":1,"shared":{"touchMin":56,"buttonMin":64,"puckScreenY":0.71,"nightWindow":"19:30-06:30 (otomatik; sistem koyu tema da geceyi açar)","fontsLicense":"Tüm yazı tipleri Google Fonts üzerinden OFL lisanslı ve ücretsizdir; uygulamaya TTF olarak gömülür (expo-font), çalışma zamanında ağ isteği yoktur.","mapLabelFont":"Noto Sans Regular / Bold (ADR-0018 glyph seti; değişmez)","spacing":{"xxs":2,"xs":4,"sm":8,"md":12,"lg":16,"xl":20,"xxl":24}},"variants":{"A":{"name":"Sade / Google Maps benzeri","fonts":{"ui":"Inter","numerals":"Inter","fallback":["Roboto","system-ui","Segoe UI","Arial","sans-serif"],"numeralFeatures":"tabular-nums"},"ui":{"day":{"banner":"#FFFFFF","bannerText":"#202124","bannerSub":"#5F6368","bannerDivider":"#E8EAED","maneuverTile":"#1A73E8","maneuverIcon":"#FFFFFF","panel":"#FFFFFF","panelText":"#202124","panelMuted":"#5F6368","border":"#E3E5E8","surface2":"#F1F3F4","accent":"#1A73E8","accentText":"#FFFFFF","time":"#188038","danger":"#C5221F","dangerSoft":"#FCE8E6","toastBg":"#303134","toastText":"#FFFFFF","toastIcon":"#8AB4F8","route":"#1A73E8","routeCasing":"#1557B0","me":"#1A73E8","meStroke":"#FFFFFF","meHalo":"rgba(26,115,232,0.14)","meCone":"rgba(26,115,232,0.30)","chipBg":"#FFFFFF","chipText":"#3C4043","chipBorder":"#DADCE0","statusBar":"dark"},"night":{"banner":"#2B2D31","bannerText":"#E8EAED","bannerSub":"#9AA0A6","bannerDivider":"#3C4043","maneuverTile":"#8AB4F8","maneuverIcon":"#0B1A33","panel":"#202124","panelText":"#E8EAED","panelMuted":"#9AA0A6","border":"#3C4043","surface2":"#303134","accent":"#8AB4F8","accentText":"#0B1A33","time":"#81C995","danger":"#F28B82","dangerSoft":"#3C2522","toastBg":"#E8EAED","toastText":"#202124","toastIcon":"#1A73E8","route":"#669DF6","routeCasing":"#1F3A68","me":"#8AB4F8","meStroke":"#202124","meHalo":"rgba(138,180,248,0.16)","meCone":"rgba(138,180,248,0.30)","chipBg":"#2B2D31","chipText":"#E8EAED","chipBorder":"#3C4043","statusBar":"light"}},"map":{"day":{"bg":"#F5F3EF","residential":"#F1EFEA","building":"#E8E5DF","buildingLine":"#DCD8D0","park":"#D4EAC6","water":"#AAD3F2","roadFill":{"primary":"#FCDD8A","secondary":"#FDE9A8","minor":"#FFFFFF"},"roadCase":{"primary":"#E3B85A","secondary":"#EBCB78","minor":"#E2DED6"},"rail":"#BDB8B0","oneway":"#9AA0A6","text":{"road":"#3C4043","halo":"#FFFFFF","house":"#5F6368","poi":"#8C5A2B"}},"night":{"bg":"#1D2126","residential":"#20252B","building":"#262C33","buildingLine":"#2E353D","park":"#1E3027","water":"#17263B","roadFill":{"primary":"#6E6044","secondary":"#5B5340","minor":"#353B43"},"roadCase":{"primary":"#4F452F","secondary":"#463F30","minor":"#2A2F36"},"rail":"#4A4F57","oneway":"#6B7178","text":{"road":"#C4C9CF","halo":"#1D2126","house":"#9AA0A6","poi":"#D9A25B"}}},"radius":{"banner":24,"sheet":24,"button":20,"pill":28,"badge":18,"toast":16,"chip":10,"maneuverTile":18},"shadow":{"level1":{"css":"0 1px 2px rgba(60,64,67,.30), 0 1px 3px 1px rgba(60,64,67,.15)","elevation":2},"level2":{"css":"0 1px 3px rgba(60,64,67,.30), 0 4px 8px 3px rgba(60,64,67,.15)","elevation":4},"level3":{"css":"0 2px 4px rgba(60,64,67,.25), 0 8px 20px 4px rgba(60,64,67,.18)","elevation":8},"night":"Gece gölge yok; ayrım yüzey tonuyla (panel #202124 / banner #2B2D31)."},"type":{"distance":{"size":64,"weight":800,"letterSpacing":-1.5},"distanceUnit":{"size":34,"weight":700},"instruction":{"size":21,"weight":600,"lineHeight":26},"next":{"size":17,"weight":600},"time":{"size":30,"weight":800},"sub":{"size":16,"weight":600},"button":{"size":13,"weight":700},"speed":{"size":26,"weight":800},"speedUnit":{"size":11,"weight":700},"pill":{"size":18,"weight":700},"toast":{"size":16,"weight":600}},"icon":{"ui":"Lucide tarzı çizgi, 24 ızgara, stroke 2, yuvarlak uç; düğmelerde 28 dp","maneuver":"Yuvarlak uçlu çizgi (stroke 11/100), açık ok başı (çizgi), mavi kare karo içinde beyaz","maneuverSize":{"banner":60,"tile":76,"next":26}}},"B":{"name":"Koyu / premium","fonts":{"ui":"Inter","numerals":"Barlow Condensed","fallback":["Roboto Condensed","Arial Narrow","sans-serif-condensed","Roboto","sans-serif"],"numeralFeatures":"tabular-nums"},"ui":{"day":{"banner":"rgba(17,19,24,0.94)","bannerSolid":"#111318","bannerText":"#FFFFFF","bannerSub":"#A1A8B3","bannerDivider":"rgba(255,255,255,0.10)","glassBorder":"rgba(255,255,255,0.10)","maneuverIcon":"#C8FF3A","panel":"rgba(17,19,24,0.94)","panelSolid":"#111318","panelText":"#F5F7FA","panelMuted":"#A1A8B3","border":"#2A2E36","surface2":"#22262E","accent":"#C8FF3A","accentText":"#0B0D10","accent2":"#22D3EE","time":"#FFFFFF","danger":"#FF4D4F","dangerSoft":"#3A1517","toastBg":"#C8FF3A","toastText":"#0B0D10","toastIcon":"#0B0D10","route":"#0091E6","routeCasing":"#00385A","me":"#0091E6","meStroke":"#FFFFFF","meHalo":"rgba(0,145,230,0.14)","meCone":"rgba(0,145,230,0.30)","chipBg":"#111318","chipText":"#F5F7FA","chipBorder":"#111318","statusBar":"dark"},"night":{"banner":"rgba(10,12,15,0.94)","bannerSolid":"#0A0C0F","bannerText":"#F5F7FA","bannerSub":"#8E96A3","bannerDivider":"rgba(255,255,255,0.08)","glassBorder":"rgba(255,255,255,0.08)","maneuverIcon":"#B8F03A","panel":"rgba(10,12,15,0.94)","panelSolid":"#0A0C0F","panelText":"#F5F7FA","panelMuted":"#8E96A3","border":"#232831","surface2":"#1A1E25","accent":"#B8F03A","accentText":"#0B0D10","accent2":"#22D3EE","time":"#F5F7FA","danger":"#FF5F61","dangerSoft":"#2E1214","toastBg":"#B8F03A","toastText":"#0B0D10","toastIcon":"#0B0D10","route":"#22D3EE","routeCasing":"#06343D","me":"#22D3EE","meStroke":"#0A0C0F","meHalo":"rgba(34,211,238,0.14)","meCone":"rgba(34,211,238,0.28)","chipBg":"#1A1E25","chipText":"#E6EAF0","chipBorder":"#2A303A","statusBar":"light"}},"map":{"day":{"bg":"#ECEEF1","residential":"#E7EAEE","building":"#DDE1E6","buildingLine":"#CFD5DC","park":"#D3E2D6","water":"#B5CEE3","roadFill":{"primary":"#FFFFFF","secondary":"#FFFFFF","minor":"#FFFFFF"},"roadCase":{"primary":"#9AA4B1","secondary":"#A9B2BE","minor":"#CDD3DA"},"rail":"#A7AFB9","oneway":"#8D96A3","text":{"road":"#3A414B","halo":"#FFFFFF","house":"#4F5763","poi":"#6B5E4A"}},"night":{"bg":"#0E1116","residential":"#11151B","building":"#161B23","buildingLine":"#1C222B","park":"#102019","water":"#0B1A2A","roadFill":{"primary":"#433D2F","secondary":"#39352B","minor":"#232A34"},"roadCase":{"primary":"#2B271F","secondary":"#2A2720","minor":"#1A1F27"},"rail":"#2E3540","oneway":"#4A5260","text":{"road":"#8E98A8","halo":"#0E1116","house":"#8E98A8","poi":"#C9A25E"}}},"radius":{"banner":20,"sheet":26,"button":18,"pill":28,"badge":16,"toast":12,"chip":8,"maneuverTile":0},"shadow":{"level1":{"css":"0 2px 6px rgba(0,0,0,.35)","elevation":3},"level2":{"css":"0 8px 24px rgba(0,0,0,.45)","elevation":8},"level3":{"css":"0 12px 32px rgba(0,0,0,.55)","elevation":12},"glass":"Bulanıklık (blur) YOK: %94 opak koyu yüzey + 1 dp açık kenar (glassBorder). Android'de canlı blur pahalıdır."},"type":{"distance":{"size":84,"weight":800,"letterSpacing":-1,"family":"numerals"},"distanceUnit":{"size":40,"weight":700,"family":"numerals"},"instruction":{"size":21,"weight":600,"lineHeight":26},"next":{"size":16,"weight":600},"time":{"size":38,"weight":800,"family":"numerals"},"sub":{"size":15,"weight":600},"button":{"size":12,"weight":700,"letterSpacing":0.4},"speed":{"size":32,"weight":800,"family":"numerals"},"speedUnit":{"size":11,"weight":700},"pill":{"size":17,"weight":700},"toast":{"size":15,"weight":700}},"icon":{"ui":"Lucide tarzı çizgi, stroke 2.25, açık gri; etkin durum lime","maneuver":"Geometrik kalın çizgi (stroke 14/100), dolu keskin ok başı, kavşağın diğer kolları soluk 'hayalet' çizgi; lime","maneuverSize":{"banner":92,"next":26}}},"C":{"name":"Marka / canlı","brand":{"primary":"#0F766E","primaryDark":"#115E59","warm":"#EA580C","source":"apps/courier-mobile/src/components/ui.tsx colors.primary (#0F766E) + durak rozeti turuncusu"},"fonts":{"ui":"Nunito","numerals":"Nunito","fallback":["Roboto","system-ui","Segoe UI","Arial","sans-serif"],"numeralFeatures":"tabular-nums"},"ui":{"day":{"banner":"#0F766E","bannerText":"#FFFFFF","bannerSub":"#CCFBF1","bannerDivider":"rgba(255,255,255,0.22)","nextChip":"#0B5F58","maneuverIcon":"#FFFFFF","panel":"#FFFFFF","panelText":"#12302D","panelMuted":"#52645F","border":"#DCE7E4","surface2":"#EEF6F4","accent":"#0F766E","accentText":"#FFFFFF","accentWarm":"#C2410C","accentWarmText":"#FFFFFF","time":"#0F766E","danger":"#DC2626","dangerSoft":"#FEE2E2","toastBg":"#FFEDD5","toastText":"#7C2D12","toastIcon":"#EA580C","route":"#0E9384","routeCasing":"#075E57","me":"#0F766E","meStroke":"#FFFFFF","meHalo":"rgba(15,118,110,0.14)","meCone":"rgba(15,118,110,0.30)","chipBg":"#FFFFFF","chipText":"#12302D","chipBorder":"#F2C9A8","statusBar":"light"},"night":{"banner":"#134E4A","bannerText":"#F0FDFA","bannerSub":"#99F6E4","bannerDivider":"rgba(255,255,255,0.14)","nextChip":"#0E3D3A","maneuverIcon":"#F0FDFA","panel":"#0F1A19","panelText":"#ECFDF9","panelMuted":"#94A9A4","border":"#1F3532","surface2":"#1A2B29","accent":"#2DD4BF","accentText":"#042F2E","accentWarm":"#FB923C","accentWarmText":"#2A1204","time":"#5EEAD4","danger":"#F87171","dangerSoft":"#3A1A1A","toastBg":"#3A2416","toastText":"#FED7AA","toastIcon":"#FB923C","route":"#2DD4BF","routeCasing":"#053B36","me":"#5EEAD4","meStroke":"#0F1A19","meHalo":"rgba(94,234,212,0.14)","meCone":"rgba(94,234,212,0.28)","chipBg":"#1A2B29","chipText":"#ECFDF9","chipBorder":"#5A3A22","statusBar":"light"}},"map":{"day":{"bg":"#F7F2EA","residential":"#F3EDE3","building":"#EDE4D6","buildingLine":"#E0D4C2","park":"#D2E7BF","water":"#A9D8E6","roadFill":{"primary":"#FFD49A","secondary":"#FFE2B0","minor":"#FFFFFF"},"roadCase":{"primary":"#E2A55C","secondary":"#EDBF78","minor":"#E3D8C8"},"rail":"#C2B6A6","oneway":"#A8998A","text":{"road":"#3B3430","halo":"#FFFFFF","house":"#6B5D52","poi":"#A0522D"}},"night":{"bg":"#151D1C","residential":"#182120","building":"#1E2928","buildingLine":"#263432","park":"#18301F","water":"#102A33","roadFill":{"primary":"#6E5636","secondary":"#5E4B32","minor":"#2F3B39"},"roadCase":{"primary":"#4E3D27","secondary":"#463826","minor":"#232D2C"},"rail":"#3B4644","oneway":"#5C6B68","text":{"road":"#C6D3CF","halo":"#151D1C","house":"#94A9A4","poi":"#F0A868"}}},"radius":{"banner":32,"sheet":32,"button":32,"pill":999,"badge":999,"toast":999,"chip":999,"maneuverTile":0},"shadow":{"level1":{"css":"0 2px 8px rgba(15,118,110,.18)","elevation":3},"level2":{"css":"0 10px 24px rgba(15,60,55,.22)","elevation":6},"level3":{"css":"0 14px 32px rgba(15,60,55,.28)","elevation":10},"night":"Gece renkli gölge yerine elevation 4 + 1 dp kenar (border)."},"type":{"distance":{"size":66,"weight":900,"letterSpacing":-1},"distanceUnit":{"size":34,"weight":800},"instruction":{"size":22,"weight":800,"lineHeight":27},"next":{"size":17,"weight":700},"time":{"size":32,"weight":900},"sub":{"size":16,"weight":700},"button":{"size":13,"weight":800},"speed":{"size":26,"weight":900},"speedUnit":{"size":11,"weight":800},"pill":{"size":18,"weight":800},"toast":{"size":16,"weight":800}},"icon":{"ui":"Material Symbols Rounded tarzı: dolu gövde + yuvarlak 2.5 çizgi","maneuver":"Tombul yuvarlak çizgi (stroke 15/100), yuvarlatılmış dolu ok başı; beyaz","maneuverSize":{"banner":96,"next":26}}}}}</script>
+<script>
+(function () {
+  'use strict';
+  var T = JSON.parse(document.getElementById('tokens').textContent);
+  var VK = ['A', 'B', 'C'];
+  var BADGE = { A: '#1A73E8', B: '#111318', C: '#0F766E' };
+  var state = { theme: 'day', pan: false, toast: true, glare: false };
+  try { var saved = JSON.parse(localStorage.getItem('navTasarim') || 'null'); if (saved) Object.assign(state, saved); } catch (e) { /* depolama yok */ }
+
+  // ---------------------------------------------------------------- harita geometrisi (düzlem 1000x2000; puk 500,1672)
+  var SCR_W = 390, SCR_H = 844, PW = 1000, PH = 2000, CX = 500, PERSP = 1000, TILT = 30;
+  var CT = Math.cos(TILT * Math.PI / 180), ST = Math.sin(TILT * Math.PI / 180);
+  var PAN = { x: -40, y: 120 };
+  var PUCK = { x: 195, y: 600 };
+
+  function project(x, y, pan) {
+    var tx = pan ? PAN.x : 0, ty = pan ? PAN.y : 0;
+    var d = PH - (y + ty), dx = (x + tx) - CX, k = PERSP / (PERSP + d * ST);
+    return { x: SCR_W / 2 + dx * k, y: SCR_H - d * CT * k, k: k };
+  }
+
+  var ROADS = [
+    { id: 'west2', cls: 'minor', pts: [[110, 2020], [150, 860]] },
+    { id: 'west', cls: 'minor', pts: [[290, 2020], [322, 860]] },
+    { id: 'east', cls: 'minor', pts: [[880, 2020], [905, 860]] },
+    { id: 'avsar', cls: 'minor', pts: [[-20, 880], [1020, 905]] },
+    { id: 'uysal', cls: 'minor', pts: [[-20, 1020], [1020, 1045]], name: 'Uysal Sokak', at: 0.62 },
+    { id: 'pasa', cls: 'minor', pts: [[-20, 1160], [1020, 1186]], name: 'Paşa Sokak', at: 0.6 },
+    { id: 'altayli', cls: 'minor', pts: [[-20, 1290], [500, 1302]], name: 'Altaylı Sokak', at: 0.62 },
+    { id: 'yaprak', cls: 'minor', pts: [[500, 1302], [1020, 1316]], name: 'Yaprak Sokak', at: 0.32 },
+    { id: 'isbulma', cls: 'minor', pts: [[-20, 1410], [1020, 1434]], name: 'İşbulma Sokak', at: 0.6 },
+    { id: 'vural', cls: 'minor', pts: [[500, 1700], [1020, 1712]] },
+    { id: 's35', cls: 'minor', pts: [[-20, 1745], [500, 1736]] },
+    { id: 'temel', cls: 'minor', pts: [[380, 1541], [452, 1020]], name: 'Temel Sokak', at: 0.42 },
+    { id: 'muderris', cls: 'minor', pts: [[680, 1545], [722, 860]], name: 'Müderris Sokak', at: 0.5, route: true },
+    { id: 'naymanN', cls: 'minor', pts: [[500, 1542], [508, 860]] },
+    { id: 'kurtulus', cls: 'primary', pts: [[-20, 1380], [230, 1240], [600, 960], [760, 850], [1020, 700]], name: 'Kurtuluş Caddesi', at: 0.36 },
+    { id: 'cengiz', cls: 'secondary', pts: [[-20, 1534], [1020, 1550]], name: 'Cengiz Topel Caddesi', at: 0.33, route: true },
+    { id: 'naymanS', cls: 'secondary', pts: [[500, 2020], [500, 1542]], name: 'Nayman Sokak', at: 0.5 }
+  ];
+  var WIDTH = { primary: { fill: 34, cas: 42 }, secondary: { fill: 30, cas: 38 }, minor: { fill: 19, cas: 25 } };
+  var RAIL = [[-20, 1905], [1020, 1880]];
+  var PARK = [[328, 1318], [394, 1321], [385, 1396], [326, 1394]];
+  var ROUTE_D = 'M500 1690 L500 1562 Q500 1542 520 1542.3 L660 1544.5 Q680 1544.8 681.2 1525 L722 860';
+  var TURN_ARROW = 'M500 1606 L500 1562 Q500 1542 520 1542.3 L552 1542.8';
+  var HOUSES = [['13/A', 560, 1610], ['No:38', 585, 1690], ['35', 430, 1765], ['15', 600, 1488]];
+  var POIS = [
+    { t: ['Karamel', 'Eczanesi'], x: 380, y: 1640, kind: 'pharmacy' },
+    { t: ['Gözde', 'Eczanesi'], x: 660, y: 1640, kind: 'pharmacy' },
+    { t: ['İki Eylül', 'Ortaokulu'], x: 360, y: 1462, kind: 'school' }
+  ];
+
+  function segDist(px, py, a, b) {
+    var dx = b[0] - a[0], dy = b[1] - a[1], l2 = dx * dx + dy * dy;
+    var t = l2 ? Math.max(0, Math.min(1, ((px - a[0]) * dx + (py - a[1]) * dy) / l2)) : 0;
+    var x = a[0] + t * dx - px, y = a[1] + t * dy - py;
+    return Math.sqrt(x * x + y * y);
+  }
+  function lineDist(px, py, pts) {
+    var m = 1e9;
+    for (var i = 0; i < pts.length - 1; i++) m = Math.min(m, segDist(px, py, pts[i], pts[i + 1]));
+    return m;
+  }
+  function inPoly(x, y, poly) {
+    var c = false;
+    for (var i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      var a = poly[i], b = poly[j];
+      if ((a[1] > y) !== (b[1] > y) && x < (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]) + a[0]) c = !c;
+    }
+    return c;
+  }
+  function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+  var BUILDINGS = (function () {
+    var r = rng(7), out = [];
+    for (var y = 700; y < 2000; y += 54) {
+      for (var x = -10; x < 1000; x += 62) {
+        if (r() < 0.12) continue;
+        var w = 30 + r() * 22, h = 24 + r() * 18, bx = x + r() * 14, by = y + r() * 12;
+        var ok = true, pts = [];
+        for (var i = 0; i <= 2; i++) for (var j = 0; j <= 2; j++) pts.push([bx + w * i / 2, by + h * j / 2]);
+        for (var p = 0; p < pts.length && ok; p++) {
+          var q = pts[p];
+          for (var k = 0; k < ROADS.length; k++) {
+            if (lineDist(q[0], q[1], ROADS[k].pts) < WIDTH[ROADS[k].cls].cas / 2 + 7) { ok = false; break; }
+          }
+          if (ok && lineDist(q[0], q[1], RAIL) < 12) ok = false;
+          if (ok && inPoly(q[0], q[1], PARK)) ok = false;
+        }
+        if (ok) out.push([bx, by, w, h]);
+      }
+    }
+    return out;
+  })();
+
+  function pointAt(pts, frac) {
+    var L = 0, segs = [];
+    for (var i = 0; i < pts.length - 1; i++) { var l = Math.hypot(pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1]); segs.push(l); L += l; }
+    var t = frac * L;
+    for (var s = 0; s < segs.length; s++) {
+      if (t <= segs[s] || s === segs.length - 1) {
+        var a = pts[s], b = pts[s + 1], u = Math.min(1, t / segs[s]);
+        var ang = Math.atan2(b[1] - a[1], b[0] - a[0]) * 180 / Math.PI;
+        if (ang > 90) ang -= 180; if (ang < -90) ang += 180;
+        return { x: a[0] + (b[0] - a[0]) * u, y: a[1] + (b[1] - a[1]) * u, ang: ang };
+      }
+      t -= segs[s];
+    }
+  }
+  function pl(pts) { return pts.map(function (p) { return p[0] + ',' + p[1]; }).join(' '); }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+
+  // ---------------------------------------------------------------- manevra okları (uygulamadaki ManeuverArrow şekilleri)
+  function headPts(x, y, angleDeg, size) {
+    var a = angleDeg * Math.PI / 180, fx = Math.sin(a), fy = -Math.cos(a), px = -fy, py = fx;
+    var tip = [x + fx * size * 0.9, y + fy * size * 0.9];
+    var b1 = [x - fx * size * 0.35 + px * size, y - fy * size * 0.35 + py * size];
+    var b2 = [x - fx * size * 0.35 - px * size, y - fy * size * 0.35 - py * size];
+    return tip.join(',') + ' ' + b1.join(',') + ' ' + b2.join(',');
+  }
+  function chevronD(x, y, angleDeg, L) {
+    var a = angleDeg * Math.PI / 180, fx = Math.sin(a), fy = -Math.cos(a), px = -fy, py = fx;
+    var tip = [x + fx * 4, y + fy * 4];
+    var w1 = [tip[0] - fx * L + px * L, tip[1] - fy * L + py * L];
+    var w2 = [tip[0] - fx * L - px * L, tip[1] - fy * L - py * L];
+    return 'M' + w1.join(' ') + ' L' + tip.join(' ') + ' L' + w2.join(' ');
+  }
+  var SHAPES = {
+    straight: { main: 'M50 94 V30', head: [50, 30, 0], ghost: ['M50 94 V8'] },
+    turn: { main: 'M36 94 V58 Q36 44 50 44 H64', head: [64, 44, 90], ghost: ['M36 58 V8', 'M36 44 H6'] },
+    slight: { main: 'M40 94 V66 Q40 52 52 42 L64 30', head: [64, 30, 40], ghost: ['M40 66 V8'] },
+    uturn: { main: 'M66 94 V42 Q66 22 48 22 Q30 22 30 42 V64', head: [30, 64, 180], ghost: ['M66 42 V6'] }
+  };
+  var ASTYLE = {
+    A: { sw: 11, cap: 'round', join: 'round', head: 'chev' },
+    B: { sw: 14, cap: 'butt', join: 'miter', head: 'fill', ghost: true },
+    C: { sw: 15, cap: 'round', join: 'round', head: 'round' }
+  };
+  function headSvg(h, st, color) {
+    if (st.head === 'chev') return '<path d="' + chevronD(h[0], h[1], h[2], 15) + '" stroke="' + color + '" stroke-width="' + st.sw + '" stroke-linecap="round" stroke-linejoin="round" fill="none"/>';
+    if (st.head === 'round') return '<polygon points="' + headPts(h[0], h[1], h[2], 17) + '" fill="' + color + '" stroke="' + color + '" stroke-width="7" stroke-linejoin="round"/>';
+    return '<polygon points="' + headPts(h[0], h[1], h[2], 21) + '" fill="' + color + '"/>';
+  }
+  function arrow(kind, side, vk, color, size, exitNo) {
+    var st = ASTYLE[vk];
+    var sp = 'stroke="' + color + '" stroke-width="' + st.sw + '" stroke-linecap="' + st.cap + '" stroke-linejoin="' + st.join + '" fill="none"';
+    var body = '';
+    if (kind === 'arrive') {
+      if (vk === 'A') body = '<path d="M32 92 V14" ' + sp + '/><path d="M32 16 L78 28 L32 46" ' + sp + '/>';
+      else if (vk === 'C') body = '<path d="M32 92 V14" ' + sp + '/><polygon points="32,14 80,29 32,48" fill="' + color + '" stroke="' + color + '" stroke-width="7" stroke-linejoin="round"/>';
+      else body = '<path d="M32 94 V12" ' + sp + '/><polygon points="32,12 84,28 32,48" fill="' + color + '"/>';
+    } else if (kind === 'roundabout') {
+      // Sağdan trafik: kavşak saat yönünün tersine dönülür (alttan gir, sağdan dolaş). Halka soluk, izlenen yol kalın.
+      var ea = side === 'right' ? -45 : side === 'left' ? -135 : -90, rad = ea * Math.PI / 180, R0 = 20, cy0 = 54;
+      var ex = 50 + R0 * Math.cos(rad), ey = cy0 + R0 * Math.sin(rad);
+      var ox = ex + 17 * Math.cos(rad), oy = ey + 17 * Math.sin(rad);
+      var arc = ea === -90
+        ? 'A' + R0 + ' ' + R0 + ' 0 0 0 70 ' + cy0 + ' A' + R0 + ' ' + R0 + ' 0 0 0 ' + ex.toFixed(2) + ' ' + ey.toFixed(2)
+        : 'A' + R0 + ' ' + R0 + ' 0 ' + (90 - ea > 180 ? 1 : 0) + ' 0 ' + ex.toFixed(2) + ' ' + ey.toFixed(2);
+      var g = '';
+      if (st.ghost) g += '<path d="M50 34 V8 M30 54 H6 M70 54 H94" ' + sp + ' opacity=".22"/>';
+      g += '<circle cx="50" cy="' + cy0 + '" r="' + R0 + '" fill="none" stroke="' + color + '" stroke-width="' + (st.sw * 0.55).toFixed(1) + '" opacity=".4"/>';
+      g += '<path d="M50 96 V' + (cy0 + R0) + ' ' + arc + ' L' + ox.toFixed(2) + ' ' + oy.toFixed(2) + '" ' + sp + '/>';
+      g += headSvg([ox, oy, ea + 90], st, color);
+      body = g;
+      if (exitNo != null) body += '<text x="50" y="' + (cy0 + 6.5) + '" font-size="19" font-weight="800" font-family="Inter, Roboto, Arial, sans-serif" fill="' + color + '" text-anchor="middle">' + exitNo + '</text>';
+    } else {
+      var sh = SHAPES[kind];
+      var mir = kind === 'uturn' ? side === 'right' : side === 'left';
+      var tr = mir ? ' transform="translate(100,0) scale(-1,1)"' : '';
+      var gg = '';
+      if (st.ghost) gg += sh.ghost.map(function (d) { return '<path d="' + d + '" ' + sp + ' opacity=".22"/>'; }).join('');
+      gg += '<path d="' + sh.main + '" ' + sp + '/>' + headSvg(sh.head, st, color);
+      body = '<g' + tr + '>' + gg + '</g>';
+    }
+    return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 100 100" aria-hidden="true">' + body + '</svg>';
+  }
+
+  // ---------------------------------------------------------------- arayüz ikonları (Lucide tarzı, elle çizilmiş)
+  var ICON = {
+    volume: function (f) { return '<path d="M11 5 6 9H2v6h4l5 4V5z"' + (f ? ' fill="currentColor"' : '') + '/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/>'; },
+    menu: function () { return '<path d="M4 6h16M4 12h16M4 18h16"/>'; },
+    x: function () { return '<path d="M18 6 6 18M6 6l12 12"/>'; },
+    overview: function () { return '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>'; },
+    locate: function () { return '<path d="M2 12h3M19 12h3M12 2v3M12 19v3"/><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/>'; },
+    route: function () { return '<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>'; },
+    check: function () { return '<path d="M20 6 9 17l-5-5"/>'; }
+  };
+  var ISW = { A: 2, B: 2.25, C: 2.6 };
+  function icon(name, vk, size) {
+    return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + ISW[vk] + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICON[name](vk === 'C') + '</svg>';
+  }
+
+  // ---------------------------------------------------------------- harita SVG (düzlem)
+  var mapCache = {};
+  function mapSVG(vk, mode, ui, mp) {
+    var key = vk + mode;
+    if (mapCache[key]) return mapCache[key];
+    var s = [];
+    s.push('<svg width="1000" height="2000" viewBox="0 0 1000 2000" xmlns="http://www.w3.org/2000/svg">');
+    s.push('<rect width="1000" height="2000" fill="' + mp.residential + '"/>');
+    s.push('<polygon points="' + pl(PARK) + '" fill="' + mp.park + '"/>');
+    var b = [];
+    BUILDINGS.forEach(function (r) { b.push('<rect x="' + r[0].toFixed(1) + '" y="' + r[1].toFixed(1) + '" width="' + r[2].toFixed(1) + '" height="' + r[3].toFixed(1) + '" rx="3"/>'); });
+    s.push('<g fill="' + mp.building + '" stroke="' + mp.buildingLine + '" stroke-width="1.5" transform="rotate(0.9 500 1500)">' + b.join('') + '</g>');
+    s.push('<polyline points="' + pl(RAIL) + '" fill="none" stroke="' + mp.rail + '" stroke-width="5"/>');
+    s.push('<polyline points="' + pl(RAIL) + '" fill="none" stroke="' + mp.bg + '" stroke-width="3" stroke-dasharray="14 12"/>');
+    ['minor', 'secondary', 'primary'].forEach(function (cls) {
+      var cas = [], fill = [];
+      ROADS.forEach(function (r) {
+        if (r.cls !== cls) return;
+        cas.push('<polyline points="' + pl(r.pts) + '"/>');
+        fill.push('<polyline points="' + pl(r.pts) + '"/>');
+      });
+      if (cls === 'primary') { cas.push('<circle cx="640" cy="932" r="30"/>'); fill.push('<circle cx="640" cy="932" r="30"/>'); }
+      s.push('<g fill="none" stroke="' + mp.roadCase[cls] + '" stroke-width="' + WIDTH[cls].cas + '" stroke-linecap="round" stroke-linejoin="round">' + cas.join('') + '</g>');
+      s.push('<g fill="none" stroke="' + mp.roadFill[cls] + '" stroke-width="' + WIDTH[cls].fill + '" stroke-linecap="round" stroke-linejoin="round">' + fill.join('') + '</g>');
+    });
+    // tek yön okları (Kurtuluş Caddesi)
+    [0.2, 0.5, 0.78].forEach(function (f) {
+      var p = pointAt(ROADS[14].pts, f);
+      s.push('<path d="M-9 -6 L5 0 L-9 6" transform="translate(' + p.x + ' ' + p.y + ') rotate(' + p.ang + ')" fill="none" stroke="' + mp.oneway + '" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>');
+    });
+    // rota
+    var rw = vk === 'A' ? { cas: 28, line: 20 } : vk === 'B' ? { cas: 30, line: 18 } : { cas: 30, line: 20 };
+    if (vk === 'B') s.push('<path d="' + ROUTE_D + '" fill="none" stroke="' + ui.route + '" stroke-opacity=".22" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>');
+    s.push('<path d="' + ROUTE_D + '" fill="none" stroke="' + ui.routeCasing + '" stroke-width="' + rw.cas + '" stroke-linecap="round" stroke-linejoin="round"/>');
+    s.push('<path d="' + ROUTE_D + '" fill="none" stroke="' + ui.route + '" stroke-width="' + rw.line + '" stroke-linecap="round" stroke-linejoin="round"/>');
+    var ta = vk === 'B' ? ui.accent : '#FFFFFF';
+    s.push('<path d="' + TURN_ARROW + '" fill="none" stroke="' + ta + '" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>');
+    s.push('<polygon points="' + headPts(552, 1542.8, 90, 11) + '" fill="' + ta + '"/>');
+    // yol adları (çizgi üzerinde, eğik düzlemle birlikte)
+    ROADS.forEach(function (r) {
+      if (!r.name) return;
+      var p = pointAt(r.pts, r.at), major = r.cls !== 'minor';
+      var size = major ? 25 : 22;
+      s.push('<text x="' + p.x.toFixed(1) + '" y="' + p.y.toFixed(1) + '" transform="rotate(' + p.ang.toFixed(2) + ' ' + p.x.toFixed(1) + ' ' + p.y.toFixed(1) + ')" text-anchor="middle" dominant-baseline="central" font-family="\'Noto Sans\', Roboto, Arial, sans-serif" font-weight="700" font-size="' + size + '" fill="' + mp.text.road + '" stroke="' + mp.text.halo + '" stroke-width="6" stroke-linejoin="round" paint-order="stroke">' + esc(r.name) + '</text>');
+    });
+    s.push('</svg>');
+    return (mapCache[key] = s.join(''));
+  }
+
+  // Ekran uzayı etiketleri (MapLibre'de nokta sembolleri ekrana dik durur): kapı numaraları ve POI
+  function overlaySVG(vk, ui, mp, pan, idp) {
+    var s = ['<svg class="overlay" width="390" height="844" viewBox="0 0 390 844" aria-hidden="true">'];
+    var chipR = Math.min(T.variants[vk].radius.chip, 12);
+    HOUSES.forEach(function (h) {
+      var p = project(h[1], h[2], pan), f = 0.72 + 0.28 * p.k, w = h[0].length * 8 + 16;
+      s.push('<g transform="translate(' + p.x.toFixed(1) + ' ' + p.y.toFixed(1) + ') scale(' + f.toFixed(3) + ')">' +
+        '<rect x="' + (-w / 2) + '" y="-12" width="' + w + '" height="24" rx="' + chipR + '" fill="' + ui.chipBg + '" stroke="' + ui.chipBorder + '" stroke-width="1.2"/>' +
+        '<text y="0.5" text-anchor="middle" dominant-baseline="central" font-family="\'Noto Sans\', Roboto, Arial, sans-serif" font-size="13" font-weight="700" fill="' + ui.chipText + '">' + esc(h[0]) + '</text></g>');
+    });
+    POIS.forEach(function (o) {
+      var p = project(o.x, o.y, pan), f = 0.72 + 0.28 * p.k;
+      var mark = o.kind === 'pharmacy'
+        ? '<circle r="8" fill="' + mp.text.poi + '"/><path d="M0 -4.5V4.5M-4.5 0H4.5" stroke="' + mp.text.halo + '" stroke-width="2.2" stroke-linecap="round"/>'
+        : '<circle r="8" fill="' + mp.text.poi + '"/><path d="M-4 -1 L0 -4 L4 -1 M-2.6 0 V3.6 H2.6 V0" stroke="' + mp.text.halo + '" stroke-width="1.6" fill="none" stroke-linejoin="round"/>';
+      var txt = o.t.map(function (line, i) {
+        return '<text y="' + (20 + i * 16) + '" text-anchor="middle" font-family="\'Noto Sans\', Roboto, Arial, sans-serif" font-size="13.5" font-weight="700" fill="' + mp.text.poi + '" stroke="' + mp.text.halo + '" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">' + esc(line) + '</text>';
+      }).join('');
+      s.push('<g transform="translate(' + p.x.toFixed(1) + ' ' + (p.y - 10).toFixed(1) + ') scale(' + f.toFixed(3) + ')">' + mark + txt + '</g>');
+    });
+    if (pan) {
+      // takip dışında konum: haritaya yapışık nokta (circle-pitch-alignment: map), ekranda değil
+      var me = project(500, 1672, true);
+      s.push('<g transform="translate(' + me.x.toFixed(1) + ' ' + me.y.toFixed(1) + ') scale(1 ' + CT.toFixed(3) + ')">' +
+        '<circle r="26" fill="' + ui.meHalo + '" stroke="' + ui.me + '" stroke-opacity=".35"/>' +
+        '<circle r="12" fill="' + (vk === 'B' && ui.meStroke !== '#FFFFFF' ? ui.meStroke : '#FFFFFF') + '"/><circle r="8.5" fill="' + ui.me + '"/></g>');
+    }
+    s.push('</svg>');
+    return s.join('');
+  }
+
+  // ---------------------------------------------------------------- puk (ekranda sabit: yön konisi + doğruluk halesi + seyir oku)
+  var uid = 0;
+  function puckSVG(vk, ui) {
+    var id = 'cone' + (uid++);
+    var R = 104, a = 27 * Math.PI / 180;
+    var x1 = (-R * Math.sin(a)).toFixed(1), y1 = (-R * Math.cos(a)).toFixed(1), x2 = (R * Math.sin(a)).toFixed(1);
+    var chev = 'M0 -19 L14.5 15.5 L0 8.5 L-14.5 15.5 Z';
+    var glow = vk === 'B' ? '<path d="' + chev + '" fill="none" stroke="' + ui.me + '" stroke-opacity=".35" stroke-width="12" stroke-linejoin="round"/>' : '';
+    var sw = vk === 'C' ? 4.5 : 3.5;
+    return '<svg class="puck" width="240" height="240" viewBox="-120 -120 240 240" style="left:' + (PUCK.x - 120) + 'px;top:' + (PUCK.y - 120) + 'px" aria-hidden="true">' +
+      '<defs><radialGradient id="' + id + '" cx="0" cy="0" r="' + R + '" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="' + ui.meCone + '"/><stop offset="1" stop-color="' + ui.meCone + '" stop-opacity="0"/></radialGradient></defs>' +
+      '<path d="M0 0 L' + x1 + ' ' + y1 + ' A' + R + ' ' + R + ' 0 0 1 ' + x2 + ' ' + y1 + ' Z" fill="url(#' + id + ')"/>' +
+      '<circle r="27" fill="' + ui.meHalo + '" stroke="' + ui.me + '" stroke-opacity=".35" stroke-width="1.5"/>' +
+      glow + '<path d="' + chev + '" fill="' + ui.me + '" stroke="' + ui.meStroke + '" stroke-width="' + sw + '" stroke-linejoin="round"/></svg>';
+  }
+
+  // ---------------------------------------------------------------- bileşenler
+  var TXT = { dist: '50', unit: 'm', instr: "Cengiz Topel Caddesi'ne sağa dönün", next: "Müderris Sokak'a sola dönün", speed: 40, time: '1', timeU: 'dk', km: '750 m', eta: '16:39', clock: '16:38', toast: 'Yeni rota hesaplandı' };
+
+  function cssVars(vk, mode) {
+    var v = T.variants[vk], ui = v.ui[mode], out = [];
+    Object.keys(ui).forEach(function (k) { out.push('--' + k + ':' + ui[k]); });
+    Object.keys(v.radius).forEach(function (k) { out.push('--r-' + k + ':' + v.radius[k]); });
+    Object.keys(v.type).forEach(function (k) {
+      var t = v.type[k];
+      out.push('--fs-' + k + ':' + t.size, '--fw-' + k + ':' + t.weight);
+      if (t.letterSpacing != null) out.push('--ls-' + k + ':' + t.letterSpacing);
+    });
+    if (v.type.distance.letterSpacing == null) out.push('--ls-distance:0');
+    var fb = v.fonts.fallback.map(function (f) { return /\s/.test(f) ? '\'' + f + '\'' : f; }).join(', ');
+    out.push('--font-ui:\'' + v.fonts.ui + '\', ' + fb, '--font-num:\'' + v.fonts.numerals + '\', ' + fb);
+    out.push('--sh1:' + v.shadow.level1.css, '--sh2:' + v.shadow.level2.css, '--sh3:' + v.shadow.level3.css);
+    if (!ui.panel && ui.panelSolid) out.push('--panel:' + ui.panelSolid);
+    return out.join(';');
+  }
+
+  function statusBar(ui) {
+    var c = ui.statusBar === 'dark' ? '#1F1F1F' : '#FFFFFF';
+    return '<div class="statusbar" style="color:' + c + '"><span>' + TXT.clock + '</span><span class="sb-icons">' +
+      '<svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="4.3" y="5.5" width="3" height="6.5" rx="1"/><rect x="8.6" y="3" width="3" height="9" rx="1"/><rect x="12.9" y="0" width="3" height="12" rx="1"/></svg>' +
+      '<svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 12 5.4 8.6a4.2 4.2 0 0 1 5.2 0zM2.8 5.9a8.4 8.4 0 0 1 10.4 0l-1.6 2a5.9 5.9 0 0 0-7.2 0zM0 2.6a13 13 0 0 1 16 0l-1.6 2a10.4 10.4 0 0 0-12.8 0z"/></svg>' +
+      '<svg width="26" height="12" viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".5"/><rect x="2.5" y="2.5" width="16" height="7" rx="2" fill="currentColor"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="currentColor" opacity=".5"/></svg>' +
+      '</span></div>';
+  }
+
+  function banner(vk, ui) {
+    var v = T.variants[vk], sz = v.icon.maneuverSize;
+    var main;
+    if (vk === 'A') {
+      main = '<div class="b-main"><div class="tile">' + arrow('turn', 'right', 'A', ui.maneuverIcon, 60) + '</div>';
+    } else {
+      main = '<div class="b-main">' + arrow('turn', 'right', vk, ui.maneuverIcon, sz.banner);
+    }
+    main += '<div class="b-txt"><div class="dist">' + TXT.dist + '<span class="u"> ' + TXT.unit + '</span></div><div class="instr">' + esc(TXT.instr) + '</div></div></div>';
+    var nextIconColor = vk === 'B' ? ui.accent : ui.bannerText;
+    var next = '<div class="b-next"><span class="lbl">Ardından</span>' + arrow('turn', 'left', vk, nextIconColor, sz.next) + '<span class="nt">' + esc(TXT.next) + '</span></div>';
+    if (vk === 'C') return '<div class="banner">' + main + '</div>' + next;
+    return '<div class="banner">' + main + next + '</div>';
+  }
+
+  function toast(vk) {
+    var ic = vk === 'B' ? 'check' : 'route';
+    return '<div class="toast">' + icon(ic, vk, 22) + '<span>' + TXT.toast + '</span></div>';
+  }
+  function speedBadge() { return '<div class="speed"><b>' + TXT.speed + '</b><small>km/sa</small></div>'; }
+  function overviewPill(vk) { return '<div class="pill overview">' + icon('overview', vk, 22) + '<span>Genel bakış</span></div>'; }
+  function recenterPill(vk) { return '<div class="pill recenter">' + icon('locate', vk, 26) + '<span>Ortala</span></div>'; }
+  function bottomBar(vk) {
+    var sub = vk === 'B' ? TXT.km + ' · <span class="eta">' + TXT.eta + '</span>' : TXT.km + ' · ' + TXT.eta;
+    return '<div class="bottom"><div class="b-info"><div class="b-time">' + TXT.time + '<span class="u"> ' + TXT.timeU + '</span></div><div class="b-sub">' + sub + '</div></div>' +
+      '<div class="btn">' + icon('volume', vk, 28) + '<span>Ses açık</span></div>' +
+      '<div class="btn">' + icon('menu', vk, 28) + '<span>Menü</span></div>' +
+      '<div class="btn exit">' + icon('x', vk, 28) + '<span>Çıkış</span></div></div>';
+  }
+
+  function phone(vk, mode, scale) {
+    var v = T.variants[vk], ui = v.ui[mode], mp = v.map[mode];
+    var pan = state.pan;
+    var planeT = 'perspective(' + PERSP + 'px) rotateX(' + TILT + 'deg)' + (pan ? ' translate(' + PAN.x + 'px,' + PAN.y + 'px)' : '');
+    var scrim = '';
+    if (vk !== 'C') scrim = '<div class="scrim" style="background:linear-gradient(' + (mode === 'day' ? 'rgba(255,255,255,.85)' : 'rgba(0,0,0,.6)') + ',transparent)"></div>';
+    var gesture = vk === 'B' ? (mode === 'day' ? '#1F1F1F' : '#FFFFFF') : ui.panelText;
+    var label = T.variants[vk].name + ', ' + (mode === 'day' ? 'gündüz' : 'gece');
+    return '<div class="phone-wrap" style="width:' + (410 * scale).toFixed(1) + 'px;height:' + (864 * scale).toFixed(1) + 'px" role="img" aria-label="' + esc(label) + '">' +
+      '<div class="phone" style="transform:scale(' + scale.toFixed(4) + ')">' +
+      '<div class="screen v-' + vk + ' m-' + mode + '" style="' + cssVars(vk, mode) + '">' +
+      '<div class="map" style="background:' + mp.bg + '"><div class="plane" style="transform:' + planeT + '">' + mapSVG(vk, mode, ui, mp) + '</div>' + overlaySVG(vk, ui, mp, pan) + '</div>' +
+      (pan ? '' : puckSVG(vk, ui)) + scrim + statusBar(ui) +
+      '<div class="top">' + banner(vk, ui) + (state.toast ? toast(vk) : '') + '</div>' +
+      (pan ? recenterPill(vk) : speedBadge() + overviewPill(vk)) +
+      bottomBar(vk) + '<div class="gesture" style="background:' + gesture + '"></div>' +
+      '</div></div></div>';
+  }
+
+  // ---------------------------------------------------------------- belirteç şeridi
+  var DESC = {
+    A: 'Google Haritalar\'ın sakin dilini izler: beyaz yüzeyler, 20–24 px yumuşak köşeler, hafif katmanlı gölgeler ve tek vurgu rengi (rota mavisi). Manevra oku mavi bir karoda, mesafe siyaha yakın ve çok büyük; ikincil bilgi griye çekilir. Haritada mevcut ekranın "kaba" görünümünün ana kaynağı olan koyu kahverengi yol kenarlıkları açık griye döner, ana yollar kısık sarı, parklar yumuşak yeşil olur. Gece aynı düzen koyu gri yüzeylerle sürer; gölge yerine ince kenar kullanılır.',
+    B: 'Koyu cam paneller (bulanıklık yok, %94 opak + 1 px açık kenar) gündüz de kullanılır. Manevra oku ve vurgu lime, rota camgöbeği-mavi; dar ve kalın Barlow Condensed rakamlar mesafeyi 84 px\'te tek satırda tutar. Ok, kavşağın diğer kollarını soluk "hayalet" çizgiyle gösterir. Gece harita neredeyse siyah ve kısık renkli. Bilinçli bir sapma: gündüz harita koyu değil açık "gümüş"tür, çünkü koyu harita güneşte okunmaz; koyu olan yalnızca paneller.',
+    C: 'Kurye uygulamasının marka rengi teal (#0F766E) üst bandın tamamını kaplar; durak rozetlerindeki turuncu ikinci vurgu olarak "Ortala" ve bildirimde kullanılır. Bütün kontroller hap biçiminde, Nunito ile daha sıcak ve dostça bir tipografi. "Ardından" satırı bandın kenarına asılı bir hap. Harita hafif sıcak: krem zemin, kayısı ana yollar. Mevcut ekrana en yakın seçenek: düzen aynı, yeşil yerine marka rengi ve yumuşatılmış formlar.'
+  };
+
+  function swatchRow(vk, mode) {
+    var v = T.variants[vk], u = v.ui[mode], m = v.map[mode];
+    var items = [['Bant', u.bannerSolid || u.banner], ['Panel', u.panelSolid || u.panel], ['Vurgu', u.accent], ['Rota', u.route], ['Çıkış', u.danger], ['Harita zemin', m.bg], ['Ana yol', m.roadFill.primary], ['Ara sokak', m.roadFill.minor], ['Park', m.park]];
+    return '<div class="swatches">' + items.map(function (it) { return '<div class="sw"><i style="background:' + it[1] + '"></i><b>' + it[0] + '</b>' + it[1] + '</div>'; }).join('') + '</div>';
+  }
+
+  function tokenStrip(vk, galleryMode) {
+    var v = T.variants[vk], dayUi = v.ui.day, h = [];
+    h.push('<p class="desc">' + DESC[vk] + '</p>');
+    h.push('<h3>Renkler</h3><div class="row-label">Gündüz</div>' + swatchRow(vk, 'day') + '<div class="row-label">Gece</div>' + swatchRow(vk, 'night'));
+    var r = v.radius;
+    h.push('<h3>Köşe yarıçapı</h3><div class="radii">' + [['Bant', r.banner], ['Düğme', r.button], ['Hap', r.pill], ['Çip', r.chip]].map(function (x) {
+      var rr = Math.min(x[1], 44);
+      return '<div class="rd"><div class="radius-demo" style="border-top-left-radius:' + rr + 'px"></div>' + x[0] + ' ' + (x[1] >= 999 ? 'tam' : x[1]) + '</div>';
+    }).join('') + '</div>');
+    h.push('<h3>Gölge (gündüz)</h3><div class="shadow-stage">' + ['level1', 'level2', 'level3'].map(function (k, i) {
+      return '<div class="sh-demo" style="box-shadow:' + v.shadow[k].css + '">' + (i + 1) + ' · elev ' + v.shadow[k].elevation + '</div>';
+    }).join('') + '</div>');
+    var t = v.type, ff = 'font-family:\'' + v.fonts.numerals + '\',' + v.fonts.fallback.join(','), fu = 'font-family:\'' + v.fonts.ui + '\',' + v.fonts.fallback.join(',');
+    h.push('<h3>Tip ölçeği · ' + esc(v.fonts.ui) + (v.fonts.numerals !== v.fonts.ui ? ' + ' + esc(v.fonts.numerals) : '') + '</h3><div class="types">' +
+      '<div class="type-row"><span style="' + ff + ';font-size:' + Math.min(t.distance.size, 64) + 'px;font-weight:' + t.distance.weight + ';line-height:1">50<span style="font-size:' + Math.min(t.distanceUnit.size, 32) + 'px"> m</span></span><small>Mesafe ' + t.distance.size + '/' + t.distance.weight + '</small></div>' +
+      '<div class="type-row"><span style="' + fu + ';font-size:' + t.instruction.size + 'px;font-weight:' + t.instruction.weight + '">sağa dönün</span><small>Talimat ' + t.instruction.size + '/' + t.instruction.weight + '</small></div>' +
+      '<div class="type-row"><span style="' + ff + ';font-size:' + t.time.size + 'px;font-weight:' + t.time.weight + '">1 dk</span><small>Süre ' + t.time.size + '/' + t.time.weight + '</small></div>' +
+      '<div class="type-row"><span style="' + fu + ';font-size:' + t.next.size + 'px;font-weight:' + t.next.weight + '">Ardından</span><small>Sonraki ' + t.next.size + '/' + t.next.weight + '</small></div>' +
+      '<div class="type-row"><span style="' + fu + ';font-size:' + t.button.size + 'px;font-weight:' + t.button.weight + '">Ses açık · Menü · Çıkış</span><small>Düğme ' + t.button.size + '/' + t.button.weight + '</small></div></div>');
+    var tileBg = vk === 'A' ? dayUi.maneuverTile : (dayUi.bannerSolid || dayUi.banner), tileFg = dayUi.maneuverIcon;
+    var set = [['turn', 'left', 'Sola dön'], ['turn', 'right', 'Sağa dön'], ['slight', 'right', 'Hafif sağa'], ['uturn', 'left', 'U dönüşü'], ['roundabout', 'right', 'Dönel kavşak, 2. çıkış', 2], ['arrive', null, 'Varış']];
+    h.push('<h3>Manevra ikonları · ' + esc(v.icon.maneuver) + '</h3><div class="icons">' + set.map(function (s) {
+      return '<div class="ico" style="background:' + tileBg + ';color:' + (dayUi.bannerText) + '">' + arrow(s[0], s[1], vk, tileFg, 56, s[3]) + '<span>' + s[2] + '</span></div>';
+    }).join('') + '</div>');
+    var uiIc = ['volume', 'menu', 'x', 'overview', 'locate', 'route'];
+    h.push('<div class="ui-icons">' + uiIc.map(function (n) { return '<span style="background:' + (v.ui[galleryMode].surface2) + ';color:' + v.ui[galleryMode].panelText + '">' + icon(n, vk, 24) + '</span>'; }).join('') + '</div><p class="note">' + esc(v.icon.ui) + '</p>');
+    var gm = v.ui[galleryMode];
+    h.push('<h3>Bileşenler (' + (galleryMode === 'day' ? 'gündüz' : 'gece') + ')</h3><div class="gallery screen-less v-' + vk + ' m-' + galleryMode + '" style="' + cssVars(vk, galleryMode) + ';background:' + v.map[galleryMode].bg + ';font-family:var(--font-ui);line-height:1.2">' +
+      speedBadge() + overviewPill(vk) + recenterPill(vk) + toast(vk) + '</div>');
+    return h.join('');
+  }
+
+  // ---------------------------------------------------------------- çizim
+  var cols = document.getElementById('cols');
+  function build() {
+    cols.innerHTML = VK.map(function (vk) {
+      return '<section class="col" id="v-' + vk + '" aria-labelledby="h-' + vk + '"><div class="col-head"><div class="badge" style="background:' + BADGE[vk] + '">' + vk + '</div><div><h2 id="h-' + vk + '">' + esc(T.variants[vk].name) + '</h2><div class="sub">' + esc(T.variants[vk].fonts.ui) + (T.variants[vk].fonts.numerals !== T.variants[vk].fonts.ui ? ' + ' + esc(T.variants[vk].fonts.numerals) : '') + '</div></div></div>' +
+        '<div class="phones"></div><div class="tokens"></div></section>';
+    }).join('');
+    render();
+  }
+  function render() {
+    uid = 0;
+    document.body.classList.toggle('glare', !!state.glare);
+    var modes = state.theme === 'both' ? ['day', 'night'] : [state.theme];
+    var galleryMode = state.theme === 'night' ? 'night' : 'day';
+    VK.forEach(function (vk) {
+      var col = document.getElementById('v-' + vk);
+      var phonesEl = col.querySelector('.phones');
+      var w = phonesEl.clientWidth || 400;
+      var n = modes.length, scale = Math.min(1, (w - 12 * (n - 1)) / n / 410);
+      phonesEl.innerHTML = modes.map(function (m) {
+        return '<div class="phone-cell">' + phone(vk, m, scale) + (n > 1 ? '<span>' + (m === 'day' ? 'Gündüz' : 'Gece') + '</span>' : '') + '</div>';
+      }).join('');
+      col.querySelector('.tokens').innerHTML = tokenStrip(vk, galleryMode);
+    });
+    document.querySelectorAll('.seg').forEach(function (seg) {
+      var k = seg.getAttribute('data-key');
+      seg.querySelectorAll('button').forEach(function (b) {
+        var val = b.getAttribute('data-val');
+        var cur = typeof state[k] === 'boolean' ? (state[k] ? '1' : '0') : state[k];
+        b.setAttribute('aria-pressed', String(val === cur));
+      });
+    });
+  }
+  document.querySelectorAll('.seg').forEach(function (seg) {
+    seg.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      var k = seg.getAttribute('data-key'), val = b.getAttribute('data-val');
+      state[k] = k === 'theme' ? val : val === '1';
+      try { localStorage.setItem('navTasarim', JSON.stringify(state)); } catch (err) { /* depolama yok */ }
+      render();
+    });
+  });
+  var rt;
+  window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(render, 120); });
+  build();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(render);
+})();
+</script>
+</body>
+</html>

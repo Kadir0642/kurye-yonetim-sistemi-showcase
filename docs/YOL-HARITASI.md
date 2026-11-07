@@ -8,7 +8,7 @@ Kapsam, pilot müşteri keşfi sonrasında değişebilir. Her iterasyon bir demo
 | 1 | Çekirdek | ✅ Uygulandı ve birleştirildi |
 | 2 | **Ana hedef: dinamik, rota uyumlu dağıtım** (tek akıllı rota, en iyi uyan kuryeye tekil ve toplu atama, kararlı yeniden sıralama, öneri / otomatik atama, ret ve devir, uygulama içi navigasyon, benchmark) | ✅ Uygulandı ve birleştirildi (SPEC) |
 | 2b | Platform ve sağlamlaştırma: RLS, push (FCM), iOS / TestFlight, OTA, aynı restoran gruplaması, gerçek cihaz testi | ⏳ |
-| 3 | **Eskişehir'e özel harita platformu:** kendi karo / geocoder / OSM güncelleme hattı, çevrimdışı harita ve eylem kuyruğu, saha verisinden öğrenen harita, üretim hazırlığı | **3a ✅ tamamlandı** (SPEC-3a; entegrasyon turunda gerçek yığınla doğrulandı, açık maddeler aşağıda); **3b spec hazır** (SPEC-3b, sözleşme 0.4.0, görev brief'leri: Q3b, R3b, W3b, M3b); 3c ⏳ (PLAN) |
+| 3 | **Eskişehir'e özel harita platformu:** kendi karo / geocoder / OSM güncelleme hattı, çevrimdışı harita ve eylem kuyruğu, saha verisinden öğrenen harita, üretim hazırlığı | **3a ✅ tamamlandı** (SPEC-3a; entegrasyon turunda gerçek yığınla doğrulandı, açık maddeler aşağıda); **3b ✅ tamamlandı** (SPEC-3b, sözleşme 0.4.0; PR #31-#38 2026-11-07'de birleşti, entegrasyon kaydı; açık: gerçek cihaz, pilot kararları); 3c ⏳ (PLAN) |
 | 4 | Hakediş, kasa ve atama (eski İterasyon 3) | ⏳ |
 | 5+ | Genişleme (eski İterasyon 4+) | ⏳ |
 
@@ -122,7 +122,7 @@ Beş paralel görev (gorevler/): **R** rota altyapısı + motor + benchmark, **A
 
 ---
 
-## İterasyon 3 — Eskişehir'e özel harita platformu (3a ✅, 3b-3c ⏳) <a id="iterasyon-3-harita"></a>
+## İterasyon 3 — Eskişehir'e özel harita platformu (3a ✅, 3b ✅, 3c ⏳) <a id="iterasyon-3-harita"></a>
 
 **Hedef:** Tüm harita, rota ve adres verisi kendi sistemimizin içinde çalışır; çalışma zamanında üçüncü taraf harita servisine bağımlılık yoktur. Genel amaçlı haritaları **bizim kullanım alanımızda** (tek şehir, motosikletli kurye, tekrar eden adresler) geçmek; canlı trafik, kapı düzeyi adres, genel POI ve sokak görüntülerinde Google'ın üstün kaldığını kabul etmek.
 
@@ -145,18 +145,29 @@ Beş paralel görev (gorevler/): **R** rota altyapısı + motor + benchmark, **A
 - [ ] "Çevrimdışı" göstergesini yalnızca cihaz ağına değil sunucuya erişilememesine de bağlamak (zayıf kapsamada ağ "bağlı" görünür; uygulama 4 sn sonra önbellekle açılır)
 - [ ] Panelde `courier.sync_conflict` bildiriminin gerçek akışta ekran görüntüsü; ikinci şehir poligonu için bootstrap seçeneği
 - [ ] Adres kalitesi: site / kampüs kapısı ve belediye binası gibi yerlerde konum düzeltme (öğrenilmiş nokta, 3b-1)
-- [x] Navigasyon ekranı akıcılığı ve course-up düzeltmesi (harita rota yönüne döner; yerel öngörülü kamera, konum başına harita ağacı çizimi yok, düşük donanım kademesi; [ADR-0024](kararlar/0024-navigasyon-render-performansi.md), ölçüm)
+- [x] Navigasyon ekranı akıcılığı ve course-up düzeltmesi (harita rota yönüne döner; yerel öngörülü kamera, konum başına harita ağacı çizimi yok, düşük donanım kademesi; emülatörde ortalama kare hızı 23,2 -> 27-34 fps, >= 100 ms takılma 71 -> 5-10, 60 fps elde edilmedi; [ADR-0024](kararlar/0024-navigasyon-render-performansi.md), ölçüm)
 - [ ] Navigasyon kare ölçümü gerçek ucuz Android cihazda (protokol); emülatörde MapLibre GL iş parçacığı doygun, 60 fps görülemedi
+- [x] Navigasyon ekranı B tasarımı ve marka kimliği: koyu krom + neon yeşil, gündüz açık "gümüş" harita, manevra ikon seti, Inter / Barlow Condensed (ürün sahibi B'yi seçti; maketler, belirteçler ve uygulama; [ADR-0027](kararlar/0027-marka-kimligi-ve-navigasyon-gorsel-dili.md), [tasarım](tasarim/navigasyon/README.md), [marka](tasarim/marka/README.md), uygulama notu). Diğer kurye ekranları ve yönetim paneli geçişi ayrı görev
 
-**3b**
-- [ ] Öğrenilmiş teslim noktaları (3b-1), restoran "paket hazır" sinyali + hazırlık süresi öğrenme (3b-2), aynı restoran gruplamayı iyileştirme (3b-3), teslim geofence'i (3b-4) — **spec hazır; 3b-3 motoru ve benchmark (gruplama, hazır zamanı üç koşul) PR'da, ayar varsayılanı kapalı** (SPEC-3b; kararlar [ADR-0025](kararlar/0025-isletme-hazir-baglantisi.md), [ADR-0026](kararlar/0026-teslim-geofence-politikasi.md))
-- [ ] Dağıtım v2 ayarları için panel ekranı (3b-5) — **spec hazır** (SPEC-3b §10)
+**3b ✅** — teknik spesifikasyon: iterasyon-3/SPEC-3b.md (sözleşme 0.4.0; kararlar [ADR-0025](kararlar/0025-isletme-hazir-baglantisi.md), [ADR-0026](kararlar/0026-teslim-geofence-politikasi.md); görev brief'leri: Q3b, R3b, W3b, M3b). Sekiz PR (#31-#38) 2026-11-07'de birleşti; birleşik ağaç çakışmasız ve yeşil (API birim 626 / e2e 341 / panel 135 / mobil 456 / harita 36). Kayıt: ENTEGRASYON-3B-DURUM.md.
+- [x] Öğrenilmiş teslim noktaları (3b-1): adres defteri, HMAC adres anahtarı, ağırlıklı medyan ve güven, sabitle / sıfırla; `DELIVERY_POINT_LEARNING_ENABLED=false` ile kapalı başlar
+- [x] Restoran "paket hazır" sinyali ve hazırlık süresi öğrenme (3b-2): panel, kurye ve girişsiz işletme bağlantısı (QR); hazırlık tahmini
+- [x] Aynı restoran gruplamayı iyileştirme (3b-3): motor + 30 tohumlu benchmark; kiracı ayarı **varsayılan kapalı** (önerilen 150 / 240 / 0,5; [rapor](benchmark/v2/gruplama.md))
+- [x] Teslim geofence'i (3b-4): `OFF | OBSERVE | ENFORCE` (varsayılan OBSERVE), gerekçeli geçersiz kılma, çevrimdışı kuyruk uyumu
+- [x] Dağıtım v2 ayarları için panel ekranı (3b-5) (SPEC-3b §10)
+
+**3b sonrası açık maddeler:**
+- [ ] Gerçek cihaz saha testi (emülatör kabul testi sürüyor; sonucu ayrıca eklenecek)
+- [ ] Gerçek `prod.env` için `ADDRESS_KEY_SECRET` (aksi hâlde 3b dağıtımı API'yi başlatmaz)
+- [ ] Karar: öğrenilmiş nokta güven eşiği (k = 3 gözlemde yalnızca ~%61 kullanılabilir; N0 gevşetilsin mi)
+- [ ] Karar: gruplama (T) ön ayarı ve pilotta firma bazında açılış; hazır zamanı bilinince km +%25-40 incelemesi
+- [ ] Karar: geofence ENFORCE zamanı (tüm kuryeler 3b APK'sında, OBSERVE'de geçersiz kılma < %15)
 
 **3c**
 - [ ] Öğrenilmiş hızların OSRM'ye uygulanması, ETA hatası (MAE) önce / sonra, benchmark güncellemesi (pilot verisi >= 4 hafta gerekir)
 
 **Algoritma v2 kolu (paralel)**
-- [x] Faz 1: araştırma ve benchmark — kayan ufuk toplu atama, kuryeler arası ALNS, CBBA karşılaştırması (DAGITIM-ALGORITMASI-V2.md, benchmark v2, [ADR-0023](kararlar/0023-dagitim-algoritmasi-v2.md))
+- [x] Faz 1: araştırma ve benchmark — kayan ufuk toplu atama, kuryeler arası ALNS, CBBA karşılaştırması (DAGITIM-ALGORITMASI-V2.md, [benchmark v2](benchmark/v2/README.md), [ADR-0023](kararlar/0023-dagitim-algoritmasi-v2.md))
 - [x] Faz 2: kayan ufuk + gecikmeli atama `DISPATCH_V2` ve kiracı ayarı arkasında üretimde (varsayılan kapalı), ALNS gölge kipte (`DISPATCH_V2_ALNS_SHADOW`), `GET /metrics/dispatch-v2`; benchmark üretim yolu (RH60-PROD) Faz 1 ile birebir aynı ([ADR-0023](kararlar/0023-dagitim-algoritmasi-v2.md) kabul edildi, [MIMARI §6.1.1](MIMARI.md#611-dağıtım-v2-ayarları-adr-0023-faz-2))
 - [ ] Faz 3: pilotta firma bazında açılış ve gölge ALNS verisiyle gerçek ALNS taşımalarına (`DISPATCH_V2_ALNS`) karar
 

@@ -1,6 +1,6 @@
 # ADR-0024: Navigasyon ekranında render performansı (yerel kamera animasyonu, konum başına harita ağacı çizimi yok, kalite kademesi)
 
-- **Durum:** Önerildi (ürün sahibi onayına; gerçek cihaz ölçümü bekleniyor)
+- **Durum:** Kabul edildi (ürün sahibi, 2026-11-06; uygulandı PR #35)
 - **Tarih:** 2026-11-06
 - **Ayrıntılandırdığı karar:** [ADR-0015](0015-uygulama-ici-navigasyon.md) madde 3 ("kamera ve konum işaretçisi animasyonları sınırlıdır") ve N2 brief'indeki kare hızı bütçesi
 - **İlgili:** [ADR-0002](0002-kurye-uygulamasi-react-native-expo.md), [ADR-0019](0019-kurye-cevrimdisi-harita-ve-navigasyon.md), ölçüm belgesi NAVIGASYON-AKICILIK.md
