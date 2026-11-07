@@ -40,8 +40,21 @@
 
 ## Uygulama notları — API
 
-_(Görev Q3b doldurur: sunucu tarafı uygulama, ölçülen davranış, sapmalar.)_
+- **Kod:** saf `decideGeofence` (`services/api/src/packages/geofence.ts`) ve `GeofenceDeliveryVerifier` (`delivery-verifier.ts`). `courierAction` DELIVER akışı: rota kilidi -> paket satırı kilidi -> yalnızca paket bu kuryede `PICKED_UP` ise geofence -> bugünkü teslim. Hedef durumdaki yeniden deneme ve çakışmalar 422 almaz; bugünkü 400 VALIDATION_FAILED dalı kaldırıldı, PICKUP serbesttir.
+- **422:** `OUTSIDE_DELIVERY_GEOFENCE` (`distanceM` 10 m yuvarlanmış, konum yoksa `null`; `requiredM`; `targetSource`). Kesici 422'yi sakladığı için aynı anahtar aynı yanıtı döner; geçersiz kılma yeni anahtarla gönderilir (`geofence.e2e-spec.ts`). Gövde farklıysa (ör. `recordedAt` değişmişse) kesici `IDEMPOTENCY_KEY_REUSED` döner; istemci yeniden gönderimde özgün `position` ve `occurredAt`'i aynen kullanmalıdır (M3b'ye not).
+- **Olay verisi:** her DELIVER'da `data.geofence` (OFF dahil: `DISABLED`, `distanceM: null`). `Package.deliveryCheck` son DELIVERED olayından okunur. `GET /metrics/delivery-geofence` kurye kırılımı içermez; ölçülen teslim = INSIDE + dışarıda + konumsuz (DISABLED ve LOW_ACCURACY ölçüm dışı).
+- **Öğrenme ilişkisi:** geçersiz kılma, `OUTSIDE_OBSERVED`, düşük doğruluk, sahte konum, konumsuz ve bayat konumlu teslimler gözlem olmaz (`observation-filter.ts`). Ortak test vektörleri: `services/api/test/fixtures/geofence-vectors.json` (31 durum; mobil kopyalar).
+- Varsayılan `OBSERVE`; ENFORCE'a geçiş çalışma kitabı adımıdır (tüm kuryeler 3b APK'sına geçince).
 
 ## Uygulama notları — Mobil
 
-_(Görev M3b doldurur: cihazda ön uyarı, geçersiz kılma akışı, emülatör / cihaz gözlemleri.)_
+İterasyon 3b-4, kurye uygulaması (M3b). Ölçüm kaynağı: `Medium_Phone_API_36.1` emülatörü (release APK, x86_64) + yerel mock sunucu (`MOCK_GEOFENCE_MODE=ENFORCE`, `/__mock/geofence?mode=`); gerçek API (PR #34) birleşmediği için bu doğrulama mock ile yapıldı.
+
+- **Cihazda karar:** `src/lib/geofence.ts` `decideGeofence`, sunucuyla ortak vektör dosyasını (`geofence-vectors.json`) geçer. Hedef sırası: paketin `deliveryTarget` (konum + `toleranceM`), yoksa rota durağının etkin konumu ve `locationSource`'u, yoksa geocoder noktası (`lowConfidenceToleranceM`). Ayarlar önbellekteki `tenant.settings.delivery`'den okunur, bu yüzden aynı karar **çevrimdışıyken de** verilir.
+- **Tek yol:** rota kartı, navigasyon varış kartı ve paket ayrıntısındaki "Teslim ettim" aynı `deliverWithGeofence` akışını kullanır. ENFORCE + dışarıda (ya da konumsuz): tam ekran sayfa ("Teslim noktasına git" birincil, "Vazgeç", "Yine de teslim ettim"), sonra üç büyük gerekçe ve kaydırarak onay. Gerekçe seçilmeden kaydırma etkinleşmez; "Vazgeç" hiçbir şeyi kuyruğa yazmaz. OBSERVE, OFF, INSIDE ve düşük doğruluk (> 50 m) engellemez: yalnızca bilgi şeridi (düşük doğrulukta uyarı) gösterilir.
+- **Kuyruk:** `classify` 422 `OUTSIDE_DELIVERY_GEOFENCE` yanıtını `NEEDS_OVERRIDE` yapar (`action_queue.state` genişledi; `distanceM`, `requiredM` kayda yazılır). Gönderici bu kaydı atlar, sıradaki kayıtları sürdürür. Kalıcı kart ("Teslim onay bekliyor") kapatılamaz; tek çıkış gerekçe seçmek ya da "Vazgeç" ile bilinçli iptaldir (paket yolda kalır). Gerekçeyle yeniden gönderim **yeni `Idempotency-Key`**, özgün `occurredAt` ve özgün `position` ile yapılır (emülatörde doğrulandı: sunucu günlüğünde özgün olay zamanı, yeni anahtar).
+- **Çevrimdışı gerekçe:** uçak modunda 1,9 km uzaktaki teslimde önbellekteki ayarla uyarı sayfası açıldı, gerekçe + kaydırma sonrası "Kaydedildi, bağlanınca gönderilecek"; bağlantı gelince kayıt `geofenceOverride` ile tek seferde kabul edildi.
+- **Sunucu 422'si (cihaz eski ayarla OBSERVE sanıyordu):** mock'ta kip çalışırken ENFORCE'a çevrildi; teslim 422 aldı, gerekçe sayfası doğrudan ikinci adımda açıldı, kapatınca kalıcı kart kaldı, gerekçeyle gönderim kabul edildi.
+- **Hazır durumu:** `ready-status` kuyruğa girmez; çevrimdışıyken düğmeler devre dışı ve "Bağlantı gerekli" yazar. "Hazır değil" etiketi kalan süreyi yuvarlar (yukarı yuvarlama bildirimden hemen sonra "~6 dk" gösteriyordu).
+- **Gözlem:** hiç açılmamış bir paketin ayrıntısı çevrimdışıyken önbellekte yoktur ("Sunucuya ulaşılamıyor"); rota kartı çevrimdışı çalışır. Bu, 3a'dan gelen davranıştır ve M3b kapsamında değiştirilmedi.
+

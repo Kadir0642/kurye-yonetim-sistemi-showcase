@@ -145,9 +145,11 @@ Beş paralel görev (gorevler/): **R** rota altyapısı + motor + benchmark, **A
 - [ ] "Çevrimdışı" göstergesini yalnızca cihaz ağına değil sunucuya erişilememesine de bağlamak (zayıf kapsamada ağ "bağlı" görünür; uygulama 4 sn sonra önbellekle açılır)
 - [ ] Panelde `courier.sync_conflict` bildiriminin gerçek akışta ekran görüntüsü; ikinci şehir poligonu için bootstrap seçeneği
 - [ ] Adres kalitesi: site / kampüs kapısı ve belediye binası gibi yerlerde konum düzeltme (öğrenilmiş nokta, 3b-1)
+- [x] Navigasyon ekranı akıcılığı ve course-up düzeltmesi (harita rota yönüne döner; yerel öngörülü kamera, konum başına harita ağacı çizimi yok, düşük donanım kademesi; [ADR-0024](kararlar/0024-navigasyon-render-performansi.md), ölçüm)
+- [ ] Navigasyon kare ölçümü gerçek ucuz Android cihazda (protokol); emülatörde MapLibre GL iş parçacığı doygun, 60 fps görülemedi
 
 **3b**
-- [ ] Öğrenilmiş teslim noktaları (3b-1), restoran "paket hazır" sinyali + hazırlık süresi öğrenme (3b-2), aynı restoran gruplamayı iyileştirme (3b-3), teslim geofence'i (3b-4) — **spec hazır** (SPEC-3b; kararlar [ADR-0025](kararlar/0025-isletme-hazir-baglantisi.md), [ADR-0026](kararlar/0026-teslim-geofence-politikasi.md))
+- [ ] Öğrenilmiş teslim noktaları (3b-1), restoran "paket hazır" sinyali + hazırlık süresi öğrenme (3b-2), aynı restoran gruplamayı iyileştirme (3b-3), teslim geofence'i (3b-4) — **spec hazır; 3b-3 motoru ve benchmark (gruplama, hazır zamanı üç koşul) PR'da, ayar varsayılanı kapalı** (SPEC-3b; kararlar [ADR-0025](kararlar/0025-isletme-hazir-baglantisi.md), [ADR-0026](kararlar/0026-teslim-geofence-politikasi.md))
 - [ ] Dağıtım v2 ayarları için panel ekranı (3b-5) — **spec hazır** (SPEC-3b §10)
 
 **3c**

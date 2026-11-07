@@ -284,6 +284,8 @@ sequenceDiagram
 
 Sunucu durum tutmaz; Türkçe metinler yalnızca sunucuda üretilir. Sınırlar: canlı trafik, şerit ve hız sınırı yok (ADR-0015 madde 5).
 
+**Render performansı ([ADR-0024](kararlar/0024-navigasyon-render-performansi.md)):** kamera (course-up, yön rota geometrisinden) her konumda MapLibre'nin yerel animasyonuyla, öngörülü hedefle akar; harita ağacı konum başına çizilmez (konuma bağlı her harita parçası kendi bileşeninde abone; yalnızca rota başı kaynağı her okumada güncellenir); rota çizgisi baş / kuyruk kaynaklarına bölünür; RN hedef işareti yalnızca ekrana yakınken eklenir; düşük donanımda (< 2,5 GB RAM, emülatör hariç) 30 fps ve düz kamera, diğerlerinde uyarlanır 60 -> 30 fps tavanı. Ölçüm düzeni ve sonuçlar: NAVIGASYON-AKICILIK.md.
+
 ### 6.2 Kuryeler arası devir (iterasyon 2)
 
 Pilot müşterinin isteği: bir kurye, kendisine atanmış paketi, konumunun yakınındaki vardiyada olan bir meslektaşına devredebilsin ([ADR-0010](kararlar/0010-kuryeler-arasi-devir.md)). Özet akış:

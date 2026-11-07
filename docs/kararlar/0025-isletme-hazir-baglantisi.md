@@ -39,3 +39,11 @@ Kısıtlar: hiçbir ücretli servis yok (SMS / WhatsApp Business API kullanılam
 | SMS / WhatsApp Business API ile otomatik gönderim | Ücretli; ürün sahibinin kuralı |
 | Paket başına ayrı bağlantı | Restoran her sipariş için yeni bağlantı açmak zorunda kalır; işletme başına tek sayfa daha kullanışlı |
 | Süresiz bağlantı | Sızıntı etkisi zamanla büyür; kısa ömür + kolay yenileme daha güvenli |
+
+## Uygulama notları (İterasyon 3b-2, Görev Q3b)
+
+- **Kod:** `services/api/src/business-link/` (servis, koruyucu, panel ve girişsiz denetleyiciler). Jeton `crypto.randomBytes(32)` base64url (43 karakter); veritabanında yalnızca `sha256` özeti; `X-Business-Link-Token` başlığı hiçbir günlüğe yazılmaz (istek serileştiricisi yalnızca `authorization` ve `user-agent` taşır; `business-link.e2e-spec.ts` günlük testi).
+- **Hız sınırı:** jeton başına `BUSINESS_LINK_RATE_PER_MIN` (30) / dk koruyucuda Redis sayacıyla (`RATE_LIMITED`, 429, `Retry-After`); IP başına ×2 genel hız sınırlayıcıda (`app.factory.ts` `bl-ip` kuralı). Tüm `/business-link/*` yanıtları (hata ve 429 dahil) `Cache-Control: no-store` ve `Referrer-Policy: no-referrer` taşır.
+- **Kapsam:** liste son 12 saat CREATED / IN_POOL / ASSIGNED + son 30 dk PICKED_UP; `dropoffHint` adres metninin ilk virgülüne kadar, <= 40 karakter (hukuk görüşüne bağlı, alan kolayca kaldırılabilir). Başka işletmenin paketi 404, alınmış 409.
+- **Sapma:** "hazır" çağrısı `ready_at_source = SIGNAL` iken idempotenttir (SPEC'teki "ready_signaled_at doluysa" yerine); kurye "Hazır değil" dedikten sonra "Hazır oldu" / panel "Hazır" yeniden `readyAt = şimdi` yapar ve `ready_signaled_at` ilk değerini korur.
+- CORS: `allowedHeaders` listesine `X-Business-Link-Token` eklendi (önkontrol testi). Saklama: bitiş / iptalden 30 gün sonra `JobsService.runRetention` siler.

@@ -58,3 +58,7 @@
 | CBBA (merkeziyetsiz açık artırma) | Bilgi ve iletişim zaten merkezde; gruplama ve geç teslimde geride; yakınsama için teklif bükme sinerjiyi siler; sınırlı menzilde çift atama |
 | CBBA ile görevleri her pencerede serbest bırakmak | Yoğunlukta km kazancı ALNS'ye yakın ama 3,5 kat yeniden atama, daha kötü geç teslim ve gruplama |
 | Değer fonksiyonu / pekiştirmeli öğrenme (Didi, Meituan tarzı) | Veri gerektirir; pilot verisi birikince gelecek iş |
+
+## Not (2026-11-06): gruplama
+
+İterasyon 3b-3 gruplama sonucu (κ, τ, sonradan bağlama, işletme duyarlı kapanış; v2 yolunda bayraklı): bkz. [ADR-0014 sonuç notu](0014-toplu-atama-regret-ekleme.md) ve benchmark.

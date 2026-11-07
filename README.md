@@ -197,7 +197,7 @@ Aşağıdaki görüntüler emülatörde, **gerçek API + kendi karolarımız + k
   <tr>
     <td align="center"><img src="docs/assets/screenshots/kurye-navigasyon-yeniden-rota.png" width="220" alt="Yeniden rota"><br><sub>Yoldan çıkınca yeniden rota</sub></td>
     <td align="center"><img src="docs/assets/screenshots/kurye-navigasyon-varis.png" width="220" alt="Varış kartı"><br><sub>Varış: Ara + kaydırarak onay</sub></td>
-    <td align="center" colspan="2"><img src="docs/assets/gifs/kurye-navigasyon.gif" width="220" alt="Navigasyon GIF"><br><sub>Sürüş, sapma ve varış</sub></td>
+    <td align="center" colspan="2"><img src="docs/assets/gifs/kurye-navigasyon.gif" width="220" alt="Navigasyon GIF"><br><sub>Sürüş: rota yönünde dönen harita (course-up)</sub></td>
   </tr>
 </table>
 
