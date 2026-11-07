@@ -330,6 +330,10 @@ flowchart LR
 
 Tasarım, veri modeli (`handover_offers`), API eskizi, uç durumlar ve KVKK notları: iterasyon-2/KURYE-DEVIR.md. Paket durum makinesine yeni durum eklenmez (§4).
 
+### 6.4 Mola durumu (MVP+ 5)
+
+Vardiyadaki kurye mola verebilir ([ADR-0035](kararlar/0035-mola-durumu.md)): `shifts.break_started_at` / `break_ends_at` + mola geçmişi `shift_breaks`; azami süre kiracı ayarı `settings.shifts.breakMaxMin` (10-120 dk, varsayılan 45), dolunca `ShiftBreakJobsService` (10 sn) molayı otomatik bitirir. Molada kurye `SuggestionsService.prefilter` içinde `ON_BREAK` ile elenir (öneri, toplu plan, OTOMATİK atama ve kabul süresi aşımı yeniden dağıtımı tek noktadan); mevcut rota sürer, yönetici elle atayabilir, bekleyen kabul kartı kabul / ret edilebilir, havuzdan `claim` 422. Olaylar: panel `courier.shift` `BREAK_STARTED` / `BREAK_ENDED`, kurye `shift.updated`. Konum kademeleri değişmez.
+
 ## 7. Güvenlik ve gizlilik ilkeleri
 
 - Tenant izolasyonu: her istekte JWT'den gelen `tenant_id` bağlamı, depo katmanında zorunlu filtre ve bileşik yabancı anahtarlar; RLS İterasyon 2b'de ([ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md)).
