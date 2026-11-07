@@ -281,6 +281,18 @@ Kiracı ayarları `settings.dispatch.poolVisibleToCouriers` (varsayılan `true`)
 
 Tasarım, algoritma, veri modeli taslağı ve benchmark planı: iterasyon-2/ROTA-UYUMLU-ATAMA.md. Yeni tablolar (`courier_routes`, `route_stops`, `assignment_suggestions`, `package_rejections`, `handover_requests`, `handover_offers`) yukarıdaki diyagramdaki `STOP` kavramının yerini alır.
 
+#### 6.1.4 Gecikme ve takılma uyarıları (MVP+ 7, ADR-0036)
+
+| Ayar | Kapsam | Varsayılan | Aralık | Anlam |
+|---|---|---|---|---|
+| `settings.alerts.enabled` | Kiracı (`PATCH /tenant`, OWNER) | `true` | | Kapalıyken değerlendirme çalışmaz, açık uyarılar kapanır |
+| `settings.alerts.latePickupMin` | Kiracı | 15 | 1-120 dk | Hazır paket bu kadar dakikadır alınmadıysa `LATE_PICKUP` |
+| `settings.alerts.lateDeliveryMin` | Kiracı | 10 | 1-120 dk | Planlı teslim tahmini bu kadar aşıldıysa `LATE_DELIVERY` |
+| `settings.alerts.lateDeliveryNoEtaMin` | Kiracı | 45 | 15-240 dk | Tahmin yoksa atanalı bu kadar geçtiyse `LATE_DELIVERY` |
+| `settings.alerts.stuckMin` | Kiracı | 20 | 5-120 dk | Aktif paketli kurye bu sürede 100 m'den az yer değiştirdiyse `STUCK_COURIER` |
+
+`COURIER_STALE` eşiği mevcut `settings.locationStaleMinutes`'tır (yinelenmez; etkin eşik en az 5 dk, açma ve kapama için 2 ardışık değerlendirme, molada atlanır). Değerlendirme işi dakikada bir, kiracı başına, Redis kilidiyle; `alerts` tablosunda konu + tür başına tek açık satır; koşul kalkınca kendiliğinden kapanır. Olaylar `alert.opened / resolved / acked` (yalnızca panel).
+
 ### 6.3 Uygulama içi navigasyon (iterasyon 2)
 
 > Karar: [ADR-0015](kararlar/0015-uygulama-ici-navigasyon.md). Görev: API tarafı N1, uygulama tarafı N2.
