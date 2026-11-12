@@ -28,7 +28,7 @@ Kurye vardiya açıkken yemek, dua, araç bakımı gibi kısa ara verir. Bugün 
 
 - Menajer molayı görür; OTOMATİK atama molada olana paket vermez. Mola yeni bir vardiya durumu gerektirmez: vardiya açık kalır, istatistik ve konum izi bölünmez.
 - Son tarih veritabanında olduğundan yeniden başlatma molayı kaybettirmez; en kötü gecikme iş aralığı (10 sn).
-- Bilinen sınır: devir (kuryeler arası) hedef adayları molayı hesaba katmaz; mola henüz bir devir hedefini engellemez (ayrı iş).
+- Devir (kuryeler arası) **aday listesi** moladaki kuryeyi dışlar (takip paketi). Bilinen sınır: yöneticinin doğrudan hedef seçmesi (`evaluateTarget`, yol B) molayı engel saymaz. Dağıtım v2 pencere kapanışı uzatma kararı (`closeExtension`) da molada kuryeyi "işletmenin alınmamış alışı olan kurye" saymaz; gölge ALNS filosu molada kuryeyi içermeye devam eder (rotası sürer).
 - `shift_breaks` mola raporlaması (kurye başına süre, sıklık) için temel olur; ayrı rapor bu kararın dışındadır.
 
 ## Alternatifler
