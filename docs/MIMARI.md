@@ -290,8 +290,14 @@ Tasarım, algoritma, veri modeli taslağı ve benchmark planı: iterasyon-2/ROTA
 | `settings.alerts.lateDeliveryMin` | Kiracı | 10 | 1-120 dk | Planlı teslim tahmini bu kadar aşıldıysa `LATE_DELIVERY` |
 | `settings.alerts.lateDeliveryNoEtaMin` | Kiracı | 45 | 15-240 dk | Tahmin yoksa atanalı bu kadar geçtiyse `LATE_DELIVERY` |
 | `settings.alerts.stuckMin` | Kiracı | 20 | 5-120 dk | Aktif paketli kurye bu sürede 100 m'den az yer değiştirdiyse `STUCK_COURIER` |
+| `settings.alerts.rejectionEnabled` | Kiracı | `true` | | `COURIER_HIGH_REJECTION` (MVP+ 12) açık mı; kapatınca açık ret uyarıları kapanır |
+| `settings.alerts.rejectionRatePct` | Kiracı | 40 | 10-100 % | Kuryenin pencere içi ret oranı (`ret / teklif`) bu değere ulaşınca uyarı; 10 puan altına inince kapanır |
+| `settings.alerts.rejectionWindowHours` | Kiracı | 24 | 1-168 sa | Oranın hesaplandığı kayan pencere |
+| `settings.alerts.rejectionMinOffers` | Kiracı | 5 | 3-100 | Pencerede en az bu kadar teklif yoksa uyarı yok (1 tekliften 1 ret uyarı üretmez) |
 
 `COURIER_STALE` eşiği mevcut `settings.locationStaleMinutes`'tır (yinelenmez; etkin eşik en az 5 dk, açma ve kapama için 2 ardışık değerlendirme, molada atlanır). Değerlendirme işi dakikada bir, kiracı başına, Redis kilidiyle; `alerts` tablosunda konu + tür başına tek açık satır; koşul kalkınca kendiliğinden kapanır. Olaylar `alert.opened / resolved / acked` (yalnızca panel).
+
+`COURIER_HIGH_REJECTION` (MVP+ 12, ADR-0036 eki): teklif = yönetici / sistem ataması olayları (`ASSIGNED`, `REASSIGNED`, `ASSIGNED_AUTO`; havuzdan kendi alma ve devir hariç), ret = `REJECTED` olayı; kabul süresi aşımları orana girmez, ayrı sayaç olarak uyarı ayrıntısında (`Alert.rejection`) görünür. Yalnızca açık vardiyası olan kuryeler değerlendirilir; mola uyarıyı etkilemez. `courier.rejection_alert` (vardiya başına ret sayısı, ADR-0009) ayrı ve değişmemiştir.
 
 ### 6.3 Uygulama içi navigasyon (iterasyon 2)
 

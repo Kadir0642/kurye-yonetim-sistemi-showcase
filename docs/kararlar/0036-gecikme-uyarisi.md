@@ -43,3 +43,38 @@ Menajer bugün gecikmeyi haritaya bakarak ya da telefonla fark ediyor: hazır be
 - **Olay güdümlü hesap (paket / konum olaylarında):** daha az gecikme, ama paket, konum ve dağıtım modüllerine dokunmak gerekir; dakikalık iş yeterli bulundu.
 - **Tek "gecikme" eşiği:** farklı olaylar (alınmama, teslim aşımı, takılma) farklı süre ister; ayrı eşikler seçildi.
 - **Anlık bildirim (FCM) / SMS / e-posta:** panel içi uyarı yeterli; harici sağlayıcılar ayrı karar ve onay gerektirir.
+
+## Ek (2026-11-12, MVP+ 12): kurye ret oranı uyarısı `COURIER_HIGH_REJECTION`
+
+**Gerekçe.** Mevcut `courier.rejection_alert` olayı yalnızca vardiya başına ret **sayısına** bakar ve bir kez bildirir. Menajer "bu kurye tekliflerin çoğunu reddediyor" bilgisini panelde kalıcı, kapanan / açılan bir uyarı olarak ister; oran, çok teklif alan kuryeyi (10 tekliften 2 ret) az teklif alan kuryeden (3 tekliften 2 ret) ayırır.
+
+**Beşinci uyarı türü:**
+
+| Tür | Koşul | Ayar (varsayılan, aralık) |
+|---|---|---|
+| `COURIER_HIGH_REJECTION` | Açık vardiyası olan kuryenin son `rejectionWindowHours` saatteki ret oranı >= `rejectionRatePct` ve en az `rejectionMinOffers` teklif | `rejectionEnabled` true; `rejectionRatePct` 40 (10-100); `rejectionWindowHours` 24 (1-168); `rejectionMinOffers` 5 (3-100) |
+
+**Tanımlar (mevcut veriden):**
+- **Teklif** = `package_events` içinde kuryeye yazılan `ASSIGNED`, `REASSIGNED`, `ASSIGNED_AUTO` olayı (yönetici ya da sistem ataması). Kuryenin havuzdan kendi aldığı paket (`data.assignment.source` = `CLAIM` / `SMART_POOL_CLAIM`) ve devirle gelen paket (`HANDOVER`, devri kurye zaten kabul etmiştir) teklif **sayılmaz**.
+- **Ret** = aynı kuryenin `REJECTED` olayı (kurye uygulamasında gerekçeli ret) **ve** o paket için kuryeye yapılan son atamanın teklif olması (kaynağı `CLAIM` / `SMART_POOL_CLAIM` / `HANDOVER` değil). Böylece pay ve payda aynı kümedendir: havuzdan kendi aldığı ya da devirle gelen paketi "Reddet" ile geri vermek ret oranını şişirmez. Eşleşme, retten önceki en son atama olayına bakılarak sorguda yapılır (şema değişikliği yok). Serbest bırakma (`RELEASED`) ret değildir.
+- **Kabul süresi aşımı** (`ASSIGNMENT_EXPIRED`, ADR-0028) orana **girmez**; ayrı sayaç olarak uyarı ayrıntısında görünür (`rejection.timeouts`). Gerekçe: aşım "reddetme" kararı değildir (uygulama kapalı, telefon cebinde olabilir); yine de teklif sayısında yer alır. Ayrı eşik gerekirse ayar eklenir (ADR-0028 sonuçlarındaki not).
+- Pencere olay kayıt zamanına (`created_at`) göre **kayan** saat penceresidir (vardiya penceresi değil): bir önceki günün ret yoğunluğu da görünür, vardiya sınırında oran sıfırlanıp uyarıyı gizlemez. Oran `ret / teklif`, en çok %100 (pencere dışı teklifin pencere içi reti oranı şişirebilir; kırpılır).
+
+**Yaşam döngüsü (diğer türlerle aynı kalıp):** konu = kurye, kurye + tür başına en çok bir açık satır (mevcut kısmi benzersiz dizin); dakikalık değerlendirme, `alert.opened` / `alert.resolved` / `alert.acked` olayları (yeni olay yok), yalnızca panel rolleri, her sorgu `tenant_id` ile süzülür. **Histerezis:** açmak için oran >= eşik, açıkken oran >= eşik - 10 puan kaldığı sürece açık kalır; örneklem `rejectionMinOffers`'ın altına inerse (kayan pencere) kapanır. Yalnızca açık vardiyası olan kuryeler değerlendirilir: vardiya bitince uyarı kapanır. **Mola** oranı değiştirmez; uyarıyı açmaz da kapatmaz da (`COURIER_STALE`'in tersine mola burada bir beklenen durum değil, geçmiş veri). `severity`: oran eşiğin iki katına (en çok %100) ulaşmışsa `CRITICAL`, aksi `WARNING` (açılışta sabitlenir). Açılış anındaki sayılar (`offers`, `rejections`, `timeouts`, `ratePct`, `windowHours`) `alerts.data.rejection` içinde saklanır ve `Alert.rejection` olarak döner; kişisel veri yok, günlüğe yalnızca sayılar / kimlikler yazılır. Anahtar kapalıysa (`rejectionEnabled = false` ya da ana `enabled = false`) açık ret uyarıları kapanır.
+
+**Veri modeli (migrasyon 0014):** `tenants.alerts_rejection_enabled / _rate_pct / _window_h / _min_offers` (CHECK aralıkları), `alerts_type_chk` yeni türle genişler, `package_events(tenant_id, courier_id, created_at)` üzerinde kısmi dizin (`type IN ASSIGNED, REASSIGNED, ASSIGNED_AUTO, REJECTED, ASSIGNMENT_EXPIRED`) kurye başına sayımı hızlı yapar. Sözleşme 0.6.8: `AlertType`, `Alert.rejection`, `AlertSummary.openByType`, `AlertSettings` / `AlertSettingsUpdate` eklemedir.
+
+**Panel:** zil / çekmece / `/uyarilar` listesinde "Yüksek ret" çipi (simge + etiket), ayrıntı satırı "Açılışta: son 24 saat, 10 tekliften 5 ret (%50) · 1 kabul süresi aşımı (orana dahil değil)" (açılış anındaki ölçümdür, canlı değildir), "Kuryeye git", türe göre süzgeç; Ayarlar › Uyarılar'da anahtar + üç eşik.
+
+### Ürün sahibi kararı bekleyen (tek satırda değiştirilebilir varsayılanlar)
+
+| Karar | Önerilen / uygulanan varsayılan | Nerede değişir |
+|---|---|---|
+| Uyarı varsayılan açık mı | Açık (`rejectionEnabled = true`) | `tenants.alerts_rejection_enabled` varsayılanı (`db/schema/tenants.ts`) ya da Ayarlar › Uyarılar |
+| Ret oranı eşiği | %40 | `alerts_rejection_rate_pct` varsayılanı (10-100) |
+| Pencere | Son 24 saat, kayan (vardiya değil) | `alerts_rejection_window_h` varsayılanı (1-168) |
+| Asgari teklif sayısı | 5 | `alerts_rejection_min_offers` varsayılanı (3-100) |
+| Kapanış payı (histerezis) | 10 puan | `REJECTION_CLOSE_MARGIN_PCT` (`alerts/alert-rules.ts`) |
+| Süre aşımı orana girsin mi | Hayır (ayrı sayaç olarak gösterilir) | `highRejection` sorgusundaki `rejections` sayacı (`alerts-evaluator.service.ts`) |
+| Havuzdan kendi aldığı paket teklif sayılsın mı | Hayır (geri verilmesi de ret sayılmaz) | `highRejection` sorgusundaki `source` süzgeci |
+| Pencere türü: kayan saat mi, yalnızca geçerli vardiya mı | Kayan 24 saat. Sonucu: uyarı vardiya bitince kapanır, ertesi vardiyanın ilk dakikasında önceki günün verisiyle yeniden açılır (menajere yeni zil bildirimi gider). Alternatif: "yalnızca geçerli vardiyanın teklifleri" (her vardiya sıfırdan başlar, gün sonu yoğun ret ertesi güne taşınmaz; ama vardiyanın ilk teklifleri asgari örneklemi doldurana dek uyarı çıkmaz) | `highRejection` sorgusundaki pencere koşulu (`created_at > now - window`) yerine vardiya başlangıcı |
