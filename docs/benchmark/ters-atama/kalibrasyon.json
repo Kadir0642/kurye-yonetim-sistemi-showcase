@@ -1,0 +1,29 @@
+{
+  "seeds": [
+    101,
+    102,
+    103,
+    104,
+    105
+  ],
+  "variants": [
+    "NA",
+    "V1",
+    "V2"
+  ],
+  "samples": 260463,
+  "cheapInsertions": 5728,
+  "cheapCorridorP50": 250,
+  "cheapCorridorP90": 626,
+  "inCorridor": 44306,
+  "inCorridorAddedP50": 159,
+  "inCorridorAddedP75": 254,
+  "inCorridorAddedP90": 379,
+  "cheapBackP90": 2006,
+  "chosen": {
+    "corridorM": 600,
+    "minAddedS": 150,
+    "severeAddedS": 360,
+    "severeBackM": 2000
+  }
+}

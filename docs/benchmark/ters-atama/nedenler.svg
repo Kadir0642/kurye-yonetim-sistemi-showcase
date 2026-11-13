@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="430" viewBox="0 0 1100 430" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<rect width="1100" height="430" fill="#ffffff"/>
+<text x="70" y="34" font-size="20" font-weight="600" fill="#1f2328">Ters atamalar nereden geliyor?</text>
+<text x="70" y="58" font-size="13" fill="#57606a">100 sistem ataması başına ters atama, nedene göre (8 senaryo x 10 tohum havuzlanmış)</text>
+<text x="240" y="108" font-size="13" text-anchor="end" fill="#1f2328">NA</text>
+<rect x="250.0" y="94" width="405.1" height="24" fill="#c0504d"/>
+<rect x="655.1" y="94" width="0.5" height="24" fill="#8a8f98"/>
+<rect x="655.6" y="94" width="320.7" height="24" fill="#2f9e6d"/>
+<text x="982.3" y="108" font-size="12" fill="#1f2328">17,3</text>
+<text x="240" y="142" font-size="13" text-anchor="end" fill="#1f2328">B</text>
+<rect x="250.0" y="128" width="82.7" height="24" fill="#c0504d"/>
+<rect x="332.7" y="128" width="12.2" height="24" fill="#8a8f98"/>
+<rect x="344.9" y="128" width="664.4" height="24" fill="#2f9e6d"/>
+<text x="1015.3" y="142" font-size="12" fill="#1f2328">18,1</text>
+<text x="240" y="176" font-size="13" text-anchor="end" fill="#1f2328">V1</text>
+<rect x="250.0" y="162" width="88.1" height="24" fill="#c0504d"/>
+<rect x="338.1" y="162" width="22.3" height="24" fill="#8a8f98"/>
+<rect x="360.4" y="162" width="227.3" height="24" fill="#4f7cac"/>
+<rect x="587.7" y="162" width="94.3" height="24" fill="#2f9e6d"/>
+<text x="688.0" y="176" font-size="12" fill="#1f2328">10,3</text>
+<text x="240" y="210" font-size="13" text-anchor="end" fill="#1f2328">V2</text>
+<rect x="250.0" y="196" width="385.6" height="24" fill="#e08a1e"/>
+<rect x="635.6" y="196" width="38.4" height="24" fill="#c0504d"/>
+<rect x="674.1" y="196" width="7.9" height="24" fill="#8a8f98"/>
+<rect x="682.0" y="196" width="192.3" height="24" fill="#4f7cac"/>
+<text x="880.3" y="210" font-size="12" fill="#1f2328">14,9</text>
+<text x="240" y="244" font-size="13" text-anchor="end" fill="#1f2328">V1, %10 kabul etmeme</text>
+<rect x="250.0" y="230" width="26.6" height="24" fill="#8e6bbf"/>
+<rect x="276.6" y="230" width="72.6" height="24" fill="#c0504d"/>
+<rect x="349.2" y="230" width="21.6" height="24" fill="#8a8f98"/>
+<rect x="370.8" y="230" width="239.9" height="24" fill="#4f7cac"/>
+<rect x="610.7" y="230" width="90.7" height="24" fill="#2f9e6d"/>
+<text x="707.4" y="244" font-size="12" fill="#1f2328">10,7</text>
+<text x="240" y="278" font-size="13" text-anchor="end" fill="#1f2328">V2, %10 kabul etmeme</text>
+<rect x="250.0" y="264" width="59.1" height="24" fill="#8e6bbf"/>
+<rect x="309.1" y="264" width="357.1" height="24" fill="#e08a1e"/>
+<rect x="666.2" y="264" width="30.4" height="24" fill="#c0504d"/>
+<rect x="696.6" y="264" width="5.4" height="24" fill="#8a8f98"/>
+<rect x="702.0" y="264" width="187.0" height="24" fill="#4f7cac"/>
+<text x="895.0" y="278" font-size="12" fill="#1f2328">15,2</text>
+<rect x="70" y="313" width="14" height="14" fill="#8e6bbf"/><text x="90" y="325" font-size="12" fill="#1f2328">Kabul süresi aşımı sonrası yeniden atama</text>
+<rect x="590" y="313" width="14" height="14" fill="#e08a1e"/><text x="610" y="325" font-size="12" fill="#1f2328">v2 gecikmeli atama sınırında atandı</text>
+<rect x="70" y="335" width="14" height="14" fill="#c0504d"/><text x="90" y="347" font-size="12" fill="#1f2328">Makul alternatif vardı ama kapasitesi doluydu</text>
+<rect x="590" y="335" width="14" height="14" fill="#8a8f98"/><text x="610" y="347" font-size="12" fill="#1f2328">Makul alternatif yoktu (tek seçenek)</text>
+<rect x="70" y="357" width="14" height="14" fill="#4f7cac"/><text x="90" y="369" font-size="12" fill="#1f2328">Alternatif vardı; toplu / pencere kararı tercih etti</text>
+<rect x="590" y="357" width="14" height="14" fill="#2f9e6d"/><text x="610" y="369" font-size="12" fill="#1f2328">Alternatif vardı; tekil skor (yalnızca süre) tercih etti</text>
+<text x="1080" y="420" font-size="11" text-anchor="end" fill="#57606a">Yol verisi: © OpenStreetMap katkıcıları (ODbL). Senaryolar tamamen kurgusal (sentetik talep).</text>
+</svg>

@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="600" viewBox="0 0 1100 600" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+<rect width="1100" height="600" fill="#ffffff"/>
+<text x="70" y="34" font-size="20" font-weight="600" fill="#1f2328">Ters atama oranı: algoritma ve senaryo</text>
+<text x="70" y="58" font-size="13" fill="#57606a">Sistem atamalarının yüzdesi; 10 tohum ortalaması ve %95 GA; kapasite 5, ilk 15 dk ısınma hariç</text>
+<line x1="70" x2="1080" y1="460.0" y2="460.0" stroke="#e5e8eb"/>
+<text x="62" y="464.0" font-size="12" text-anchor="end" fill="#57606a">0</text>
+<line x1="70" x2="1080" y1="340.0" y2="340.0" stroke="#e5e8eb"/>
+<text x="62" y="344.0" font-size="12" text-anchor="end" fill="#57606a">10</text>
+<line x1="70" x2="1080" y1="220.0" y2="220.0" stroke="#e5e8eb"/>
+<text x="62" y="224.0" font-size="12" text-anchor="end" fill="#57606a">20</text>
+<line x1="70" x2="1080" y1="99.9" y2="99.9" stroke="#e5e8eb"/>
+<text x="62" y="103.9" font-size="12" text-anchor="end" fill="#57606a">30</text>
+<text x="18" y="275" font-size="12" fill="#57606a" transform="rotate(-90 18 275)" text-anchor="middle">Ters atama (% sistem atamaları)</text>
+<rect x="79.5" y="460.0" width="16.2" height="0.0" fill="#8a8f98" rx="2"/>
+<rect x="98.7" y="230.8" width="16.2" height="229.2" fill="#c0504d" rx="2"/>
+<line x1="106.9" x2="106.9" y1="249.1" y2="212.5" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="118.0" y="287.4" width="16.2" height="172.6" fill="#4f7cac" rx="2"/>
+<line x1="126.1" x2="126.1" y1="311.5" y2="263.2" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="137.2" y="365.7" width="16.2" height="94.3" fill="#2f9e6d" rx="2"/>
+<line x1="145.4" x2="145.4" y1="386.7" y2="344.6" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="156.5" y="334.5" width="16.2" height="125.5" fill="#e08a1e" rx="2"/>
+<line x1="164.6" x2="164.6" y1="356.4" y2="312.7" stroke="#1f2328" stroke-width="1.2"/>
+<text x="126.1" y="480" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">25 kurye 2/dk</text>
+<text x="126.1" y="495" font-size="12" font-weight="400" text-anchor="middle" fill="#1f2328">karma</text>
+<rect x="191.7" y="460.0" width="16.2" height="0.0" fill="#8a8f98" rx="2"/>
+<rect x="211.0" y="224.1" width="16.2" height="235.9" fill="#c0504d" rx="2"/>
+<line x1="219.1" x2="219.1" y1="241.1" y2="207.2" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="230.2" y="242.5" width="16.2" height="217.5" fill="#4f7cac" rx="2"/>
+<line x1="238.3" x2="238.3" y1="262.6" y2="222.4" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="249.5" y="331.6" width="16.2" height="128.4" fill="#2f9e6d" rx="2"/>
+<line x1="257.6" x2="257.6" y1="345.5" y2="317.8" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="268.7" y="284.7" width="16.2" height="175.3" fill="#e08a1e" rx="2"/>
+<line x1="276.8" x2="276.8" y1="318.3" y2="251.0" stroke="#1f2328" stroke-width="1.2"/>
+<text x="238.3" y="480" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">25 kurye 2/dk</text>
+<text x="238.3" y="495" font-size="12" font-weight="400" text-anchor="middle" fill="#1f2328">karşıt</text>
+<rect x="303.9" y="460.0" width="16.2" height="0.0" fill="#8a8f98" rx="2"/>
+<rect x="323.2" y="265.8" width="16.2" height="194.2" fill="#c0504d" rx="2"/>
+<line x1="331.3" x2="331.3" y1="282.9" y2="248.6" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="342.4" y="245.2" width="16.2" height="214.8" fill="#4f7cac" rx="2"/>
+<line x1="350.6" x2="350.6" y1="259.5" y2="230.9" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="361.7" y="329.3" width="16.2" height="130.7" fill="#2f9e6d" rx="2"/>
+<line x1="369.8" x2="369.8" y1="354.8" y2="303.8" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="380.9" y="262.5" width="16.2" height="197.5" fill="#e08a1e" rx="2"/>
+<line x1="389.0" x2="389.0" y1="288.4" y2="236.6" stroke="#1f2328" stroke-width="1.2"/>
+<text x="350.6" y="480" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">25 kurye 3/dk</text>
+<text x="350.6" y="495" font-size="12" font-weight="400" text-anchor="middle" fill="#1f2328">karma</text>
+<rect x="416.2" y="460.0" width="16.2" height="0.0" fill="#8a8f98" rx="2"/>
+<rect x="435.4" y="249.7" width="16.2" height="210.3" fill="#c0504d" rx="2"/>
+<line x1="443.5" x2="443.5" y1="272.8" y2="226.6" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="454.7" y="148.9" width="16.2" height="311.1" fill="#4f7cac" rx="2"/>
+<line x1="462.8" x2="462.8" y1="174.1" y2="123.6" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="473.9" y="305.8" width="16.2" height="154.2" fill="#2f9e6d" rx="2"/>
+<line x1="482.0" x2="482.0" y1="327.7" y2="283.8" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="493.1" y="224.0" width="16.2" height="236.0" fill="#e08a1e" rx="2"/>
+<line x1="501.3" x2="501.3" y1="252.8" y2="195.1" stroke="#1f2328" stroke-width="1.2"/>
+<text x="462.8" y="480" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">25 kurye 3/dk</text>
+<text x="462.8" y="495" font-size="12" font-weight="400" text-anchor="middle" fill="#1f2328">karşıt</text>
+<rect x="528.4" y="460.0" width="16.2" height="0.0" fill="#8a8f98" rx="2"/>
+<rect x="547.6" y="254.1" width="16.2" height="205.9" fill="#c0504d" rx="2"/>
+<line x1="555.8" x2="555.8" y1="265.5" y2="242.7" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="566.9" y="308.2" width="16.2" height="151.8" fill="#4f7cac" rx="2"/>
+<line x1="575.0" x2="575.0" y1="324.9" y2="291.5" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="586.1" y="357.5" width="16.2" height="102.5" fill="#2f9e6d" rx="2"/>
+<line x1="594.2" x2="594.2" y1="367.0" y2="347.9" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="605.4" y="352.1" width="16.2" height="107.9" fill="#e08a1e" rx="2"/>
+<line x1="613.5" x2="613.5" y1="362.1" y2="342.1" stroke="#1f2328" stroke-width="1.2"/>
+<text x="575.0" y="480" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">50 kurye 4/dk</text>
+<text x="575.0" y="495" font-size="12" font-weight="400" text-anchor="middle" fill="#1f2328">karma</text>
+<rect x="640.6" y="460.0" width="16.2" height="0.0" fill="#8a8f98" rx="2"/>
+<rect x="659.9" y="238.0" width="16.2" height="222.0" fill="#c0504d" rx="2"/>
+<line x1="668.0" x2="668.0" y1="257.9" y2="218.0" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="679.1" y="272.9" width="16.2" height="187.1" fill="#4f7cac" rx="2"/>
+<line x1="687.2" x2="687.2" y1="288.6" y2="257.1" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="698.3" y="353.9" width="16.2" height="106.1" fill="#2f9e6d" rx="2"/>
+<line x1="706.5" x2="706.5" y1="366.5" y2="341.4" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="717.6" y="330.2" width="16.2" height="129.8" fill="#e08a1e" rx="2"/>
+<line x1="725.7" x2="725.7" y1="345.5" y2="314.9" stroke="#1f2328" stroke-width="1.2"/>
+<text x="687.2" y="480" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">50 kurye 4/dk</text>
+<text x="687.2" y="495" font-size="12" font-weight="400" text-anchor="middle" fill="#1f2328">karşıt</text>
+<rect x="752.8" y="460.0" width="16.2" height="0.0" fill="#8a8f98" rx="2"/>
+<rect x="772.1" y="271.5" width="16.2" height="188.5" fill="#c0504d" rx="2"/>
+<line x1="780.2" x2="780.2" y1="285.4" y2="257.7" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="791.3" y="265.8" width="16.2" height="194.2" fill="#4f7cac" rx="2"/>
+<line x1="799.4" x2="799.4" y1="276.8" y2="254.9" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="810.6" y="328.1" width="16.2" height="131.9" fill="#2f9e6d" rx="2"/>
+<line x1="818.7" x2="818.7" y1="342.2" y2="314.1" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="829.8" y="275.0" width="16.2" height="185.0" fill="#e08a1e" rx="2"/>
+<line x1="837.9" x2="837.9" y1="285.7" y2="264.4" stroke="#1f2328" stroke-width="1.2"/>
+<text x="799.4" y="480" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">50 kurye 6/dk</text>
+<text x="799.4" y="495" font-size="12" font-weight="400" text-anchor="middle" fill="#1f2328">karma</text>
+<rect x="865.1" y="460.0" width="16.2" height="0.0" fill="#8a8f98" rx="2"/>
+<rect x="884.3" y="252.9" width="16.2" height="207.1" fill="#c0504d" rx="2"/>
+<line x1="892.4" x2="892.4" y1="263.9" y2="241.9" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="903.5" y="165.1" width="16.2" height="294.9" fill="#4f7cac" rx="2"/>
+<line x1="911.7" x2="911.7" y1="189.1" y2="141.1" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="922.8" y="297.2" width="16.2" height="162.8" fill="#2f9e6d" rx="2"/>
+<line x1="930.9" x2="930.9" y1="316.5" y2="277.9" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="942.0" y="210.6" width="16.2" height="249.4" fill="#e08a1e" rx="2"/>
+<line x1="950.2" x2="950.2" y1="237.1" y2="184.0" stroke="#1f2328" stroke-width="1.2"/>
+<text x="911.7" y="480" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">50 kurye 6/dk</text>
+<text x="911.7" y="495" font-size="12" font-weight="400" text-anchor="middle" fill="#1f2328">karşıt</text>
+<rect x="977.3" y="460.0" width="16.2" height="0.0" fill="#8a8f98" rx="2"/>
+<rect x="996.5" y="252.5" width="16.2" height="207.5" fill="#c0504d" rx="2"/>
+<line x1="1004.6" x2="1004.6" y1="257.5" y2="247.4" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="1015.8" y="243.1" width="16.2" height="216.9" fill="#4f7cac" rx="2"/>
+<line x1="1023.9" x2="1023.9" y1="251.5" y2="234.7" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="1035.0" y="336.9" width="16.2" height="123.1" fill="#2f9e6d" rx="2"/>
+<line x1="1043.1" x2="1043.1" y1="342.0" y2="331.7" stroke="#1f2328" stroke-width="1.2"/>
+<rect x="1054.3" y="282.0" width="16.2" height="178.0" fill="#e08a1e" rx="2"/>
+<line x1="1062.4" x2="1062.4" y1="291.3" y2="272.7" stroke="#1f2328" stroke-width="1.2"/>
+<text x="1023.9" y="480" font-size="12" font-weight="600" text-anchor="middle" fill="#1f2328">Tümü</text>
+<text x="1023.9" y="495" font-size="12" font-weight="400" text-anchor="middle" fill="#1f2328">(havuz)</text>
+<rect x="70" y="523" width="14" height="14" fill="#8a8f98" rx="2"/><text x="90" y="535" font-size="13" fill="#1f2328">NI  En yakın boştaki kurye</text>
+<rect x="400" y="523" width="14" height="14" fill="#c0504d" rx="2"/><text x="420" y="535" font-size="13" fill="#1f2328">NA  En yakın kurye</text>
+<rect x="730" y="523" width="14" height="14" fill="#4f7cac" rx="2"/><text x="750" y="535" font-size="13" fill="#1f2328">B  Rota uyumlu öneri (1. aday)</text>
+<rect x="70" y="543" width="14" height="14" fill="#2f9e6d" rx="2"/><text x="90" y="555" font-size="13" fill="#1f2328">V1  OTOMATİK v1 (pilot ayarları)</text>
+<rect x="400" y="543" width="14" height="14" fill="#e08a1e" rx="2"/><text x="420" y="555" font-size="13" fill="#1f2328">V2  Dağıtım v2 (60 sn pencere)</text>
+<text x="1080" y="590" font-size="11" text-anchor="end" fill="#57606a">Yol verisi: © OpenStreetMap katkıcıları (ODbL). Senaryolar tamamen kurgusal (sentetik talep).</text>
+</svg>

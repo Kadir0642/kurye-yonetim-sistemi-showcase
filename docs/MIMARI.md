@@ -281,6 +281,8 @@ Kiracı ayarları `settings.dispatch.poolVisibleToCouriers` (varsayılan `true`)
 - **Panel yayını birleştirme (API):** `courier.position` kiracı + kurye başına en çok 3 sn'de bir (`POSITION_COALESCE_MS`); ilk konum hemen, pencere içindekiler tek olay (en yeni nokta). Tüm noktalar yine `location_pings`'e yazılır.
 - **Rota yanlış:** `route_feedback` tablosu (migration 0007, kiracı kapsamlı, kişisel veri yok), kurye `POST /courier/route-feedback` (çevrimdışı kuyruk, `Idempotency-Key`), panel `GET /route-feedback` + `PATCH /route-feedback/{id}`, OWNER `GET /route-feedback.geojson` (OSM düzenlemesi için kimliksiz). Ayrıntı: SPEC-4b.
 
+**Ters atama ölçütü (ADR-0039):** bir atama, atandığı anda kuryenin taahhüt edilmiş rotasına göre sınıflandırılır (Δt = yerleştirme marjinal maliyeti; alış veya teslim 600 m koridorun dışında ve kuryenin gidiş yönüne göre 600 m'den fazla gerideyse ve Δt ≥ 150 sn ise "ters"). Saf modül `services/api/src/routing/ters.ts`; yalnızca benchmark'ta kullanılır (`npm run benchmark:ters`), üretim dağıtım davranışı değişmez. Ölçüm ve öneriler: [TERS-ATAMA-2026-11](benchmark/TERS-ATAMA-2026-11.md).
+
 Tasarım, algoritma, veri modeli taslağı ve benchmark planı: iterasyon-2/ROTA-UYUMLU-ATAMA.md. Yeni tablolar (`courier_routes`, `route_stops`, `assignment_suggestions`, `package_rejections`, `handover_requests`, `handover_offers`) yukarıdaki diyagramdaki `STOP` kavramının yerini alır.
 
 #### 6.1.4 Gecikme ve takılma uyarıları (MVP+ 7, ADR-0036)
