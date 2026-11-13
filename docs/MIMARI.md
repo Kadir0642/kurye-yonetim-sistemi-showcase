@@ -387,7 +387,7 @@ Pilot müşteri keşfi henüz yapılmadı; aşağıdakiler cevap bekliyor.
 | 14 | Faturalama modeli: paket başı mı, abonelik mi? | Faturalama (İterasyon 6+) |
 | 15 | iOS üretim dağıtımı: firmanın D-U-N-S numarası / Apple Business Manager hesabı var mı (Custom App), yoksa listelenmemiş App Store uygulaması mı? | ADR-0003 |
 | 16 | KVKK aydınlatma ve açık rıza metinlerinin hukuken onaylı içeriği | ADR-0005 |
-| 17 | Bir kurye aynı anda en çok kaç paket taşır? (varsayılan 4) | ADR-0009: `max_active_packages_per_courier`, kapasite kısıtı |
+| 17 | Bir kurye aynı anda en çok kaç paket taşır? (şema varsayılanı 4; pilot ön ayarı 5, Panel > Ayarlar > Atama) | ADR-0009: `max_active_packages_per_courier`, kapasite kısıtı |
 | 18 | Kabul edilebilir sapma kaç dakika? (varsayılan 5 dk) | ADR-0009: sapma eşiği, otomatik atama ve akıllı havuz |
 | 19 | Müşteriye söz verilen teslimat süresi / alıştan teslime azami süre nedir? (varsayılan 35 dk) | ADR-0009: taze kalma kısıtı, geç teslim tanımı |
 | 20 | Sipariş girilirken restoranın hazırlık süresi biliniyor mu? | ADR-0009: `ready_at`, kuryenin alış beklemesi |
