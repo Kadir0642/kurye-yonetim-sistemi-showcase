@@ -110,7 +110,7 @@ Durum: ✅ tamamlandı (İterasyon 1-4), 🧪 tamamlandı, pilot sahasında doğ
 - ✅ Vardiya aç / kapat, havuzdan paket alma (İterasyon 1)
 - ✅ Paket seçilince adres haritada açılır, tek dokunuşla navigasyon (İterasyon 1)
 - ✅ "Rotam" ekranı: tam ekran harita, numaralı durak listesi, optimal sıra, rota değişince şerit ve titreşim (İterasyon 2)
-- ✅ **Uygulama içi adım adım navigasyon**: eğik yön-yukarı harita, Türkçe sesli yönlendirme, yeniden rota, gündüz / gece teması, varışta kaydırarak onay ([ADR-0015](docs/kararlar/0015-uygulama-ici-navigasyon.md), İterasyon 2)
+- ✅ **Uygulama içi adım adım navigasyon**: eğik yön-yukarı harita, yazılı Türkçe talimat (sesli yönlendirme kuryelerin isteğiyle kapalı), yeniden rota, gündüz / gece teması, varışta kaydırarak onay ([ADR-0015](docs/kararlar/0015-uygulama-ici-navigasyon.md), İterasyon 2)
 - ✅ **Yeni navigasyon görünümü** (marka kimliği B, [ADR-0027](docs/kararlar/0027-marka-kimligi-ve-navigasyon-gorsel-dili.md)): koyu krom + neon vurgu, büyük manevra kartı, yeni ikon seti, gündüz açık "gümüş" harita; harita rota yönüne döner (course-up) ve **akıcılık iyileştirildi** ([ADR-0024](docs/kararlar/0024-navigasyon-render-performansi.md)): emülatörde ortalama kare hızı 23,2 -> 27-34 fps, 100 ms üzeri takılma 71 -> 5-10 (60 fps'e ulaşılamadı; gerçek cihazda ölçülmedi) (İterasyon 3b)
 - ✅ Öğrenilmiş teslim noktası rozeti, "Hazır değil" / "Hazır oldu", teslim geofence uyarısı ve gerekçeli geçersiz kılma (çevrimdışı kuyrukla) (İterasyon 3b)
 - ✅ Kontrollü ret (gerekçeli) ve devir isteği (İterasyon 2)
@@ -243,7 +243,7 @@ Görüntüler kurgusal seed verisiyle alındı (kişisel veri yok). Panel görü
   </tr>
 </table>
 
-**Uygulama içi navigasyon** ([ADR-0015](docs/kararlar/0015-uygulama-ici-navigasyon.md)): marka görsel diliyle (ADR-0027: koyu krom, neon vurgu, gündüz açık "gümüş" harita) büyük manevra kartı, yön-yukarı kamera, Türkçe sesli yönlendirme, otomatik yeniden rota, gündüz / gece teması, koridor etiketleri ve varışta kaydırarak onay. Emülatörde GPS oynatılarak alındı (kurgusal veri). Tasarım maketleri ve marka belirteçleri: [docs/tasarim/navigasyon](docs/tasarim/navigasyon/README.md), [docs/tasarim/marka](docs/tasarim/marka/README.md). Akıcılık ölçümü emülatörde yapıldı (ort. kare hızı 23,2 -> 27-34 fps); 60 fps'e ulaşılamadı, gerçek cihaz testi açık.
+**Uygulama içi navigasyon** ([ADR-0015](docs/kararlar/0015-uygulama-ici-navigasyon.md)): marka görsel diliyle (ADR-0027: koyu krom, neon vurgu, gündüz açık "gümüş" harita) büyük manevra kartı, yön-yukarı kamera, yazılı Türkçe talimat (sesli yönlendirme kuryelerin isteğiyle kapalı), otomatik yeniden rota, gündüz / gece teması, koridor etiketleri ve varışta kaydırarak onay. Emülatörde GPS oynatılarak alındı (kurgusal veri). Tasarım maketleri ve marka belirteçleri: [docs/tasarim/navigasyon](docs/tasarim/navigasyon/README.md), [docs/tasarim/marka](docs/tasarim/marka/README.md). Akıcılık ölçümü emülatörde yapıldı (ort. kare hızı 23,2 -> 27-34 fps); 60 fps'e ulaşılamadı, gerçek cihaz testi açık.
 
 <table>
   <tr>

@@ -307,7 +307,7 @@ Tasarım, algoritma, veri modeli taslağı ve benchmark planı: iterasyon-2/ROTA
 
 > Karar: [ADR-0015](kararlar/0015-uygulama-ici-navigasyon.md). Görev: API tarafı N1, uygulama tarafı N2.
 
-"Navigasyonu başlat" Google Maps'e atmak yerine uygulama içinde Google Maps gibi çalışan bir ekran açar: yeşil üst bant (manevra oku, mesafe, sokak adı, sonraki manevra), eğik ve yön-yukarı kamera, alt çubuk (kalan süre, km, varış saati, Çıkış), Türkçe sesli yönlendirme, yoldan çıkınca otomatik yeniden rota; varışta durak kartı açılır, işlemden sonra sonraki durağa navigasyon kendiliğinden başlar.
+"Navigasyonu başlat" Google Maps'e atmak yerine uygulama içinde Google Maps gibi çalışan bir ekran açar: yeşil üst bant (manevra oku, mesafe, sokak adı, sonraki manevra), eğik ve yön-yukarı kamera, alt çubuk (kalan süre, km, varış saati, Çıkış), yoldan çıkınca otomatik yeniden rota; varışta durak kartı açılır, işlemden sonra sonraki durağa navigasyon kendiliğinden başlar. Sesli yönlendirme ürün kararıyla kapalıdır (tek bayrak; [ADR-0015 eki](kararlar/0015-uygulama-ici-navigasyon.md#ek-kasım-2026-sesli-yönlendirme-kapalı)).
 
 ```mermaid
 sequenceDiagram

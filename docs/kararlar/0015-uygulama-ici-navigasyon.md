@@ -64,3 +64,7 @@
 | Yalnızca devir (mevcut durum) | Kurye uygulamadan çıkar; durak takibi, otomatik varış kartı ve sonraki durağa geçiş kaybolur. Yedek yol olarak korunur |
 | Valhalla / GraphHopper'ın kendi yönlendirme motoru (Türkçe talimat dahil) | Ek altyapı ve ikinci rota motoru; Valhalla'nın Türkçe talimatı vardır ama ADR-0011'deki motosiklet profili ve ETA tutarlılığı bozulur. OSRM adımları + kendi üreticimiz tek motoru korur |
 | Talimatları uygulamada üretmek | Her istemci sürümünde Türkçe düzeltmesi; test ve tutarlılık dağınık. Sunucuda üretim tek kaynak |
+
+## Ek (Kasım 2026): sesli yönlendirme kapalı
+
+Ürün sahibinin kararıyla uygulama içi navigasyonda **sesli yönlendirme (TTS) kapalıdır**: kuryeler sesi zaten kapatıyordu. Uygulamada tek bayrak (`NAV_VOICE_ENABLED = false`, `apps/courier-mobile/src/navigation/speech.ts`); ses düğmesi ve kalıcı ses ayarı kaldırıldı. Sunucu sözleşmesi değişmedi: `voiceAnnouncements` üretilmeye devam eder, uygulama okumaz; bayrak açılırsa anonslar yeniden okunur. Bildirim sesleri (yeni atama vb.) navigasyon dışıdır ve bu karardan etkilenmez.
