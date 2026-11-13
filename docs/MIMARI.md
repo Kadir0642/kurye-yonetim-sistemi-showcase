@@ -2,6 +2,8 @@
 
 > Durum: **İterasyon 1 için kabul edildi** (2026-10-30); **İterasyon 2 spesifikasyonu onaya sunuldu** (2026-11-02): iterasyon-2/SPEC.md, [ADR-0011](kararlar/0011-osrm-motosiklet-profili-ve-rota-altyapisi.md), [ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md), [ADR-0013](kararlar/0013-rota-motoru-siniri-ve-yaklasik-mod.md), [ADR-0014](kararlar/0014-toplu-atama-regret-ekleme.md). Yığın ve harita kararları [ADR-0007](kararlar/0007-backend-ve-web-yigini.md) ve [ADR-0008](kararlar/0008-acik-kaynak-harita.md), kurye uygulaması [ADR-0002](kararlar/0002-kurye-uygulamasi-react-native-expo.md), rota uyumlu atama (İterasyon 2 ana hedefi) [ADR-0009](kararlar/0009-rota-uyumlu-atama.md), kuryeler arası devir [ADR-0010](kararlar/0010-kuryeler-arasi-devir.md), uygulama içi navigasyon [ADR-0015](kararlar/0015-uygulama-ici-navigasyon.md). İterasyon 1'in kesin şeması, durum makinesi ve protokolleri: İterasyon 1 spesifikasyonu. Pilot müşteri keşfi sürdüğü için ileriki iterasyonlara ait bölümler değişebilir. Gerekçeler için [karar kayıtları](kararlar/README.md), dayanak için araştırma raporları.
 
+> **Güncel işaretçiler (2026-11-13, İterasyon 4 kapanışı; durum için [YOL-HARITASI](YOL-HARITASI.md#iterasyon-4-pilot)):** İterasyon 2, 3a, 3b ve 4 uygulandı ve birleştirildi. Karar kayıtları ADR-0001 ... ADR-0037 ([dizin](kararlar/README.md)); İterasyon 4 kararları ADR-0028 ... ADR-0037. API sözleşmesi `packages/contracts` **0.7.0**. Veritabanı geçişleri `services/api/drizzle` altında 0000 ... 0014 (15 dosya); İterasyon 4'ün geçişleri: 0006 dağıtım pilotu, 0007 rota geri bildirimi, 0008 şifre değiştirme, 0009 müşteri verisi saklama, 0010 yeniden deneme aralığı, 0011 tahsilat, 0012 mola, 0013 ve 0014 uyarılar. Uyarı türleri ([§6.1.4](#614-gecikme-ve-takılma-uyarıları-mvp-7-adr-0036)): `LATE_PICKUP`, `LATE_DELIVERY`, `COURIER_STALE`, `STUCK_COURIER`, `COURIER_HIGH_REJECTION`. Oturum: panelde refresh token HttpOnly çerezde ([ADR-0037](kararlar/0037-panel-refresh-cerezi.md), [§7](#7-güvenlik-ve-gizlilik-ilkeleri)), kurye uygulamasında gövde akışı. Yük testi ve darboğaz düzeltmeleri: [ADR-0033](kararlar/0033-yuk-testi-darbogazlari.md), rapor (100 kuryeye kadar, dakikada 3 siparişle hatasız; sipariş hızı kuryeyle ölçeklenmedi).
+
 ## 1. Bileşenler
 
 | Bileşen | Teknoloji | Sorumluluk |
@@ -357,6 +359,7 @@ Vardiyadaki kurye mola verebilir ([ADR-0035](kararlar/0035-mola-durumu.md)): `sh
 - Tenant izolasyonu: her istekte JWT'den gelen `tenant_id` bağlamı, depo katmanında zorunlu filtre ve bileşik yabancı anahtarlar; RLS İterasyon 2b'de ([ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md)).
 - Rota motoru (OSRM / VROOM) yalnızca iç ağda çalışır; kurye konumu üçüncü taraf bir servise gönderilmez.
 - Kimlik: kısa ömürlü JWT access token + rotasyonlu, tek kullanımlık refresh token (yeniden kullanım tespiti).
+- Oturum taşıma ([ADR-0037](kararlar/0037-panel-refresh-cerezi.md), sözleşme 0.7.0): **panel (tarayıcı)** refresh token'ı yalnızca `HttpOnly; SameSite=Strict; Path=/api/v1/auth/web` çerezde (üretimde `Secure`, ad `__Secure-kurye_rt`) tutar, access token yalnızca bellektedir; sayfa yenilenince `POST /auth/web/refresh` oturumu çerezle geri yükler. Web uçları (`/auth/web/login|refresh|logout`) CSRF için `X-Kurye-Client: web` başlığını ve izinli / aynı `Origin`'i ister (403 `CSRF_REJECTED`); CORS yalnızca `CORS_ORIGINS` kökenlerine kimlik bilgisiyle açılır (`*` reddedilir). **Kurye uygulaması** gövde akışında kalır (`/auth/courier/login`, `/auth/refresh`, `/auth/logout`; SecureStore); gövde uçları çerez okumaz / yazmaz, web uçları gövdede refresh token döndürmez. Sekmeler arası çıkış / giriş `BroadcastChannel` ile duyurulur (belirteç taşınmaz).
 - Giriş kilidi ve şifre kuralı ([ADR-0030](kararlar/0030-kimlik-sertlestirme.md)): hatalı giriş sayacı `kimlik + IP` çiftinde (5 / 15 dk), kimlik başına yüksek eşik (50 / saat -> 15 dk kilit) ve 3. hatadan sonra artan gecikme (en çok 5 sn); kilit yalnızca girişi etkiler. Yeni şifre en az 8 karakter, gömülü yaygın şifre listesinde değil, telefon numarasını içermez. Panelin verdiği şifre geçicidir (`users.must_change_password`): kurye kendi şifresini belirleyene kadar yalnızca `/me`, `/me/password` ve `/auth/*` açıktır.
 - Konum yalnızca açık vardiyada; aydınlatma metni ve açık rıza metni ayrı ([ADR-0005](kararlar/0005-konum-takibi-ve-kvkk.md)).
 - Gizli anahtarlar depoda tutulmaz; yapılandırma ortam değişkenleriyle.
@@ -381,7 +384,7 @@ Pilot müşteri keşfi henüz yapılmadı; aşağıdakiler cevap bekliyor.
 | 11 | Google ToS: koordinat önbellekleme ve Google verisini Google dışı harita ile kullanma sınırları | ADR-0001 (açık risk) |
 | 12 | Eskişehir OSM adres / yol kalitesi yeterli mi? (~30 örnek adresle test) | ADR-0001, ADR-0006 |
 | 13 | Android developer verification: Türkiye ve kurumsal dağıtım durumu | ADR-0003 |
-| 14 | Faturalama modeli: paket başı mı, abonelik mi? | Faturalama (İterasyon 5+) |
+| 14 | Faturalama modeli: paket başı mı, abonelik mi? | Faturalama (İterasyon 6+) |
 | 15 | iOS üretim dağıtımı: firmanın D-U-N-S numarası / Apple Business Manager hesabı var mı (Custom App), yoksa listelenmemiş App Store uygulaması mı? | ADR-0003 |
 | 16 | KVKK aydınlatma ve açık rıza metinlerinin hukuken onaylı içeriği | ADR-0005 |
 | 17 | Bir kurye aynı anda en çok kaç paket taşır? (varsayılan 4) | ADR-0009: `max_active_packages_per_courier`, kapasite kısıtı |
@@ -393,7 +396,7 @@ Pilot müşteri keşfi henüz yapılmadı; aşağıdakiler cevap bekliyor.
 | 23 | Kurye tek turda birden fazla restoranlardan paket toplar mı? | ADR-0009: çoklu alış, yerleştirme ve kapasite |
 | 24 | Kuryeler arası devir hangi mesafede yapılıyor? (varsayılan aday yarıçapı 1500 m) | ADR-0010: `handover_radius_m` |
 | 25 | Devirde yönetici onayı istenir mi, yoksa yalnızca bilgi mi? (varsayılan: bilgi) | ADR-0010: `handover_requires_dispatcher_approval` |
-| 26 | Alınmış paketin devrinde kapıda nakit sorumluluğu ve kasa teslimi nasıl işliyor? | ADR-0010: nakit sorumluluk devri, İterasyon 4 kasa (eski numara: 3) |
+| 26 | Alınmış paketin devrinde kapıda nakit sorumluluğu ve kasa teslimi nasıl işliyor? | ADR-0010: nakit sorumluluk devri; kasa mutabakatı İterasyon 4'te teslim edildi ([ADR-0034](kararlar/0034-kapida-tahsilat-mutabakati.md)) |
 | 27 | Günlük kaç devir normal? Şehir içi GPS ile 150 m buluşma yarıçapı güvenilir mi? | ADR-0010: devir sınırları, `handover_meet_radius_m` |
 | 28 | Yeni paket eklenirken mevcut bir paketin en çok kaç dakika gecikmesi kabul edilir? (varsayılan 8 dk) Aynı restorandan gelen siparişler tek kuryeye verilmeli mi? | ADR-0014: `maxAddedDelayPerPackageMin`, toplu atama gruplaması |
 | 29 | Motosikletli kuryelerin gerçek süreleri OSRM tahmininden ne kadar farklı? (pilot konum izinden ölçülecek) | ADR-0011: `ROUTING_DURATION_FACTOR` kalibrasyonu |

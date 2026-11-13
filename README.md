@@ -2,13 +2,13 @@
 
 > Restoranların platform komisyonu ödemeden kendi teslimatını yapabilmesi için, kurye firmalarına yönelik çok kiracılı (multi-tenant) kurye yönetim platformu: mobil kurye uygulaması (Android + iOS), web yönetim paneli ve backend.
 
-**✅ İterasyon 3a (kendi harita yığınımız, çevrimdışı kurye uygulaması, üretim hazırlığı) ve 3b (öğrenilen teslim noktaları, hazır sinyali, işletme bağlantısı, teslim geofence'i, aynı restoran gruplama, yeni navigasyon görünümü) tamamlandı** · İterasyon 3c (öğrenilmiş hızlar, ETA) planlandı
+**✅ İterasyon 4 (pilot hazırlığı: dağıtım pilot kipi, güvenlik denetimi ve düzeltmeleri, KVKK saklama süresi, yük testi, kapıda tahsilat, mola, gecikme ve ret oranı uyarıları) 2026-11-13'te tamamlandı** · İterasyon 1, 2, 3a (kendi harita yığınımız, çevrimdışı kurye uygulaması) ve 3b (öğrenilen teslim noktaları, hazır sinyali, teslim geofence'i, yeni navigasyon görünümü) daha önce tamamlandı · Sırada: gerçek telefon testi ve pilot; İterasyon 3c (öğrenilmiş hızlar, ETA) ve İterasyon 5 (hakediş, öneri) planlandı
 
 Pilot bölge: Eskişehir; tasarım çok şehirli kullanıma hazırdır ([ADR-0006](docs/kararlar/0006-hizmet-bolgesi-eskisehir.md)).
 
 > **Bu bir vitrin (showcase) reposudur.** Ürün ticari olduğu için **kaynak kod özel (private) bir depoda tutulur** ve burada yer almaz. Bu depo; proje özetini, mimariyi, karar kayıtlarını (ADR), yapay zekâ destekli geliştirme sürecini, yol haritasını ve ekran görüntülerini içerir. Kaynak kod, mülakatlarda talep üzerine gösterilebilir. Vitrin, her iterasyon sonunda özel depodan güncellenir.
 
-**English summary:** Kurye Yönetim Sistemi is a multi-tenant courier management platform for Turkish courier firms that deliver for many restaurants for a per-package fee. It consists of a React Native + Expo Android courier app (background location, sideloaded APK), a React admin web panel with a live map and a NestJS/PostgreSQL+PostGIS backend. It is developed through an AI-orchestrated workflow (Claude Opus orchestrator + Sonnet sub-agents) with a human product owner; see [docs/GELISTIRME-SURECI.md](docs/GELISTIRME-SURECI.md). **This is a showcase repository:** the source code lives in a private repository because this is a commercial product, and can be demonstrated on request during interviews. This repository contains the architecture, decision records (ADRs), development process, roadmap and screenshots. Iterations 1, 2 and 3a are complete: the screenshots below come from the running system. Iteration 2 delivered route-aware assignment (real OSRM + VROOM engine, suggestions, batch assignment, drag-and-drop with warnings), courier-to-courier handover, a map-first route screen and in-app turn-by-turn navigation; in a synthetic Eskişehir-day simulation (not a field result) it cut total distance by about 30% and late deliveries from 19.9% to 3.2% versus "nearest courier" (see Sonuçlar). Iteration 3a is complete: a self-hosted, Eskişehir-specific map stack (own vector tiles, styles and Photon geocoder, weekly blue/green OSM refresh pipeline) with zero third-party map requests, an offline-capable courier app (4.4 MB offline map, offline turn-by-turn navigation, an idempotent offline action queue with conflict handling) and production-readiness work; field-learned maps (3b-3c) are planned.
+**English summary:** Kurye Yönetim Sistemi is a multi-tenant courier management platform for Turkish courier firms that deliver for many restaurants for a per-package fee. It consists of a React Native + Expo Android courier app (background location, sideloaded APK), a React admin web panel with a live map and a NestJS/PostgreSQL+PostGIS backend. It is developed through an AI-orchestrated workflow (Claude Opus orchestrator + Sonnet sub-agents) with a human product owner; see [docs/GELISTIRME-SURECI.md](docs/GELISTIRME-SURECI.md). **This is a showcase repository:** the source code lives in a private repository because this is a commercial product, and can be demonstrated on request during interviews. This repository contains the architecture, decision records (ADRs), development process, roadmap and screenshots. Iterations 1, 2, 3a, 3b and 4 are complete (Iteration 4, completed 2026-11-13, is the pilot-readiness iteration: a dispatch pilot mode with a hidden pool and timed assignment acceptance, an internal security audit with its P0 and small P1 items closed, configurable customer-data retention, a pilot-scale load test, cash-on-delivery reconciliation, courier breaks and delay / rejection-rate alerts): the screenshots below come from the running system. Iteration 2 delivered route-aware assignment (real OSRM + VROOM engine, suggestions, batch assignment, drag-and-drop with warnings), courier-to-courier handover, a map-first route screen and in-app turn-by-turn navigation; in a synthetic Eskişehir-day simulation (not a field result) it cut total distance by about 30% and late deliveries from 19.9% to 3.2% versus "nearest courier" (see Sonuçlar). Iteration 3a is complete: a self-hosted, Eskişehir-specific map stack (own vector tiles, styles and Photon geocoder, weekly blue/green OSM refresh pipeline) with zero third-party map requests, an offline-capable courier app (4.4 MB offline map, offline turn-by-turn navigation, an idempotent offline action queue with conflict handling) and production-readiness work; learned delivery points, ready signals and a delivery geofence followed in 3b, learned speeds (3c) are planned.
 
 ---
 
@@ -59,7 +59,7 @@ Restoranlar, Yemeksepeti veya Trendyol gibi platformların teslimat komisyonlar�
 
 ## Özellikler
 
-Durum: ✅ tamamlandı (İterasyon 1-2), ⏳ planlandı. Ayrıntılı kapsam için [YOL-HARITASI.md](docs/YOL-HARITASI.md).
+Durum: ✅ tamamlandı (İterasyon 1-4), 🧪 tamamlandı, pilot sahasında doğrulanacak / ayarlanacak, ⏳ planlandı. Ayrıntılı kapsam için [YOL-HARITASI.md](docs/YOL-HARITASI.md).
 
 ### ⭐ Rota uyumlu akıllı atama
 
@@ -84,6 +84,20 @@ Durum: ✅ tamamlandı (İterasyon 1-2), ⏳ planlandı. Ayrıntılı kapsam iç
 - ✅ Teslim geofence'i: ölçüm / zorlama kipleri, uyarı sayfası, gerekçeli geçersiz kılma, adres kalitesi metriği ([ADR-0026](docs/kararlar/0026-teslim-geofence-politikasi.md))
 - ✅ Aynı restoran gruplama: motor ve benchmark hazır, kiracı ayarı kapalı; panelde dağıtım v2 ayar ekranı
 
+### 🚦 Pilot hazırlığı: dağıtım pilot kipi, güvenlik, KVKK, ölçüm (İterasyon 4)
+
+> Pilot müşteriyle sahaya çıkmadan önce gereken işler 2026-11-13'te tamamlandı. **Dağıtım pilot kipinde** havuz kuryelerden gizlidir; sistem paketi rota uyumlu atar, kurye atamayı kabul eder, süre dolarsa paket başka kuryeye yeniden dağıtılır; panelde her atamanın gerekçesi görünür. **Güvenlik:** iç güvenlik denetimi yapıldı, otomatik regresyon paketi geliştirme sürecine ("tamamlandı" ölçütüne) eklendi, denetimin P0/P1 maddeleri kapatıldı. **KVKK:** müşteri bilgileri için ayarlanabilir saklama süresi ve geri alınamaz anonimleştirme işi (mevcut kiracılarda kendiliğinden açılmaz). **Ölçüm:** pilot ölçeğinde yük testi, rota doğruluğu ölçümü ve telefonla saha test protokolü. Ayrıntı: [yol haritası](docs/YOL-HARITASI.md).
+
+- 🧪 Dağıtım pilot kipi: gizli havuz, atama kabulü ve süre aşımı, Havuz sayfası, atama gerekçesi ([ADR-0028](docs/kararlar/0028-havuz-gorunurlugu-ve-atama-kabulu.md); [Havuz](docs/assets/screenshots/panel-havuz.png), [kabul bekliyor](docs/assets/screenshots/panel-kabul-bekliyor.png), [atama gerekçesi](docs/assets/screenshots/panel-atama-gerekcesi.png))
+- 🧪 Konum kademeleri ve "Rota yanlış" geri bildirimi; düzeltmeler OpenStreetMap'e kimliksiz dışa aktarılır ([ADR-0029](docs/kararlar/0029-konum-kademeleri-ve-rota-geri-bildirimi.md), [panel](docs/assets/screenshots/panel-rota-geri-bildirim.png))
+- ✅ Güvenlik denetimi ve regresyon paketi; P0/P1 maddeleri kapatıldı (kimlik sertleştirme, panel oturum güvenliği, bağlantı sınırları) ([ADR-0030](docs/kararlar/0030-kimlik-sertlestirme.md), [ADR-0031](docs/kararlar/0031-panel-csp-ve-baglanti-sinirlari.md), [ADR-0037](docs/kararlar/0037-panel-refresh-cerezi.md))
+- 🧪 KVKK müşteri verisi saklama süresi ve anonimleştirme ([ADR-0032](docs/kararlar/0032-musteri-verisi-saklama.md); süre hukuki görüşe göre pilotta belirlenir)
+- ✅ Yük testi ve darboğaz düzeltmeleri: 100 kuryeye kadar, dakikada 3 siparişle hatasız (sipariş hızı kuryeyle ölçeklenmedi); panel yenilemeleri olay güdümlü ([ADR-0033](docs/kararlar/0033-yuk-testi-darbogazlari.md))
+- ✅ Kapıda tahsilat mutabakatı: kurye nakit / kart / alınamadı işaretler, panelde günlük Tahsilat sayfası ([ADR-0034](docs/kararlar/0034-kapida-tahsilat-mutabakati.md), [panel](docs/assets/screenshots/panel-tahsilat.png), [kurye](docs/assets/screenshots/kurye-tahsilat.png))
+- ✅ Kurye molası ([ADR-0035](docs/kararlar/0035-mola-durumu.md), [kurye](docs/assets/screenshots/kurye-mola.png), [panel](docs/assets/screenshots/panel-kurye-molada.png))
+- 🧪 Gecikme ve yüksek ret oranı uyarıları: zil + çekmece + Uyarılar sayfası; eşikler pilotta ayarlanır ([ADR-0036](docs/kararlar/0036-gecikme-uyarisi.md), [ekran görüntüsü](docs/assets/screenshots/panel-uyarilar.png))
+- ⏳ Planlandı / karar bekliyor: push bildirim (FCM), teslim fotoğrafı, işletme paneli, hakediş tarifesi, gerçek telefon testi
+
 ### Sipariş ve paket yönetimi
 - ✅ Sınırsız işletme tanımı, firma başına çok kiracılı yapı (İterasyon 1)
 - ✅ Adres otomatik tamamlama (Photon / Google Places) ile paket ekleme (İterasyon 1)
@@ -101,8 +115,14 @@ Durum: ✅ tamamlandı (İterasyon 1-2), ⏳ planlandı. Ayrıntılı kapsam iç
 - ✅ Öğrenilmiş teslim noktası rozeti, "Hazır değil" / "Hazır oldu", teslim geofence uyarısı ve gerekçeli geçersiz kılma (çevrimdışı kuyrukla) (İterasyon 3b)
 - ✅ Kontrollü ret (gerekçeli) ve devir isteği (İterasyon 2)
 - ✅ Kuryeler arası devir: yakındaki meslektaşa teklif, alıştan sonra kod / QR + konum ile fiziksel devir ([ADR-0010](docs/kararlar/0010-kuryeler-arasi-devir.md), İterasyon 2)
+- 🧪 Dağıtım pilot kipi: atama kabul kartı (geri sayım, kabul / ret), gizli havuz (İterasyon 4)
+- ✅ Kapıda tahsilat işareti (nakit / kart / alınamadı), "Bugün üzerimde" kartı, çevrimdışı kuyrukla (İterasyon 4)
+- ✅ Mola ver / molayı bitir, geri sayım ve rota şeridi (İterasyon 4, [ekran görüntüsü](docs/assets/screenshots/kurye-mola.png))
+- 🧪 Navigasyonda tek dokunuşla "Rota yanlış" geri bildirimi; konum kademeleri (İterasyon 4)
+- ✅ Geçici şifreyle ilk girişte şifre değiştirme ve güçlü şifre kuralı (İterasyon 4)
+- ✅ Paket arama ve süzgeç: işletme / adres / paket kodu, durum ve ödeme türü çipleri, çevrimdışı çalışır (İterasyon 4, [ekran görüntüsü](docs/assets/screenshots/kurye-gecmis-arama.png))
 - ⏳ Push bildirim (FCM), OTA güncelleme ve iOS dağıtımı (İterasyon 2b)
-- ⏳ Şeffaf hakediş ekranı (İterasyon 4)
+- ⏳ Şeffaf hakediş ekranı (İterasyon 5, öneri)
 
 ### Yönetim paneli (Web)
 - ✅ Canlı harita ve kurye konumları (İterasyon 1)
@@ -110,15 +130,21 @@ Durum: ✅ tamamlandı (İterasyon 1-2), ⏳ planlandı. Ayrıntılı kapsam iç
 - ✅ Rota çizgileri ve numaralı duraklar, öneri paneli, sürükle-bırak atama, bekleyenler ve toplu öneri, rota motoru durumu şeridi (İterasyon 2)
 - ✅ Devirler sekmesi, atama ve devir ayarları, metrikler sayfası (İterasyon 2)
 - ✅ Adres defteri, hazır düğmesi ve hazırlık tahmini, işletme bağlantısı (QR), geofence rozetleri, adres kalitesi ile hazırlık / bekleme metrikleri, teslim / hazırlık ve dağıtım v2 ayarları (İterasyon 3b)
-- ⏳ Hakediş ve raporlar (İterasyon 4)
-- ⏳ Kasa / nakit mutabakatı (İterasyon 4)
-- ⏳ ETA gösterimi müşteriye (İterasyon 4)
+- 🧪 Dağıtım pilot kipi: Havuz sayfası, atama gerekçesi, kabul durumu, pilot ayarları (İterasyon 4)
+- 🧪 Rota geri bildirimleri sayfası ve kimliksiz GeoJSON dışa aktarma (İterasyon 4)
+- ✅ Kapıda tahsilat mutabakatı: Tahsilat sayfası, kasa teslim alma, CSV (İterasyon 4)
+- 🧪 Gecikme ve ret oranı uyarıları: zil, çekmece, Uyarılar sayfası, eşik ayarları (İterasyon 4)
+- ✅ Kurye mola durumu: "Molada" çipi ve mola geçmişi (İterasyon 4)
+- 🧪 Müşteri verisi saklama süresi (KVKK): Ayarlar > Gizlilik (İterasyon 4)
+- ✅ Panel oturum güvenliği ve bağlantı sınırları (İterasyon 4)
+- ⏳ Hakediş ve raporlar (İterasyon 5, öneri)
+- ⏳ Hakediş ile birleşik kasa raporu ve ETA gösterimi müşteriye (İterasyon 5, öneri)
 
 ### Entegrasyonlar ve genişlemeler
-- ⏳ İşletme paneli: restoranların kendi siparişlerini girmesi (İterasyon 5+)
-- ⏳ POS entegrasyonu, ilk hedef Adisyo (İterasyon 5+)
-- ⏳ Platform entegrasyonları ve SoftPOS (İterasyon 5+)
-- ⏳ Paket başı faturalama (İterasyon 5+)
+- ⏳ İşletme paneli: restoranların kendi siparişlerini girmesi (İterasyon 6+)
+- ⏳ POS entegrasyonu, ilk hedef Adisyo (İterasyon 6+)
+- ⏳ Platform entegrasyonları ve SoftPOS (İterasyon 6+)
+- ⏳ Paket başı faturalama (İterasyon 6+)
 
 ## Ekran görüntüleri
 
@@ -308,6 +334,13 @@ flowchart LR
 | [0008](docs/kararlar/0008-acik-kaynak-harita.md) | Açık kaynak harita (MapLibre + OpenFreeMap), sağlayıcı arkasında adres arama |
 | [0009](docs/kararlar/0009-rota-uyumlu-atama.md) | Rota uyumlu atama: kurye başına canlı rota, sapma süresine dayalı uygunluk, üç atama modu |
 | [0010](docs/kararlar/0010-kuryeler-arasi-devir.md) | Kuryeler arası devir: yakındaki meslektaşa teklif, alıştan sonra fiziksel buluşma ve kanıt (kod + konum) |
+| [0016](docs/kararlar/0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md) | Eskişehir'e özel, kendi barındırdığımız harita platformu |
+| [0023](docs/kararlar/0023-dagitim-algoritmasi-v2.md) | Dağıtım algoritması v2: kayan ufuk toplu atama + sınırlı kuryeler arası ALNS (bayrak arkasında) |
+| [0028](docs/kararlar/0028-havuz-gorunurlugu-ve-atama-kabulu.md) | Havuz görünürlüğü ve atama kabulü (dağıtım pilot kipi) |
+| [0032](docs/kararlar/0032-musteri-verisi-saklama.md) | Müşteri verisi saklama süresi ve anonimleştirme (KVKK) |
+| [0033](docs/kararlar/0033-yuk-testi-darbogazlari.md) | Yük testi darboğazları: olay güdümlü panel yenilemeleri |
+| [0034](docs/kararlar/0034-kapida-tahsilat-mutabakati.md) | Kapıda tahsilat kaydı ve kasa mutabakatı |
+| [0036](docs/kararlar/0036-gecikme-uyarisi.md) | Gecikme ve takılma uyarıları (panel içi) |
 
 ## Teknoloji yığını
 
@@ -339,8 +372,9 @@ flowchart LR
 | 3a | **Eskişehir'e özel harita platformu (kendi yığınımız):** kendi karoları ve stilleri, kendi Photon adres arama, haftalık OSM güncelleme hattı (mavi / yeşil), kurye uygulamasında çevrimdışı harita, navigasyon ve eylem kuyruğu (idempotent), üretim hazırlığı ([ADR-0016](docs/kararlar/0016-eskisehire-ozel-kendi-barindirdigimiz-harita-platformu.md), [ADR-0018](docs/kararlar/0018-harita-karo-ve-stil-sunumu.md)-[ADR-0022](docs/kararlar/0022-uretim-dagitimi-ucretsiz-katman.md)) | ✅ Tamamlandı (açık: gerçek cihaz, iOS, FCM, RLS, çevrimdışı ETA soluklaştırma, sürüm derlemesi) |
 | 3b | **Saha verisinden öğrenme ve teslim doğrulama:** öğrenilmiş teslim noktaları, restoran hazır sinyali ve işletme bağlantısı, teslim geofence'i, aynı restoran gruplama (varsayılan kapalı), yeni navigasyon görünümü ve akıcılık ([ADR-0017](docs/kararlar/0017-saha-verisinden-ogrenen-harita.md), [ADR-0024](docs/kararlar/0024-navigasyon-render-performansi.md)-[ADR-0027](docs/kararlar/0027-marka-kimligi-ve-navigasyon-gorsel-dili.md)) | ✅ Tamamlandı (açık: gerçek cihaz, pilot ayar kararları) |
 | 3c | Öğrenilmiş hızlar, ETA hatası önce / sonra (pilot verisi >= 4 hafta gerekir) | ⏳ |
-| 4 | Hakediş, kasa mutabakatı, ETA gösterimi | ⏳ |
-| 5+ | İşletme paneli, POS / platform entegrasyonları, SoftPOS, faturalama | ⏳ |
+| 4 | **Pilot hazırlığı:** dağıtım pilot kipi (gizli havuz, atama kabulü), konum kademeleri ve "Rota yanlış", güvenlik denetimi ve düzeltmeleri, KVKK saklama süresi, yük testi, kapıda tahsilat mutabakatı, mola, gecikme ve ret oranı uyarıları, kurye uygulamasında arama / süzgeç ([ADR-0028](docs/kararlar/0028-havuz-gorunurlugu-ve-atama-kabulu.md)-[ADR-0037](docs/kararlar/0037-panel-refresh-cerezi.md)) | ✅ Tamamlandı 2026-11-13 (açık: ürün sahibi kararları, gerçek cihaz testi, pilot) |
+| 5 | Hakediş, hakediş + kasa birleşik rapor, ETA gösterimi (**öneri**, tarife kararına bağlı) | ⏳ |
+| 6+ | İşletme paneli, POS / platform entegrasyonları, SoftPOS, faturalama | ⏳ |
 
 Ayrıntılar: [docs/YOL-HARITASI.md](docs/YOL-HARITASI.md)
 

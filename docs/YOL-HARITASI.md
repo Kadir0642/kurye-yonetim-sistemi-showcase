@@ -9,19 +9,9 @@ Kapsam, pilot müşteri keşfi sonrasında değişebilir. Her iterasyon bir demo
 | 2 | **Ana hedef: dinamik, rota uyumlu dağıtım** (tek akıllı rota, en iyi uyan kuryeye tekil ve toplu atama, kararlı yeniden sıralama, öneri / otomatik atama, ret ve devir, uygulama içi navigasyon, benchmark) | ✅ Uygulandı ve birleştirildi (SPEC) |
 | 2b | Platform ve sağlamlaştırma: RLS, push (FCM), iOS / TestFlight, OTA, aynı restoran gruplaması, gerçek cihaz testi | ⏳ |
 | 3 | **Eskişehir'e özel harita platformu:** kendi karo / geocoder / OSM güncelleme hattı, çevrimdışı harita ve eylem kuyruğu, saha verisinden öğrenen harita, üretim hazırlığı | **3a ✅ tamamlandı** (SPEC-3a; entegrasyon turunda gerçek yığınla doğrulandı, açık maddeler aşağıda); **3b ✅ tamamlandı** (SPEC-3b, sözleşme 0.4.0; PR #31-#38 2026-11-07'de birleşti, entegrasyon kaydı; açık: gerçek cihaz, pilot kararları); 3c ⏳ (PLAN) |
-| MVP+ 4a | **Dağıtım pilot kipi:** havuz kuryelerden gizli (kiracı ayarı), atama kabulü ve süre aşımı (pilot 90 sn), panelde atama gerekçesi ve havuz bekleme verisi (SPEC-4a, [ADR-0028](kararlar/0028-havuz-gorunurlugu-ve-atama-kabulu.md)) | 🚧 API ve sözleşme 0.5.0 PR #45; mobil (M4a) PR #47; **panel (W4a): havuz görünümü, atama gerekçesi, kabul durumu, pilot ayarları, canlı harita yumuşatma, işletme sayfası tahmini varış** PR açıldı (panel notu) |
-| MVP+ 4b | **Konum kademeleri ve "Rota yanlış":** navigasyonda GPS 2,5 sn / gönderim 5 sn, duran kuryede GPS 30 sn / kalp atışı 60 sn, panel `courier.position` kurye başına <= 1 olay / 3 sn; navigasyon menüsünden tek dokunuşlu rota geri bildirimi, panel listesi ve OpenStreetMap için kimliksiz GeoJSON dışa aktarma (SPEC-4b, [ADR-0029](kararlar/0029-konum-kademeleri-ve-rota-geri-bildirimi.md)) | 🚧 API, mobil ve sözleşme 0.6.0 PR #49 birleşti; **panel: "Rota geri bildirimleri" sayfası** (menü rozeti, süzgeçler, durum değişimi, OWNER GeoJSON indirme) PR açıldı |
-| Güvenlik (P0, CSP + sınırlar) | **Pilot öncesi güvenlik:** panel içerik güvenlik politikası (CSP, önce Report-Only), WebSocket bağlantı sınırları (IP başına 20 kimliksiz, kullanıcı başına 10), `/health` sınırı ve önbelleği, Caddy başlık / gövde sınırı (denetim B-06 P0, B-07, [ADR-0031](kararlar/0031-panel-csp-ve-baglanti-sinirlari.md)) | 🚧 PR açıldı; CSP zorunlu geçişi pilot haftası sonrası |
-| Güvenlik (P0, kimlik) | **Pilot öncesi kimlik sertleştirmesi:** giriş kilidi kimlik + IP (yabancı kuryeyi dışarıda bırakamaz), kimlik başına yüksek eşik ve artan gecikme; kurye / panel şifresi en az 8 karakter + yaygın şifre listesi + telefon içermez; panelin verdiği şifre geçici, kurye uygulamasında ilk girişte şifre değiştirme ekranı ([ADR-0030](kararlar/0030-kimlik-sertlestirme.md), denetim B-04 / B-05, sözleşme 0.6.1) | 🚧 PR #55 açıldı |
-| Güvenlik (P1, KVKK saklama) | **Müşteri verisi saklama süresi (B-08):** kiracı ayarı (yeni kiracıda varsayılan 30 gün, mevcut kiracılar kapalı; 7-365, 0 = kapalı), saatlik anonimleştirme işi, elle çalıştırma ve panel Ayarlar > Gizlilik kartı; tutar / zaman / istatistik / öğrenilmiş noktalar kalır ([ADR-0032](kararlar/0032-musteri-verisi-saklama.md), sözleşme 0.6.2) | 🚧 PR açıldı; süre hukuki görüşe göre değişir |
-| MVP+ 6 | **Kapıda tahsilat mutabakatı:** kurye teslimde nakit / kart / alınamadı işaretler (kısmi tutar + sebep, çevrimdışı kuyrukta teslimle aynı gövde), "Bugün üzerimde" kartı; panelde **Tahsilat** sayfası (kurye başına günlük beklenen / tahsil edilen / kart / alınamayan / teslim edilen kasa / kuryede kalan, **Kasa teslim al**, yalnızca-ekle kayıt, CSV) (SPEC-4c, [ADR-0034](kararlar/0034-kapida-tahsilat-mutabakati.md)) | 🚧 API, mobil, panel ve sözleşme 0.6.4 PR açıldı (migration 0011) |
-| MVP+ 7 | **Gecikme uyarısı:** geç alınan paket, geç teslim, konumu kesilen ve yerinde duran kurye için menajer panelinde canlı uyarı (zil + çekmece + `/uyarilar`), kiracı eşikleri Ayarlar › Uyarılar'da, işletme sayfasında "Gecikiyor" rozeti; panel içi, FCM / SMS yok ([ADR-0036](kararlar/0036-gecikme-uyarisi.md), sözleşme 0.6.6) | 🚧 PR açıldı |
-| MVP+ 12 | **Kurye ret oranı uyarısı:** vardiyadaki kurye son 24 saatte (kayan pencere) kendisine atanan tekliflerin en az %40'ını reddettiyse (en az 5 teklif) menajer panelinde "Yüksek ret" uyarısı; kabul süresi aşımları orana girmez, ayrı sayaç; histerezisli açılış / kapanış, kiracı ayarları Ayarlar › Uyarılar'da ([ADR-0036 eki](kararlar/0036-gecikme-uyarisi.md), sözleşme 0.6.8, migrasyon 0014) | 🚧 PR açıldı |
-| MVP+ 5 (Mola) | **Mola durumu:** kurye vardiyadayken mola verir (uygulamada "Mola ver" + geri sayım + rota şeridi); molada otomatik atama / toplu plan / öneri aday saymaz, rota sürer; azami süre kiracı ayarı (10-120 dk, varsayılan 45) dolunca otomatik biter; panelde "Molada · N dk" çipi, harita işaretçisi, mola geçmişi ve Ayarlar alanı ([ADR-0035](kararlar/0035-mola-durumu.md), sözleşme 0.6.5) | 🚧 PR açıldı |
-| MVP+ 11 | **Paket arama ve süzgeç (kurye uygulaması):** "Bugün" geçmişinde ve uzun aktif listede işletme / adres / paket kodu araması (Türkçe İ-ı ve aksan duyarsız, debounce'lu), durum - ödeme türü (kapıda nakit / kart / önceden ödendi) çipleri, etkin filtre sayısı ve Temizle, boş sonuç durumu; arama durumu ayrıntıdan dönünce korunur, yüklü listede çevrimdışı çalışır. Tarih çipleri (bugün / dün / son 7 gün) hazır ama `scope=today` yalnızca bugünü döndürdüğü için liste çok güne yayılınca görünür; sunucu tarafı geçmiş uç için bkz. PR notu | 🚧 PR açıldı |
-| Yük testi darboğazları | **S1 yük testi bulgularının giderilmesi:** panel liste yenilemeleri olay güdümlü ve yoklama seyrek (panel isteği −%55), bekleyenler kuyruğu yeniden deneme aralığı kiracı ayarı (`settings.dispatch.retryIntervalS`, pilot 30 sn) ve kapasite açılınca erken deneme, konum eklemesi `synchronous_commit=off` (izole ekleme p99 93 → 14 ms); yük testine navigasyon / duran konum profilleri ([ADR-0033](kararlar/0033-yuk-testi-darbogazlari.md), rapor) | 🚧 PR açıldı |
-| 4 | Hakediş, kasa ve atama (eski İterasyon 3) | ⏳ |
-| 5+ | Genişleme (eski İterasyon 4+) | ⏳ |
+| 4 | **Pilot hazırlığı:** dağıtım pilot kipi (havuz gizli, atama kabulü), konum kademeleri ve "Rota yanlış", güvenlik denetimi (P0 ve küçük P1 maddeleri kapatıldı, panel oturumu HttpOnly çerezde), KVKK saklama süresi, yük testi, kapıda tahsilat mutabakatı, kurye molası, gecikme ve ret oranı uyarıları, kurye uygulamasında arama / süzgeç ([ADR-0028](kararlar/0028-havuz-gorunurlugu-ve-atama-kabulu.md)-[ADR-0037](kararlar/0037-panel-refresh-cerezi.md), sözleşme 0.7.0) | ✅ Tamamlandı (2026-11-13, [ayrıntı](#iterasyon-4-pilot)); açık: ürün sahibi kararları ve gerçek cihaz testi |
+| 5 | Hakediş, kasa raporu ve atama ağırlıkları (eski "İterasyon 4"; **öneri**, ürün sahibi kararlarına bağlı) | ⏳ |
+| 6+ | Genişleme: işletme paneli, POS / platform entegrasyonları, SoftPOS, faturalama (eski "İterasyon 5+") | ⏳ |
 
 ---
 
@@ -190,23 +180,77 @@ Beş paralel görev (gorevler/): **R** rota altyapısı + motor + benchmark, **A
 
 ---
 
-## İterasyon 4 — Hakediş, kasa ve atama ⏳
+## İterasyon 4 — Pilot hazırlığı ✅ <a id="iterasyon-4-pilot"></a>
 
-> Numaralandırma: eskiden "İterasyon 3" olan bu iş, harita platformunun ([İterasyon 3](#iterasyon-3-harita)) öne alınmasıyla İterasyon 4'e kaydı. Eski belgelerdeki "İterasyon 3 (hakediş / kasa)" atıfları İterasyon 4 olarak okunur.
+> Numaralandırma: eskiden "İterasyon 4" olan hakediş / kasa işi [İterasyon 5](#iterasyon-5-hakedis)'e, eski "İterasyon 5+" genişleme işi İterasyon 6+'ya kaydı; bu iterasyon, harita platformundan (İterasyon 3) sonra pilot müşteriyle sahaya çıkmadan önce gereken dağıtım, güvenlik, saha operasyonu ve ölçüm işlerini toplar. Yol haritasındaki eski "MVP+ 4a ... MVP+ 12" etiketleri bu iterasyonun parçalarıdır. Eski SPEC ve ADR belgelerindeki "İterasyon 4 (hakediş)" (ve daha eskisi "İterasyon 3 (hakediş / kasa)") atıfları önceki numaralandırmaya göredir ve İterasyon 5 olarak okunur; eski "İterasyon 5+" atıfları İterasyon 6+ demektir.
+
+**Tamamlandı: 2026-11-13.** PR #43-#66 `main`'de. Sözleşme `packages/contracts` **0.7.0**, veritabanı geçişleri 0014'e kadar (15 dosya), karar kayıtları ADR-0028 ... ADR-0037. Teknik spesifikasyonlar: SPEC-4a (dağıtım pilot kipi), SPEC-4b (konum kademeleri, rota geri bildirimi), SPEC-4c (kapıda tahsilat). Sahada açma, izleme ve geri dönüş adımları: çalışma kitabı.
+
+**Hedef:** pilot müşteriye "havuzu kuryeye gösterme, sistem atasın, kurye kabul etsin" düzenini, pilot öncesi güvenlik ve KVKK işlerini, menajerin ihtiyaç duyduğu uyarı / kasa / mola araçlarını ve pilot ölçeğinin kaldırılıp kaldırılamayacağı ölçümünü tamamlamak.
+
+### Teslim edilenler
+
+| Konu | PR | ADR / belge |
+|---|---|---|
+| **Dağıtım pilot kipi:** havuz kuryelerden gizli (kiracı ayarı), atama kabulü ve süre aşımı (pilot ayarı 90 sn, süre dolunca sistem reddi ve yeniden dağıtım), panelde Havuz sayfası, atama gerekçesi, kabul geri sayımı, işletme sayfasında tahmini varış | #45 (API), #47 (mobil), #50 (panel) | [ADR-0028](kararlar/0028-havuz-gorunurlugu-ve-atama-kabulu.md), SPEC-4a |
+| **Konum kademeleri:** navigasyonda sık, duran kuryede seyrek konum; panel yayını kurye başına <= 1 olay / 3 sn. **"Rota yanlış":** kurye navigasyondan tek dokunuşla bildirir; panel sayfası, durum yönetimi, OpenStreetMap düzeltmesi için kimliksiz GeoJSON dışa aktarma | #49, #52 | [ADR-0029](kararlar/0029-konum-kademeleri-ve-rota-geri-bildirimi.md), SPEC-4b |
+| **Rota doğruluğu ölçümü** (30 + 300 çift, OSM çapraz kontrolü) ve telefonla saha test protokolü | #48 | rapor, protokol |
+| **Telefon testi (APK) kiti** ve kurye uygulamasında WebSocket bağlantı sınırı kodlarına bekleme + bildirim | #51, #56 | telefon protokolü, APK dağıtımı |
+| Navigasyon hedef işareti uygulama içi durak işaretiyle aynı aileden | #43 | [ADR-0027](kararlar/0027-marka-kimligi-ve-navigasyon-gorsel-dili.md) |
+| **Panel marka geçişi (P2):** koyu kenar çubuğu + açık içerik, kurye uygulamasıyla aynı dil | #46 | [panel tasarımı](tasarim/panel/README.md) |
+| **Güvenlik denetimi ve regresyon paketi** (`npm run security`: kimlik / rol matrisi, kiracılar arası erişim, jeton kurcalama, hız sınırı, üretim başlıkları; Definition of Done'a girdi) | #44 | [GELISTIRME-SURECI](GELISTIRME-SURECI.md#definition-of-done), denetim |
+| **Güvenlik P0 maddeleri kapatıldı:** panel içerik güvenlik politikası (önce izleme kipinde) ve bağlantı sınırları (#54); giriş kilidi, güçlü şifre kuralı ve zorunlu ilk şifre değişimi (#55) | #54, #55 | [ADR-0031](kararlar/0031-panel-csp-ve-baglanti-sinirlari.md), [ADR-0030](kararlar/0030-kimlik-sertlestirme.md) |
+| **Güvenlik P1 maddeleri:** küçük işler (hız sınırı kapsamı, sayaç atomikliği, sürüm derleme denetimleri, geliştirme altyapısı sıkılaştırması, bağımlılık denetimi CI işi) (#63) ve **panel oturum belirtecinin HttpOnly çerezde tutulması** (#66; panel için ayrı `/auth/web/*` uçları, `SameSite=Strict` çerez + CSRF başlığı / köken denetimi, erişim belirteci yalnızca bellekte, sözleşme 0.7.0; dağıtımda panel kullanıcıları bir kez yeniden girer, kurye uygulaması değişmedi) | #63, #66 | [ADR-0037](kararlar/0037-panel-refresh-cerezi.md) |
+| **KVKK müşteri verisi saklama süresi:** kiracı ayarı, saatlik anonimleştirme işi, panel Ayarlar > Gizlilik kartı; yeni kiracıda varsayılan 30 gün, **mevcut kiracılarda kapalı** | #57 | [ADR-0032](kararlar/0032-musteri-verisi-saklama.md) |
+| **Yük testi ve darboğaz düzeltmeleri:** pilot ölçeği senaryoları (kurye, panel, sipariş dalgaları), panel liste yenilemelerinin olay güdümlü olması, bekleyenler yeniden deneme aralığı ayarı, konum eklemesi tuning'i; navigasyon karışımıyla 25 / 50 / 100 kurye (ikişer koşu) ve bir keşif koşusu olarak 200 kurye ölçümü | #53, #58, #68 | [ADR-0033](kararlar/0033-yuk-testi-darbogazlari.md), rapor |
+| **Kapıda tahsilat mutabakatı:** teslimde nakit / kart / alınamadı, "Bugün üzerimde" kartı; panelde Tahsilat sayfası, kasa teslim alma, yalnızca-ekle kayıt, CSV | #59 | [ADR-0034](kararlar/0034-kapida-tahsilat-mutabakati.md), SPEC-4c |
+| **Kurye molası:** uygulamada "Mola ver" + geri sayım; molada atama aday saymaz, süre kiracı ayarı, panelde "Molada" çipi ve geçmiş | #60 | [ADR-0035](kararlar/0035-mola-durumu.md) |
+| **Gecikme uyarıları:** geç alım, geç teslim, konumu kesilen ve yerinde duran kurye; zil + çekmece + Uyarılar sayfası, kiracı eşikleri, işletme sayfasında "Gecikiyor" rozeti (panel içi; FCM / SMS yok) | #61 | [ADR-0036](kararlar/0036-gecikme-uyarisi.md) |
+| **Ret oranı uyarısı:** vardiyadaki kurye son 24 saatte tekliflerin en az %40'ını reddederse "Yüksek ret" uyarısı (en az 5 teklif; kabul süresi aşımları orana girmez) | #65 | [ADR-0036 eki](kararlar/0036-gecikme-uyarisi.md) |
+| **Takip paketi:** moladaki kurye devir adayı sayılmaz, dağıtım v2 pencere kararı ile mola uyumu, KVKK onay metni, mobil soket bekleme, kabul süresi dolduğu bilgisi | #62 | [ADR-0035](kararlar/0035-mola-durumu.md) |
+| **Kurye uygulamasında paket arama ve süzgeç:** işletme / adres / paket kodu ile arama (Türkçe İ-ı ve aksan duyarsız), durum ve ödeme türü çipleri, boş sonuç durumu; çevrimdışı çalışır | #64 | çalışma kitabı |
+
+**Yük testi:** ayrıntılı sonuçlar YUK-TESTI-2026-11.md raporundadır (bölüm 10). Navigasyon profiliyle 25, 50 ve 100 kuryede ikişer (10 dakikalık) koşu ve bir keşif koşusu olarak 200 kuryede toplam 56.363 istekte sunucu hatası 0 çıktı. Canlı kurye listesi p95: 25 / 50 / 100 kuryede sırasıyla 62-109 / 108-114 / 136-137 ms; konum yazımı p99: 41-49 / 65-67 / 89-94 ms (karışık genel p95 yanıltıcıdır: hızlı konum istekleri karışımın yaklaşık %20'sinden %41'ine çıkar). Sistem atamasında p95 35-48 sn'dir (25 kuryede 47-48 sn); uzun atamalar kuyrukta 30 sn'lik yeniden denemeyi bekleyen paketlerdir ve kurye sayısıyla artmaz. **Sonuç: 100 kuryeye kadar, dakikada 3 siparişle hatasız.** Sipariş hızı kurye sayısıyla ölçeklenmedi; gerçekçi sipariş hızında dağıtım yükü denenmedi (orantılı sipariş hızıyla koşu takip işidir).
+
+### Teslim edilmeyenler / sonraya taşınanlar
+
+Ürün sahibinin kararı veya hesabı gereken maddeler (hiçbiri ücretli servis açılmadan ilerletilmez):
+- **Hakediş tarifesi:** paket başı / kurye bazlı kural ve ödeme dönemi (İterasyon 5'i başlatır)
+- **Push bildirim (FCM) ve Firebase hesabı:** bugün uyarılar ve atama bildirimleri panel / uygulama açıkken WebSocket ile gelir
+- **Teslim fotoğrafı:** depolama yeri ve saklama süresi kararı
+- **İşletme paneli** ve **platform siparişi için fiş / tablet** akışı
+- **OSM düzeltmeleri:** "Rota yanlış" listesinden çıkan düzeltmelerin kimin, hangi ritimle yapacağı
+- **KVKK saklama süresinin pilot kiracıda açılması** (hukuki görüşe göre süre; mevcut kiracıda bilinçli olarak kapalı)
+- **Panel CSP'nin zorunlu kipe alınması** (pilot haftasından sonra, tek satırlık değişiklik)
+- **Telefon numarası tekilliği kuralı** (ürün kararı)
+- **Üretim sunucusu (VPS) seçimi ve kurulumu**
+- **Gerçek telefonda saha testi** (arka plan konum, pil optimizasyonu, navigasyon akıcılığı; protokol)
+- **Kurye geçmiş sorgusu:** "Bugün" listesi yalnızca bugünü döndürür; tarih çipleri (dün / son 7 gün) arama alt yapısında hazır ama sunucu tarafı geçmiş ucu yok
+
+Küçük teknik takip işleri iç takip belgesinde izlenir. İterasyon 2b ve [İterasyon 3](#iterasyon-3-harita) açık maddeleri (RLS, iOS, FCM, gerçek cihaz, 3c) geçerliliğini korur.
+
+**Portföy çıktısı:** dağıtım pilot kipi panel ekran görüntüleri (Havuz, kabul bekliyor, atama gerekçesi), uyarı çekmecesi, tahsilat / mola / arama ekranları ([README](../README.md#ekran-görüntüleri)); yük testi raporu.
+
+---
+
+## İterasyon 5 — Hakediş, kasa raporu ve atama (öneri) ⏳ <a id="iterasyon-5-hakedis"></a>
+
+> Bu bölüm bir **öneridir, taahhüt değildir**: kapsam ve sıra pilot geri bildirimine ve yukarıdaki ürün sahibi kararlarına (özellikle hakediş tarifesi) göre değişir. Eski "İterasyon 4 — Hakediş, kasa ve atama" bölümünün devamıdır.
 
 **Hedef:** Kurye güvenini artıran şeffaf hakediş ve finansal takip.
 
-- [ ] Paket bazlı hakediş hesabı ve kuryenin hakediş ekranı
+- [ ] Paket bazlı hakediş hesabı ve kuryenin hakediş ekranı (tarife kararı gerekir)
 - [ ] Yönetici raporları (kurye, işletme, dönem bazlı)
-- [x] Kasa / nakit mutabakatı (kapıda ödeme takibi): MVP+ 6 ile ([ADR-0034](kararlar/0034-kapida-tahsilat-mutabakati.md)); hakediş ile birleşik rapor hâlâ açık
-- [ ] ETA hesaplama ve müşteriye gösterimi (rota ETA'ları İterasyon 2'de iç kullanım için üretilir)
+- [x] Kasa / nakit mutabakatı (kapıda ödeme takibi): İterasyon 4'te teslim edildi ([ADR-0034](kararlar/0034-kapida-tahsilat-mutabakati.md)); hakediş ile birleşik rapor hâlâ açık
+- [ ] ETA hesaplama ve müşteriye gösterimi (rota ETA'ları İterasyon 2'de iç kullanım için üretilir; işletme sayfasında tahmini varış İterasyon 4'te geldi)
 - [ ] Adil atama ağırlıklarının hakedişle birlikte ayarı (temel adalet terimi ve otomatik / akıllı atama İterasyon 2'de gelir)
+- [ ] Pilot geri bildirimiyle çıkan düzeltmeler: eşik ayarları (uyarılar, kabul süresi), kurye geçmiş sorgusu, gerçek cihaz bulguları
 
 **Portföy çıktısı:** Kurye hakediş ekranı ve panel rapor ekran görüntüleri; mutabakat akışı GIF'i.
 
 ---
 
-## İterasyon 5+ — Genişleme ⏳
+## İterasyon 6+ — Genişleme ⏳
 
 **Hedef:** Ürünü ölçeklenebilir ve satılabilir hâle getirmek.
 
