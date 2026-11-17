@@ -372,6 +372,10 @@ Tasarım, veri modeli (`handover_offers`), API eskizi, uç durumlar ve KVKK notl
 
 Vardiyadaki kurye mola verebilir ([ADR-0035](kararlar/0035-mola-durumu.md)): `shifts.break_started_at` / `break_ends_at` + mola geçmişi `shift_breaks`; azami süre kiracı ayarı `settings.shifts.breakMaxMin` (10-120 dk, varsayılan 45), dolunca `ShiftBreakJobsService` (10 sn) molayı otomatik bitirir. Molada kurye `SuggestionsService.prefilter` içinde `ON_BREAK` ile elenir (öneri, toplu plan, OTOMATİK atama ve kabul süresi aşımı yeniden dağıtımı tek noktadan); mevcut rota sürer, yönetici elle atayabilir, bekleyen kabul kartı kabul / ret edilebilir, havuzdan `claim` 422. Olaylar: panel `courier.shift` `BREAK_STARTED` / `BREAK_ENDED`, kurye `shift.updated`. Konum kademeleri değişmez.
 
+### 6.5 Dış sipariş girişi (0.7.3)
+
+Siparişler platformdan bağımsız bir giriş katmanından alınır ([ADR-0042](kararlar/0042-dis-siparis-girisi.md)): işletme başına giriş anahtarı (`intake_keys`; `X-Intake-Key`, yalnızca sha256 özeti saklanır, anahtar kiracı + işletmeye bağlı, hız sınırlı), tek giriş hizmeti `IntakeService` (API anahtarı, panel elle girişi ve CSV aynı yolu kullanır), tekrar anahtarı (işletme, kaynak, dış kimlik) ile idempotent `intake_orders`. Koordinat yoksa adres `GeoService.geocode` ile çözülür; çözülemezse sipariş reddedilmez, `NEEDS_ADDRESS` olarak yöneticiye düşer (paket adres çözülünce açılır; 48 saat içinde tamamlanmazsa kişisel veri silinerek kapanır). Telefon varsayılan olarak istenmez (`packages.customer_phone` yalnızca dış siparişte boş olabilir). İsteğe bağlı durum geri bildirimi (`picked_up`, `delivered`, `undeliverable`) paketin zaman damgalarından giden kutusuna (`intake_webhook_outbox`) alınır, HMAC-SHA256 imzalı (`X-Kurye-Signature`), SSRF korumalı ve üstel geri çekilmeyle (8 deneme) gönderilir; gövde kişisel veri taşımaz. Platform bağdaştırıcıları `IntakeAdapter` arayüzüyle eklenecek (şimdilik yalnızca `generic`). Kişisel veri pakette kalır ve ADR-0032 saklama süresine tabidir.
+
 ## 7. Güvenlik ve gizlilik ilkeleri
 
 - Tenant izolasyonu: her istekte JWT'den gelen `tenant_id` bağlamı, depo katmanında zorunlu filtre ve bileşik yabancı anahtarlar; RLS İterasyon 2b'de ([ADR-0012](kararlar/0012-rls-iterasyon-2b-ye-ertelendi.md)).
@@ -427,6 +431,7 @@ Pilot müşteri keşfi henüz yapılmadı; aşağıdakiler cevap bekliyor.
 | 36 | Teslim geofence'i ne zaman ENFORCE'a alınır (tüm kuryeler 3b APK'sında, OBSERVE ölçümünden sonra)? Kurye bazlı geçersiz kılma raporu gerekli ve hukuken uygun mu? | ADR-0026, SPEC-3b §19 |
 | 37 | Tahmini hazır zamanı `readyAt`'e otomatik yazılsın mı ve aynı işletme gruplaması ile dağıtım v2 pilotta açılsın mı (benchmark sonucuna göre)? | SPEC-3b §16, §19 |
 | 38 | Müşteri adı / telefonu / açık adresi için hukuken uygun saklama süresi nedir? (ürün sahibi geçici olarak 30 gün seçti; yedek süresi N + 35 gün aydınlatma metnine yazılmalı mı?) | ADR-0032, denetim B-08 |
+| 39 | Siparişler pilotta hangi kasa programı / platformlardan gelecek, bağlantı kimliği kimde (restoran mı, kurye firması mı) ve entegrasyon için ücret istiyorlar mı? (iskelet hazır; ilk bağdaştırıcı bu cevaba bağlı) | ADR-0042, İterasyon 6 |
 
 ## 9. Harita platformu (iterasyon 3)
 
