@@ -198,6 +198,8 @@ stateDiagram-v2
 
 **Kapıda tahsilat (MVP+ 6, [ADR-0034](kararlar/0034-kapida-tahsilat-mutabakati.md)):** teslim eylemi isteğe bağlı `collection` (nakit / kart / alınamadı) taşır; `packages.collected_*` sütunlarına teslimle aynı UPDATE'te yazılır (çevrimdışı kuyrukta aynı gövde ve Idempotency-Key). Kasa teslimleri yalnızca eklenen `cash_handovers` tablosundadır; günlük toplam `GET /payments/daily`.
 
+**Restorana iade (0.7.2, [ADR-0041](kararlar/0041-pilot-kurallari.md)):** durum makinesi değişmedi. `settings.delivery.returnToBusinessOnFail` açıkken FAILED paket ayrıca `packages.return_state` taşır: `RETURNING` (kurye işletmeye götürüyor) -> `RETURNED` (kurye "işletmeye teslim ettim") -> `CLOSED` (menajer kapattı; RETURNING'den de). Kapıda ödeme tahsil edilmez (tahsilat yalnızca DELIVERED'dan hesaplanır). Kapıda bekleme süresi `packages.fail_waited_s`.
+
 Durum kodları: `CREATED` (Beklemede), `IN_POOL` (Havuzda), `ASSIGNED` (Atandı), `PICKED_UP` (Yolda), `DELIVERED` (Teslim edildi), `FAILED` (Teslim edilemedi), `CANCELLED` (İptal). Önceki taslaktaki `EN_ROUTE` kaldırıldı; `PICKED_UP` "yolda" anlamına gelir. Havuzdan alma yarışa dayanıklıdır (tek koşullu UPDATE). `PICKED_UP` sonrası iptalin ücret kuralı müşteriyle netleştirilecek.
 
 ## 5. Canlı takip veri akışı
@@ -274,6 +276,20 @@ Kiracı ayarları `settings.dispatch.poolVisibleToCouriers` (varsayılan `true`)
 - **Gizli havuz:** kurye havuzu boş döner, havuzdan alma ve "Havuza aç" 409 `POOL_CLOSED`; hiçbir paket açık havuza girmez (POOL / publish AUTO gibi, yaklaşık modda bekleyenlerde kalır). AKILLI_HAVUZ ile birleştirilemez.
 - **Atama kabulü:** paket durumu değişmez; atama `accept_state = PENDING` ve `accept_deadline_at` ile başlar (havuzdan alma ve devir doğrudan `ACCEPTED`). `POST /courier/packages/{id}/accept` kabul eder, alış örtük kabuldür. Süre dolunca 5 sn'lik `dispatch-accept-expiry` işi ret yolunu çalıştırır (`IN_POOL`, `package_rejections.reason = TIMEOUT` ile o kurye dışlanır, olay `ASSIGNMENT_EXPIRED`, WS `package.assignment_expired`) ve paketi yeniden dağıtır. Son tarih veritabanındadır (yeniden başlatmaya dayanıklı).
 - **Panel verisi:** `Package.assignment` (kaynak, sıra, sapma, toplu / grup, atayan kullanıcı kimliği, kabul durumu; `packages.assignment_info`), `dispatch.poolEnteredAt` / `poolWaitS`. Ayrıntı: SPEC-4a.
+
+**Pilot kuralları (0.7.2, [ADR-0041](kararlar/0041-pilot-kurallari.md)):** varsayılanlar bugünkü davranış; "Pilot ayarlarını uygula" pilot değerlerine çeker.
+
+| Ayar | Varsayılan | Pilot | Anlam |
+|---|---|---|---|
+| `settings.dispatch.couriersCanReject` | `true` | `false` | Kapalıyken ret / eski bırakma 409 `REJECT_DISABLED`; kabul süresi dolan atama kuryede kalır (`accept_overdue_at`, olay `ASSIGNMENT_OVERDUE`, uyarı `ACCEPT_OVERDUE`); kurye menajer onaylı **bırakma talebi** (`package_release_requests`) gönderir |
+| `settings.dispatch.boxFullTtlMin` | 30 dk | 30 | "Kutum dolu" sinyali (`couriers.box_full_at`) bu süre ya da vardiya sonu düşer; **atamayı değiştirmez** |
+| `settings.delivery.returnToBusinessOnFail` | `false` | `true` | Teslim edilemeyen paket restorana iade yoluna girer (§4); iade yolundaki paket kurye yüküne sayılır |
+| `settings.delivery.minDoorWaitS` | 0 sn | 300 | "Müşteri yok" gerekçesi için kapıda en az bekleme; eksikse 422 `MIN_DOOR_WAIT_NOT_MET` |
+| `settings.alerts.unassignedEnabled` / `unassignedMin` | `false` / 10 dk | `true` | `UNASSIGNED_TOO_LONG` (paket kuryesiz) |
+| `settings.alerts.noCourierEnabled` / `noCourierMin` | `false` / 3 dk | `true` | `NO_COURIER_AVAILABLE` (bekleyen paket var, uygun kurye yok; kiracı geneli) |
+| `settings.courierApp.minVersion` / `latestVersion` / `downloadUrl` / `apkSha256` | boş | (yeni APK ile) | Sürüm kapısı: `X-App-Version` eski / yoksa ve kuryenin aktif paketi yoksa 426 `APP_VERSION_UNSUPPORTED`; aktif paket varken uyarı başlığı |
+
+Kurye başına kapasite `couriers.max_active_packages` (NULL = firma ayarı); kapasite okuyan tüm otomatik yollar `COALESCE(kurye, firma)` kullanır. Kurye "gördü" kaydı `packages.assignment_seen_at`. Dış navigasyon açılışları yalnızca sayaç (`external_nav_opens`, konum yok, 90 gün). Menajer için `GET /manual-actions` ("Elle işlem" sayfası), kurye kartında tahsil edilecek tutar (`LiveCourier.toCollectKurus`).
 
 #### 6.1.3 Konum kademeleri ve "Rota yanlış" geri bildirimi (MVP+ 4b, ADR-0029)
 
